@@ -10,6 +10,7 @@
         {{ stylesheet_link('css/bootstrap.min.css') }}
         {{ stylesheet_link('css/brain-theme.css') }}
         {{ stylesheet_link('css/styles.css') }}
+        {{ stylesheet_link('css/custom.css') }}
         {{ stylesheet_link('css/font-awesome.min.css') }}
         {{ stylesheet_link("http://fonts.googleapis.com/css?family=Cuprum", false) }}
         {{ javascript_include('js/jquery.min.js') }}
