@@ -7,6 +7,7 @@ class ControllerBase extends Controller
     protected function initialize()
     {
         $this->tag->prependTitle('SYA | ');
+        $this->view->setTemplateAfter('principal');
 
     }
 
