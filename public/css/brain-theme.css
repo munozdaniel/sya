@@ -2281,6 +2281,32 @@ select[multiple] {
   color: #2D552D;
 }
 
+/* Exito */
+.alert-exito {
+    color: #2d552d;
+    background-color: #F5FAF4;
+    border-color: #D6E9C6;
+}
+.alert-exito hr {
+    border-top-color: #D6E9C6;
+}
+.alert-exito .alert-link {
+    color: #2D552D;
+}
+
+/* Problema */
+
+.alert-problema {
+    color: #FFF;
+    background-color: #8a0002;
+    border-color: #c0000b;
+}
+.alert-problema hr {
+    border-top-color: #c0000b;
+}
+.alert-problema .alert-link {
+    color: #8a0002;
+}
 
 /* Info */
 
