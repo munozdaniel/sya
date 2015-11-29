@@ -17,7 +17,6 @@
         {{ javascript_include('js/jquery-ui.min.js') }}
         {{ javascript_include('js/plugins/interface/collapsible.min.js') }}
         {{ javascript_include('js/bootstrap.min.js') }}
-        {{ javascript_include('js/application.js') }}
         {#FIN Archivos Basicos#}
         {#Js Particulares#}
         {%  if (assets.collection("header")) %}

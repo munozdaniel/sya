@@ -11,6 +11,7 @@ class IndexController extends ControllerBase
     public function initialize()
     {
         $this->tag->setTitle('Iniciar Sesión');
+        $this->assets->collection('header')->addJs('js/application_blank.js');
         parent::initialize();
 
     }
@@ -72,7 +73,6 @@ class IndexController extends ControllerBase
             return false;
         else {
             $rol = Rol::findFirstByRolId($idRol->rol_id);
-            echo "" . $usuario->usuario_id . " - " . $rol->rol_nombre;
             $this->session->set('auth', array('usuario_id' => $usuario->usuario_id,
                 'usuario_nombreCompleto' => $usuario->usuario_nombreCompleto,
                 'usuario_nick' => $usuario->usuario_nick,
