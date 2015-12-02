@@ -52,6 +52,12 @@ class Usuarios extends \Phalcon\Mvc\Model
     public $usuario_fechaCreacion;
 
     /**
+     *
+     * @var string
+     */
+    public $usuario_imagen;
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
