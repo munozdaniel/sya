@@ -14,23 +14,8 @@
                 </button>
             </div>
             <!-- ======================= MENU DEL USUARIO ======================= -->
+            {{ elemento.getUsuario() }}
 
-            <ul class="nav navbar-nav navbar-left-custom">
-                <li class="user dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="http://placehold.it/500" alt="">
-                        <span>Eugene Kopyov</span>
-                        <i class="caret"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
-                        <li><a href="#"><i class="fa fa-tasks"></i> Tasks</a></li>
-                        <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                        <li><a href="#"><i class="fa fa-mail-forward"></i> Logout</a></li>
-                    </ul>
-                </li>
-                <li><a class="nav-icon sidebar-toggle"><i class="fa fa-bars"></i></a></li>
-            </ul>
         </div>
         <!-- ======================= MENU SUPERIOR DERECHO ======================= -->
         <ul class="nav navbar-nav navbar-right collapse" id="navbar-right">
@@ -63,6 +48,7 @@
 
 
 <!-- ======================= MENU SECUNDARIO SIMPLE ======================= -->
+{#
 <div class="container">
     <div class="page-header">
         <div class="logo"><a href="index.html" title=""><img src="images/logo.png" alt=""></a></div>
@@ -74,11 +60,12 @@
         </ul>
     </div>
 </div>
+#}
 <!-- ======================= FIN: MENU SECUNDARIO SIMPLE ======================= -->
 
 
 <!-- Page container -->
-<div class="page-container container">
+<div class="page-container container margin-top-section">
 
     <!-- ======================= MENU PRIMARIO LATERAL IZQUIERDO ======================= -->
     <div class="sidebar collapse">
@@ -100,33 +87,14 @@
 
     <!-- Page content -->
     <div class="page-content">
-        <!-- ======================= BARRA SUPERIOR DEL CONTENIDO ======================= -->
 
-        <!-- Page title -->
-        <div class="page-title">
-            <h5><i class="fa fa-bars"></i> Fixed navbar <small>Blank page</small></h5>
-
-
-            <div class="btn-group">
-                <a href="#" class="btn btn-link btn-lg btn-icon dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i><span class="caret"></span></a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li><a href="#">One more line</a></li>
-                </ul>
-            </div>
-
-        </div>
         {{ content() }}
-        <!-- /page title -->
+
         <!-- Footer -->
         <div class="footer">
-            &copy; Copyright 2011. All rights reserved. It's Brain admin theme by <a href="#" title="">Eugene Kopyov</a>
+            &copy; Copyright 2015. Todos los derechos reservados.
         </div>
         <!-- /footer -->
-
-
     </div>
     <!-- /page content -->
 
