@@ -8,7 +8,7 @@
 
             <!-- Login wrapper -->
             <div class="login-wrapper">
-                {{ form('index/validar','method':'post') }}
+                {{ form('sesion/validar','method':'post') }}
                     {{ content() }}
                     <div class="panel panel-default">
                         <div class="panel-heading"><h6 class="panel-title"><i class="fa fa-user"></i> Bienvenido</h6>
