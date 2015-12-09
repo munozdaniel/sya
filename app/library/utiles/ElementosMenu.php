@@ -19,7 +19,7 @@ class ElementosMenu extends \Phalcon\Mvc\User\Component
             'perfil'=>array(
                 'icono'=>'fa fa-user',
                 'leyenda'=>'Perfil',
-                'url'=>'sesion/perfil'
+                'url'=>'usuarios/index'
             ),
             'config'=>array(
                 'icono'=>'fa fa-cog',
