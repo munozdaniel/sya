@@ -17,7 +17,7 @@
             {{ elemento.getUsuario() }}
 
         </div>
-        <!-- ======================= MENU SUPERIOR DERECHO ======================= -->
+        <!-- ======================= MENU SUPERIOR DERECHO =======================
         <ul class="nav navbar-nav navbar-right collapse" id="navbar-right">
             <li>
                 <a href="#">
@@ -41,26 +41,21 @@
                     <span>Notificaciones</span>
                 </a>
             </li>
-        </ul>
+        </ul>-->
     </div>
 </div>
 <!-- /navbar -->
 
 
-<!-- ======================= MENU SECUNDARIO SIMPLE ======================= -->
-{#
+<!-- ======================= ICONO DE LA EMPRESA =======================
+
 <div class="container">
     <div class="page-header">
-        <div class="logo"><a href="index.html" title=""><img src="images/logo.png" alt=""></a></div>
-        <ul class="middle-nav">
-            <li><a href="#" class="btn btn-default"><i class="fa fa-comments-o"></i> <span>Support tickets</span></a><div class="label label-info">9</div></li>
-            <li><a href="#" class="btn btn-default"><i class="fa fa-bars"></i> <span>Statistics</span></a></li>
-            <li><a href="#" class="btn btn-default"><i class="fa fa-male"></i> <span>User list</span></a></li>
-            <li><a href="#" class="btn btn-default"><i class="fa fa-money"></i> <span>Billing panel</span></a></li>
-        </ul>
+        <div class="logo"><a href="index.html" title=""><img src="http://placehold.it/190x90" alt=""></a></div>
+
     </div>
-</div>
-#}
+</div>-->
+
 <!-- ======================= FIN: MENU SECUNDARIO SIMPLE ======================= -->
 
 
@@ -70,16 +65,26 @@
     <!-- ======================= MENU PRIMARIO LATERAL IZQUIERDO ======================= -->
     <div class="sidebar collapse">
         <ul class="navigation">
-            <li><a href="index.html"><i class="fa fa-laptop"></i> Dashboard</a></li>
-            <li class="active">
-                <a href="#" class="expand" id="second-level"><i class="fa fa-copy"></i> Blank pages <span class="label label-info">6</span></a>
+            <li><a href="index.html"><i class="fa fa-laptop"></i>  MENÚ</a></li>
+            <li>
+                <a href="#" class="expand"><i class="fa fa-align-justify"></i> Categoria 1</a>
                 <ul>
-                    <li class="active"><a href="blank_fixed_navbar.html">Fixed navbar</a></li>
-                    <li><a href="blank_static_navbar.html">Static navbar</a></li>
-                    <li><a href="blank_collapsed_sidebar.html">Collapsed sidebar</a></li>
-                    <li><a href="blank_full_width.html">Full width page</a></li>
+                    <li><a href="form_components.html">item 1</a></li>
+                    <li><a href="form_validation.html">item 2</a></li>
+                    <li><a href="wysiwyg.html">item 3</a></li>
+                    <li><a href="form_layouts.html">item 4</a></li>
                 </ul>
             </li>
+            <li>
+                <a href="#" class="expand"><i class="fa fa-table"></i>  Categoria 2</a>
+                <ul>
+                    <li><a href="form_components.html">item 1</a></li>
+                    <li><a href="form_validation.html">item 2</a></li>
+                    <li><a href="wysiwyg.html">item 3</a></li>
+                    <li><a href="form_layouts.html">item 4</a></li>
+                </ul>
+            </li>
+
         </ul>
     </div>
     <!-- ======================= FIN: MENU PRIMARIO LATERAL IZQUIERDO ======================= -->
