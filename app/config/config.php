@@ -18,7 +18,8 @@ return new \Phalcon\Config(array(
         'viewsDir'       => APP_PATH . '/app/views/',
         'pluginsDir'     => APP_PATH . '/app/plugins/',
         'libraryDir'     => APP_PATH . '/app/library/',
-        'utilesDir'     => APP_PATH . '/app/library/utiles',
+        'excelDir'     => APP_PATH . '/app/library/excel/',
+        'utilesDir'     => APP_PATH . '/app/library/utiles/',
         'cacheDir'       => APP_PATH . '/app/cache/',
         'baseUri'        => '/sya/',
     )
