@@ -32,7 +32,7 @@ class Seguridad extends \Phalcon\Mvc\User\Plugin
             $this->flash->message('problema',"<p>ZONA RESTRINGIDA, NO TIENES PERMISO PARA ACCEDER A LA SECCIÓN SOLICITADA</p>");
             $dispatcher->forward(
                 array(
-                    'controller' => 'sesion',
+                    'controller' => 'index',
                     'action' => 'index'
                 )
             );
