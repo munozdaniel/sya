@@ -17,31 +17,33 @@
             {{ elemento.getUsuario() }}
 
         </div>
-        <!-- ======================= MENU SUPERIOR DERECHO =======================
+
+        <!-- ======================= MENU SUPERIOR DERECHO =======================-->
+
         <ul class="nav navbar-nav navbar-right collapse" id="navbar-right">
             <li>
                 <a href="#">
-                    <i class="fa fa-rotate-right"></i>
-                    <span>Actualizaciones</span>
-                    <strong class="label label-danger">15</strong>
+                    <span>Agregar Orden</span>
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <i class="fa fa-comments"></i>
-                    <span>Mensajes</span>
-                    <strong class="label label-danger">7</strong>
+                    <span>Listar Planilla</span>
                 </a>
             </li>
 
             <li>
                 <a href="#">
-                    <i class="fa fa-tasks"></i>
-                    <span>Notificaciones</span>
+                    <span>Generar Excel</span>
                 </a>
             </li>
-        </ul>-->
+            <li>
+                <a href="#">
+                    <span>Filtrar</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
 <!-- /navbar -->
@@ -67,16 +69,21 @@
         <ul class="navigation">
             <li><a href="index.html"><i class="fa fa-laptop"></i>  MENÚ</a></li>
             <li>
-                <a href="#" class="expand"><i class="fa fa-align-justify"></i> Categoria 1</a>
+                <a href="#" class="expand"><i class="fa fa-align-justify"></i> AGREGAR</a>
                 <ul>
-                    <li><a href="form_components.html">item 1</a></li>
-                    <li><a href="form_validation.html">item 2</a></li>
-                    <li><a href="wysiwyg.html">item 3</a></li>
-                    <li><a href="form_layouts.html">item 4</a></li>
+                    <li><a href="form_components.html">Agregar Planilla</a></li>
+                    <li><a href="form_validation.html">Agregar Orden</a></li>
+                    <li><a href="wysiwyg.html">Agregar Transporte</a></li>
+                    <li><a href="form_layouts.html">Agregar Viaje</a></li>
+                    <li><a href="form_layouts.html">Agregar Tipo de Equipo</a></li>
+                    <li><a href="form_layouts.html">Agregar Tipo de Carga</a></li>
+                    <li><a href="form_layouts.html">Agregar Chofer</a></li>
+                    <li><a href="form_layouts.html">Agregar Tarifa</a></li>
+                    <li><a href="form_layouts.html">Agregar Cliente</a></li>
                 </ul>
             </li>
             <li>
-                <a href="#" class="expand"><i class="fa fa-table"></i>  Categoria 2</a>
+                <a href="#" class="expand"><i class="fa fa-table"></i> LISTADO </a>
                 <ul>
                     <li><a href="form_components.html">item 1</a></li>
                     <li><a href="form_validation.html">item 2</a></li>

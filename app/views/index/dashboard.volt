@@ -7,7 +7,7 @@
             <li><a href="#">Action</a></li>
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
-            <li><a href="#">One more line</a></li>
+            <li>{{ link_to('index/generarExcel','GENERAR EXCEL') }}</li>
         </ul>
     </div>
 </div>
