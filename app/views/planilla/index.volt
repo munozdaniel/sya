@@ -1,59 +1,43 @@
-<!-- Page title -->
-<div class="page-title">
-    <h5><i class="fa fa-bars"></i> Fixed navbar <small>Blank page</small></h5>
-    <div class="btn-group">
-        <a href="#" class="btn btn-link btn-lg btn-icon dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i><span class="caret"></span></a>
-        <ul class="dropdown-menu dropdown-menu-right">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li><a href="#">One more line</a></li>
-        </ul>
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Buscar planilla</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+
+                <div align="right">
+                    {{ link_to("planilla/new", "crear planilla",'class':'btn btn-large btn-danger btn-flat') }}
+                </div>
+                {{ content() }}
+                {{ form("planilla/search", "method":"post", "autocomplete" : "") }}
+                    <div class="box-body">
+                        <label for="planilla_id">N° Planilla</label>
+                        <div class="form-group">
+                            {{ text_field("planilla_id", "type" : "numeric") }}
+                        </div>
+                        <label for="planilla_nombreCliente">Nombre del Cliente</label>
+                        <div class="form-group">
+                            {{ text_field("planilla_nombreCliente", "size" : 30) }}
+                        </div>
+                        <label for="planilla_nombreCliente">Fecha de Creacion</label>
+                        <div class="form-group">
+                            {{ text_field("planilla_fecha", "type" : "date") }}
+                        </div>
+                    </div><!-- /.box-body -->
+
+                    <div class="box-footer">
+                        {{ submit_button("Buscar",'class':'btn btn-large btn-primary btn-flat') }}
+                    </div>
+                </form>
+
+            </div><!-- /.box -->
+        </div>
     </div>
-</div>
-<!-- /page title -->
-{{ content() }}
+</section>
 
-<div align="right">
-    {{ link_to("planilla/new", "Create planilla") }}
-</div>
 
-{{ form("planilla/search", "method":"post", "autocomplete" : "off") }}
 
-<div align="center">
-    <h1>Search planilla</h1>
-</div>
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="planilla_id">Planilla</label>
-        </td>
-        <td align="left">
-            {{ text_field("planilla_id", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="planilla_nombreCliente">Planilla Of NombreCliente</label>
-        </td>
-        <td align="left">
-            {{ text_field("planilla_nombreCliente", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="planilla_fecha">Planilla Of Fecha</label>
-        </td>
-        <td align="left">
-                {{ text_field("planilla_fecha", "type" : "date") }}
-        </td>
-    </tr>
-
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Search") }}</td>
-    </tr>
-</table>
-
-</form>
