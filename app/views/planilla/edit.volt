@@ -1,39 +1,39 @@
-{{ content() }}
-{{ form("planilla/save", "method":"post") }}
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Editar planilla</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
 
-<table width="100%">
-    <tr>
-        <td align="left">{{ link_to("planilla", "Go Back") }}</td>
-        <td align="right">{{ submit_button("Save") }}</td>
-    </tr>
-</table>
+                {{ content() }}
+                {{ form("planilla/save", "method":"post") }}
+                <table width="100%">
+                    <tr>
+                        <td align="left">
+                            {{ link_to("planilla", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                        </td>
+                    </tr>
+                </table>
 
-<div align="center">
-    <h1>Edit planilla</h1>
-</div>
+                <div class="box-body">
+                    <label for="planilla_nombreCliente">Nombre de la Planilla</label>
+                    <div class="form-group">
+                        {{ text_field("planilla_nombreCliente", "size" : 30) }}
+                    </div>
+                </div><!-- /.box-body -->
 
-<table>
-    <tr>
-        <td align="right">
-            <label for="planilla_nombreCliente">Planilla Of NombreCliente</label>
-        </td>
-        <td align="left">
-            {{ text_field("planilla_nombreCliente", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="planilla_fecha">Planilla Of Fecha</label>
-        </td>
-        <td align="left">
-                {{ text_field("planilla_fecha", "type" : "date") }}
-        </td>
-    </tr>
+                <div class="box-footer">
+                    {{ hidden_field("planilla_id") }}
+                    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
+                </div>
+                </form>
 
-    <tr>
-        <td>{{ hidden_field("id") }}</td>
-        <td>{{ submit_button("Save") }}</td>
-    </tr>
-</table>
+            </div><!-- /.box -->
+        </div>
+    </div>
+</section>
 
-</form>
