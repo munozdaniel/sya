@@ -1,114 +1,215 @@
-<!-- Navbar -->
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <div class="hidden-lg pull-right">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-right">
-                    <span class="sr-only">Toggle navigation</span>
-                    <i class="fa fa-chevron-down"></i>
-                </button>
+<!-- Site wrapper -->
+<div class="wrapper">
 
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar">
-                    <span class="sr-only">Toggle sidebar</span>
-                    <i class="fa fa-bars"></i>
-                </button>
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="../../index2.html" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>S</b>&A</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>s&a</b> ALL SERVICE</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">Alexander Pierce</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                <p>
+                                    Nombre de usuario
+                                    <small>rol</small>
+                                </p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-default btn-flat">Salir</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    </li>
+                </ul>
             </div>
-            <!-- ======================= MENU DEL USUARIO ======================= -->
-            {{ elemento.getUsuario() }}
+        </nav>
+    </header>
 
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">MENÚ DE NAVEGACIÓN</li>
+                {#====== ITEM SENCILLO =======#}
+                <li>
+                    {{ link_to('index/dashboard','<i class="fa fa-laptop"></i> <span>Inicio</span> ') }}
+                </li>
+                {#====== ITEM ARBOL =======#}
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-edit"></i> <span>Formularios</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Crear Planilla') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Agregar Orden') }}</li>
+                    </ul>
+                </li>
+                {#====== ITEM ARBOL =======#}
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-table"></i> <span>Tablas</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Ver Ordenes') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Exportar Excel') }}</li>
+                    </ul>
+                </li>
+                {#====== ITEM ARBOL =======#}
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-search"></i> <span>Filtro</span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Filtro Personalizado') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Planilla') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Orden') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Transporte') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Viaje') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tipo Equipo') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tipo Carga') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Chofer') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tarifa') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Cliente') }}</li>
+                    </ul>
+                </li>
+                {#====== ITEM SENCILLO =======#}
+                <li>
+                    {{ link_to('index/dashboard','<i class="fa fa-pie-chart"></i> <span>Estadisticas</span> ') }}
+                </li>
+                {#====== ITEM ARBOL =======#}
+                <li class="header">ADMINISTRADOR</li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa  fa-user"></i>
+                        <span>Gestionar</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Transporte') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Tipo Equipo') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Tipo Carga') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Chofer') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Cliente') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Yacimiento') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Equipo/Pozo') }}</li>
+                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Centro Costo') }}</li>
+                    </ul>
+                </li>
+
+
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- =============================================== -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+       {{ content() }}
+    </div><!-- /.content-wrapper -->
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 1.0.0
         </div>
+        <strong>Copyright &copy; 2015 <a href="http://almsaeedstudio.com">S&A All Service</a>.</strong> Todos los derechos reservados.
+    </footer>
 
-        <!-- ======================= MENU SUPERIOR DERECHO =======================-->
-
-        <ul class="nav navbar-nav navbar-right collapse" id="navbar-right">
-            <li>
-                <a href="#">
-                    <span>Agregar Orden</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Listar Planilla</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Generar Excel</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <span>Filtrar</span>
-                </a>
-            </li>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
         </ul>
-    </div>
-</div>
-<!-- /navbar -->
+        <!-- Tab panes -->
+        <div class="tab-content">
 
+            <!-- Stats tab content -->
+            <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
+            <!-- Settings tab content -->
+            <div class="tab-pane" id="control-sidebar-settings-tab">
+                <form method="post">
+                    <h3 class="control-sidebar-heading">Configuración de Usuario</h3>
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            {{ link_to('','Buscar usuario <i class="fa fa-toggle-right pull-right"></i>') }}
+                        </label>
+                        <p>
+                            Busca los usuarios por diferentes criterios
+                        </p>
+                    </div><!-- /.form-group -->
 
-<!-- ======================= ICONO DE LA EMPRESA =======================
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            {{ link_to('','Agregar usuario <i class="fa fa-toggle-right pull-right"></i>') }}
+                        </label>
+                        <p>
+                            Ingresa un nuevo usuario al sistema.
+                        </p>
+                    </div><!-- /.form-group -->
 
-<div class="container">
-    <div class="page-header">
-        <div class="logo"><a href="index.html" title=""><img src="http://placehold.it/190x90" alt=""></a></div>
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            {{ link_to('','Agregar permisos <i class="fa fa-toggle-right pull-right"></i>') }}
+                        </label>
+                        <p>
+                            Vincula las paginas con los roles.
+                        </p>
+                    </div><!-- /.form-group -->
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            {{ link_to('','Asignar rol <i class="fa fa-toggle-right pull-right"></i>') }}
+                        </label>
+                        <p>
+                            Vincula al usuario con un rol especifico.
+                        </p>
+                    </div><!-- /.form-group -->
 
-    </div>
-</div>-->
-
-<!-- ======================= FIN: MENU SECUNDARIO SIMPLE ======================= -->
-
-
-<!-- Page container -->
-<div class="page-container container margin-top-section">
-
-    <!-- ======================= MENU PRIMARIO LATERAL IZQUIERDO ======================= -->
-    <div class="sidebar collapse">
-        <ul class="navigation">
-            <li><a href="index.html"><i class="fa fa-laptop"></i>  MENÚ</a></li>
-            <li>
-                <a href="#" class="expand"><i class="fa fa-align-justify"></i> AGREGAR</a>
-                <ul>
-                    <li><a href="form_components.html">Agregar Planilla</a></li>
-                    <li><a href="form_validation.html">Agregar Orden</a></li>
-                    <li><a href="wysiwyg.html">Agregar Transporte</a></li>
-                    <li><a href="form_layouts.html">Agregar Viaje</a></li>
-                    <li><a href="form_layouts.html">Agregar Tipo de Equipo</a></li>
-                    <li><a href="form_layouts.html">Agregar Tipo de Carga</a></li>
-                    <li><a href="form_layouts.html">Agregar Chofer</a></li>
-                    <li><a href="form_layouts.html">Agregar Tarifa</a></li>
-                    <li><a href="form_layouts.html">Agregar Cliente</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" class="expand"><i class="fa fa-table"></i> LISTADO </a>
-                <ul>
-                    <li><a href="form_components.html">item 1</a></li>
-                    <li><a href="form_validation.html">item 2</a></li>
-                    <li><a href="wysiwyg.html">item 3</a></li>
-                    <li><a href="form_layouts.html">item 4</a></li>
-                </ul>
-            </li>
-
-        </ul>
-    </div>
-    <!-- ======================= FIN: MENU PRIMARIO LATERAL IZQUIERDO ======================= -->
-
-
-    <!-- Page content -->
-    <div class="page-content">
-
-        {{ content() }}
-
-        <!-- Footer -->
-        <div class="footer">
-            &copy; Copyright 2015. Todos los derechos reservados.
+                </form>
+            </div><!-- /.tab-pane -->
         </div>
-        <!-- /footer -->
-    </div>
-    <!-- /page content -->
-
-</div>
-<!-- page container -->
+    </aside><!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div><!-- ./wrapper -->
