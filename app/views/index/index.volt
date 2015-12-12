@@ -1,62 +1,43 @@
-<!-- Page container -->
-<section class="full-width">
-    <div class="page-container container">
+<section  class="">
+    <div class="login-box">
 
-        <!-- Page content -->
-        <div class="page-content">
+        <div class="login-logo">
+            <a href="../../index2.html"><b>s&a</b> all Service</a>
+        </div><!-- /.login-logo -->
 
+        <div class="login-box-body">
+            <p class="login-box-msg">Identificarse para iniciar sesión</p>
 
-            <!-- Login wrapper -->
-            <div class="login-wrapper">
-                {{ form('sesion/validar','method':'post') }}
-                    {{ content() }}
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h6 class="panel-title"><i class="fa fa-user"></i> Bienvenido</h6>
+            {{ form('sesion/validar','method':'post') }}
+                <div class="form-group has-feedback">
+                    <input id="sesion_nombre" name="sesion_nombre" type="text" class="form-control" placeholder="Nombre de Usuario">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input id="sesion_contrasena" name="sesion_contrasena" type="password" class="form-control" placeholder="Contraseña">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox"> Remember Me
+                            </label>
                         </div>
-                        <div class="panel-body">
-                            <div class="form-group has-feedback">
-                                <label>Usuario</label>
-                                <input id="sesion_nombre" name="sesion_nombre" type="text" class="form-control" placeholder="Nombre de Usuario">
-                                <i class="fa fa-user form-control-feedback"></i>
-                            </div>
+                    </div><!-- /.col -->
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Iniciar</button>
+                    </div><!-- /.col -->
+                </div>
+            </form>
 
-                            <div class="form-group has-feedback">
-                                <label>Contraseña</label>
-                                <input id="sesion_contrasena" name="sesion_contrasena" type="password" class="form-control" placeholder="Contraseña">
-                                <i class="fa fa-lock form-control-feedback"></i>
-                            </div>
+            <div class="social-auth-links text-center">
+                <a href="#recuperarDatos" role="button" class="" data-toggle="modal">Olvidó su contraseña?</a>
+            </div><!-- /.social-auth-links -->
 
-                            <div class="row form-actions">
-                                <div class="col-xs-6">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="styled">
-                                            Recordarme
-                                        </label>
-                                    </div>
-                                </div>
+        </div><!-- /.login-box-body -->
+    </div><!-- /.login-box -->
 
-                                <div class="col-xs-6">
-                                    <button type="submit" class="btn btn-warning pull-right"><i class="fa fa-bars"></i>
-                                        Iniciar Sesión
-                                    </button>
-                                </div>
-                                <div class="col-xs-12">
-                                    <hr>
-                                    <!-- Button HTML (to Trigger Modal) -->
-                                    <a href="#recuperarDatos" role="button" class="btn btn-block btn-primary" data-toggle="modal">Olvidó su contraseña?</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- /login wrapper -->
-
-        </div>
-        <!-- /page content -->
-
-    </div>
     <!--=========== RecuperarContraseña ================-->
     <div id="recuperarDatos" class="modal fade">
         <div class="modal-dialog">

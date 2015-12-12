@@ -20,7 +20,14 @@ class IndexController extends ControllerBase
     public function indexAction()
     {
         $this->tag->setTitle('Iniciar Sesión');
-        $this->assets->collection('header')->addJs('js/application_blank.js');
+        $this->assets->collection('footer')->addJs('plugins/iCheck/icheck.min.js');
+        $this->assets->collection('footerInline')->addInlineJs(" $(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%' // optional
+        });
+      });");
     }
 
 
@@ -31,7 +38,6 @@ class IndexController extends ControllerBase
     {
         $this->view->setTemplateAfter('principal');
         $this->tag->setTitle('Tablero Principal');
-        $this->assets->collection('header')->addJs('js/application.js');
 
 
     }
