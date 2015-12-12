@@ -9,7 +9,6 @@ class PlanillaController extends ControllerBase
     {
         $this->view->setTemplateAfter('principal');
         $this->tag->setTitle('Planilla');
-        $this->assets->collection('header')->addJs('js/application_blank.js');
         parent::initialize();
 
     }
@@ -26,6 +25,17 @@ class PlanillaController extends ControllerBase
      */
     public function searchAction()
     {
+        $this->assets->collection('headerCss')
+            ->addCss('plugins/datatables/dataTables.bootstrap.css');
+        $this->assets->collection('footer')
+            ->addJs('plugins/datatables/jquery.dataTables.min.js')
+            ->addJs('plugins/datatables/dataTables.bootstrap.min.js');
+        $this->assets->collection('footerInline')->addInlineJs('
+        $(function () {
+        $("#id_planilla").DataTable();
+
+});')
+        ;
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -77,10 +87,12 @@ class PlanillaController extends ControllerBase
     {
 
         if (!$this->request->isPost()) {
-
+            $this->flash->error($planilla_id);
             $planilla = Planilla::findFirstByplanilla_id($planilla_id);
+            $this->flash->error($planilla->planilla_nombreCliente);
+
             if (!$planilla) {
-                $this->flash->error("planilla was not found");
+                $this->flash->error("La planilla no fue encontrada");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "planilla",
@@ -98,7 +110,8 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Creates a new planilla
+     * Creacion de una nueva planilla. Al usuario se le solicita unicamente el nombre de la planilla.
+     *
      */
     public function createAction()
     {
@@ -113,7 +126,7 @@ class PlanillaController extends ControllerBase
         $planilla = new Planilla();
 
         $planilla->setPlanillaNombrecliente($this->request->getPost("planilla_nombreCliente"));
-        $planilla->setPlanillaFecha($this->request->getPost("planilla_fecha"));
+        $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
         
 
         if (!$planilla->save()) {
@@ -127,7 +140,7 @@ class PlanillaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("planilla was created successfully");
+        $this->flash->success("La PLANILLA ha sido creada correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "planilla",
