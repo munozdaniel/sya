@@ -41,7 +41,7 @@
                                     <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                                     <td>{{ planilla.getPlanillaFecha() }}</td>
                                     <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar") }}</td>
-                                    <td>{{ link_to("planilla/delete/"~planilla.getPlanillaId(), "Eliminar") }}</td>
+                                    <td>  <a href="#confirmarEliminar" role="button" class="" data-toggle="modal">Eliminar</a></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
@@ -82,4 +82,36 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
+
+
+    <!--=========== ConfirmarEliminar ================-->
+    <div id="confirmarEliminar" class="modal fade modal-danger">
+
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="fa   fa-hand-stop-o"></i> CONFIRMACIÓN</h4>
+                </div>
+                <div class="modal-body margin-left-right-one"style="border-left: 0 !important; border-right: 0 !important;">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 ">
+                            <!-- START SUBSCRIBE HEADING -->
+                            <div class="heading">
+                                <h2 class="wow fadeInLeftBig">Esta seguro de continuar con la eliminación? </h2>
+                                <p>Recuerde que se eliminarán todas las ordenes ligadas a la planilla.</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
+                    {{ link_to("planilla/delete/"~planilla.getPlanillaId(), "Eliminar", 'type':'button','class':'btn btn-outline') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--=========== FIN:ConfirmarEliminar ================-->
 </section><!-- /.content -->
+

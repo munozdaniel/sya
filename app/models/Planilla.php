@@ -22,6 +22,23 @@ class Planilla extends \Phalcon\Mvc\Model
     protected $planilla_fecha;
 
     /**
+     *
+     * @var integer
+     */
+    public $planilla_habilitado;
+    /**
+     * Method to set the value of field planilla_habilitado
+     *
+     * @param integer planilla_habilitado
+     * @return $this
+     */
+    public function setPlanillaHabilitado($planilla_habilitado)
+    {
+        $this->planilla_habilitado = $planilla_habilitado;
+
+        return $this;
+    }
+    /**
      * Method to set the value of field planilla_id
      *
      * @param integer $planilla_id
