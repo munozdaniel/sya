@@ -3,21 +3,29 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Tell the browser to be responsive to screen width -->
+        {#Especificacion del tamaño de pantalla +#}
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         {{ getTitle() }}
-        <link rel="shortcut icon" type="image/png" href="{{ url('img/favicon.ico') }}">
-        {#Archivos Basicos#}
-        {{ stylesheet_link('css/bootstrap.min.css') }}
-        {{ stylesheet_link('css/brain-theme.css') }}
-        {{ stylesheet_link('css/styles.css') }}
-        {{ stylesheet_link('css/custom.css') }}
-        {{ stylesheet_link('css/font-awesome.min.css') }}
-        {{ stylesheet_link("http://fonts.googleapis.com/css?family=Cuprum", false) }}
-        {{ javascript_include('js/jquery.min.js') }}
-        {{ javascript_include('js/jquery-ui.min.js') }}
-        {{ javascript_include('js/plugins/interface/collapsible.min.js') }}
-        {{ javascript_include('js/bootstrap.min.js') }}
-        {#FIN Archivos Basicos#}
+        <link rel="shortcut icon" type="image/png" href="{{ url('favicon.ico') }}">
+        {#Archivos Globales#}
+        {# Bootstrap 3.3.5 #}
+        {{ stylesheet_link('bootstrap/css/bootstrap.min.css') }}
+        {#  Font Awesome #}
+        {{ stylesheet_link("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css", false) }}
+        {#  Ionicons #}
+        {{ stylesheet_link("https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css", false) }}
+        {# Template de Estilo#}
+        {{ stylesheet_link('dist/css/AdminLTE.min.css') }}
+        {# Skins Colors#}
+        {{ stylesheet_link('dist/css/skins/skin-blue.min.css') }}
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        {#FIN Archivos Globales#}
         {#Js Particulares#}
         {%  if (assets.collection("header")) %}
             {{  assets.outputJs("header") }}
@@ -27,8 +35,19 @@
         {% endif %}
         {#Fin: Js Particulares#}
     </head>
-    <body>
+    <body class="hold-transition skin-blue layout-boxed  ">
         {{ content() }}
+        {#Js Globales#}
+        {# jQuery 2.1.4 #}
+        {{ javascript_include('plugins/jQuery/jQuery-2.1.4.min.js') }}
+        {# Bootstrap 3.3.5 #}
+        {{ javascript_include('bootstrap/js/bootstrap.min.js') }}
+        {# AdminLTE App #}
+        {{ javascript_include('dist/js/app.min.js') }}
+        {# FastClick     #}
+        {{ javascript_include('plugins/fastclick/fastclick.min.js') }}
+        {# Slimscroll #}
+        {{ javascript_include('plugins/slimScroll/jquery.slimscroll.min.js') }}
         {#Js Particulares#}
         {%  if (assets.collection("footer")) %}
             {{  assets.outputJs("footer") }}
