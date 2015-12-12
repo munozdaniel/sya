@@ -25,8 +25,12 @@
                         </div>
                         <label for="planilla_nombreCliente">Fecha de Creacion</label>
                         <div class="form-group">
-                            {{ text_field("planilla_fecha", "type" : "date") }}
+                            {{ date_field("planilla_fecha", "type" : "date") }}
                         </div>
+                        {# Si no es ADMIN mostrar unicamente los habilitados #}
+                        {% if admin!=1 %}
+                            {{ hidden_field("planilla_habilitado", "value" : "1" ) }}
+                        {% endif %}
                     </div><!-- /.box-body -->
 
                     <div class="box-footer">

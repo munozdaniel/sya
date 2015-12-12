@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -12,16 +12,24 @@ class PlanillaController extends ControllerBase
         parent::initialize();
 
     }
+
     /**
      * Index action
      */
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        $miSesion = $this->session->get('auth');
+        if($miSesion['rol_nombre']=='ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
     }
 
     /**
-     * Searches for planilla
+     * Buscando las planillas.
+     * SI el usuario tiene rol de administrador podra ver todas las planillas.
+     * Sino se veran las Habilitadas unicamente
      */
     public function searchAction()
     {
@@ -34,8 +42,7 @@ class PlanillaController extends ControllerBase
         $(function () {
         $("#id_planilla").DataTable();
 
-});')
-        ;
+        });');
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -53,7 +60,7 @@ class PlanillaController extends ControllerBase
 
         $planilla = Planilla::find($parameters);
         if (count($planilla) == 0) {
-            $this->flash->notice("The search did not find any planilla");
+            $this->flash->notice("No se encontraron resultados");
 
             return $this->dispatcher->forward(array(
                 "controller" => "planilla",
@@ -63,7 +70,7 @@ class PlanillaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $planilla,
-            "limit"=> 10,
+            "limit" => 10,
             "page" => $numberPage
         ));
 
@@ -79,7 +86,7 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Edits a planilla
+     * Arma el formulario con datos a partir del id que viene por POST
      *
      * @param string $planilla_id
      */
@@ -87,9 +94,7 @@ class PlanillaController extends ControllerBase
     {
 
         if (!$this->request->isPost()) {
-            $this->flash->error($planilla_id);
             $planilla = Planilla::findFirstByplanilla_id($planilla_id);
-            $this->flash->error($planilla->planilla_nombreCliente);
 
             if (!$planilla) {
                 $this->flash->error("La planilla no fue encontrada");
@@ -105,7 +110,7 @@ class PlanillaController extends ControllerBase
             $this->tag->setDefault("planilla_id", $planilla->getPlanillaId());
             $this->tag->setDefault("planilla_nombreCliente", $planilla->getPlanillaNombrecliente());
             $this->tag->setDefault("planilla_fecha", $planilla->getPlanillaFecha());
-            
+
         }
     }
 
@@ -127,7 +132,7 @@ class PlanillaController extends ControllerBase
 
         $planilla->setPlanillaNombrecliente($this->request->getPost("planilla_nombreCliente"));
         $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
-        
+
 
         if (!$planilla->save()) {
             foreach ($planilla->getMessages() as $message) {
@@ -150,7 +155,7 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Saves a planilla edited
+     * Guarda los datos que se editaron.
      *
      */
     public function saveAction()
@@ -167,7 +172,7 @@ class PlanillaController extends ControllerBase
 
         $planilla = Planilla::findFirstByplanilla_id($planilla_id);
         if (!$planilla) {
-            $this->flash->error("planilla does not exist " . $planilla_id);
+            $this->flash->error("La planilla N° " . $planilla_id. " no existe");
 
             return $this->dispatcher->forward(array(
                 "controller" => "planilla",
@@ -176,8 +181,7 @@ class PlanillaController extends ControllerBase
         }
 
         $planilla->setPlanillaNombrecliente($this->request->getPost("planilla_nombreCliente"));
-        $planilla->setPlanillaFecha($this->request->getPost("planilla_fecha"));
-        
+
 
         if (!$planilla->save()) {
 
@@ -192,7 +196,7 @@ class PlanillaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("planilla was updated successfully");
+        $this->flash->success("La planilla ha sido actualizada correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "planilla",
@@ -202,7 +206,8 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Deletes a planilla
+     * Eliminar una planilla de manera LOGICA.
+     * Al Eliminar una planilla se eliminan todas las ordenes relacionadas (Eliminacion Logica).
      *
      * @param string $planilla_id
      */
@@ -211,15 +216,24 @@ class PlanillaController extends ControllerBase
 
         $planilla = Planilla::findFirstByplanilla_id($planilla_id);
         if (!$planilla) {
-            $this->flash->error("planilla was not found");
+            $this->flash->error("La planilla no ha sido encontrada");
 
             return $this->dispatcher->forward(array(
                 "controller" => "planilla",
                 "action" => "index"
             ));
         }
+        $eliminados = Orden::eliminarByPlanilla_id();
+        if(!$eliminados){
+            $this->flash->error("Hubo un problema al eliminar las ordenes relacionadas a la planilla N° $planilla_id");
 
-        if (!$planilla->delete()) {
+            return $this->dispatcher->forward(array(
+                "controller" => "planilla",
+                "action" => "index"
+            ));
+        }
+        $planilla->planilla_habilitado =0 ;
+        if (!$planilla->update()) {
 
             foreach ($planilla->getMessages() as $message) {
                 $this->flash->error($message);
@@ -231,7 +245,7 @@ class PlanillaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("planilla was deleted successfully");
+        $this->flash->success("La planilla ha sido eliminada correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "planilla",
