@@ -39,6 +39,15 @@ class Planilla extends \Phalcon\Mvc\Model
         return $this;
     }
     /**
+     * Returns the value of field planilla_id
+     *
+     * @return integer
+     */
+    public function getPlanillaHabilitado()
+    {
+        return $this->planilla_habilitado;
+    }
+    /**
      * Method to set the value of field planilla_id
      *
      * @param integer $planilla_id

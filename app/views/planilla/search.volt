@@ -20,9 +20,6 @@
                 <!-- /.box-header -->
                 {{ content() }}
                 <div class="box-body">
-
-
-
                     <table id="id_planilla" class="table table-bordered table-striped">
                         <thead>
                         <tr>
@@ -31,6 +28,7 @@
                             <th>Fecha de Creación</th>
                             <th>Editar</th>
                             <th>Eliminar</th>
+                            <th style="width: 10px;">EST</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,8 +38,21 @@
                                     <td>{{ planilla.getPlanillaId() }}</td>
                                     <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                                     <td>{{ planilla.getPlanillaFecha() }}</td>
+
+                                    {% if admin == 1 %}
                                     <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar") }}</td>
-                                    <td>  <a href="#confirmarEliminar" role="button" class="" data-toggle="modal">Eliminar</a></td>
+                                    <td>
+                                        <a href="#confirmarEliminar" role="button" class="" data-toggle="modal">Eliminar</a>
+                                    </td>
+                                    {% else %}
+                                    <td> sin acceso </td>
+                                    <td> sin acceso </td>
+                                    {% endif %}
+                                    {% if planilla.getPlanillaHabilitado() == 1 %}
+                                        <td class="bg-green-active"><i class="fa fa-check-circle-o"></i></td>
+                                    {% else %}
+                                        <td class="bg-red-active"><i class="fa fa-remove"></i></td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         {% endif %}
@@ -69,6 +80,7 @@
                             <th>Fecha de Creación</th>
                             <th>Editar</th>
                             <th>Eliminar</th>
+                            <th style="width: 10px;">EST</th>
                         </tr>
                         </tfoot>
                     </table>

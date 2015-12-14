@@ -75,6 +75,11 @@ class PlanillaController extends ControllerBase
         ));
 
         $this->view->page = $paginator->getPaginate();
+        $miSesion = $this->session->get('auth');
+        if($miSesion['rol_nombre']=='ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
     }
 
     /**
@@ -210,6 +215,7 @@ class PlanillaController extends ControllerBase
      * Al Eliminar una planilla se eliminan todas las ordenes relacionadas (Eliminacion Logica).
      *
      * @param string $planilla_id
+     * @return null
      */
     public function deleteAction($planilla_id)
     {
@@ -223,29 +229,35 @@ class PlanillaController extends ControllerBase
                 "action" => "index"
             ));
         }
-        $eliminados = Orden::eliminarByPlanilla_id();
-        if(!$eliminados){
-            $this->flash->error("Hubo un problema al eliminar las ordenes relacionadas a la planilla N° $planilla_id");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "planilla",
-                "action" => "index"
-            ));
-        }
-        $planilla->planilla_habilitado =0 ;
-        if (!$planilla->update()) {
-
-            foreach ($planilla->getMessages() as $message) {
-                $this->flash->error($message);
+        try{
+            $this->db->begin();
+            $eliminados = Orden::eliminarByPlanilla_id($planilla_id);
+            if(!$eliminados){
+                $this->flash->error("Hubo un problema al eliminar las ordenes relacionadas a la planilla N° $planilla_id");
+                $this->db->rollback();
+                return $this->dispatcher->forward(array(
+                    "controller" => "planilla",
+                    "action" => "index"
+                ));
             }
+            $planilla->planilla_habilitado =0 ;
+            if (!$planilla->update()) {
 
-            return $this->dispatcher->forward(array(
-                "controller" => "planilla",
-                "action" => "search"
-            ));
+                foreach ($planilla->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+                $this->db->rollback();
+                return $this->dispatcher->forward(array(
+                    "controller" => "planilla",
+                    "action" => "search"
+                ));
+            }
+            $this->db->commit();
+            $this->flash->success("La planilla ha sido eliminada correctamente");
         }
-
-        $this->flash->success("La planilla ha sido eliminada correctamente");
+        catch(Phalcon\Mvc\Model\Transaction\Failed $e) {
+            $this->flash->error('Transaccion Fallida: ', $e->getMessage());
+        }
 
         return $this->dispatcher->forward(array(
             "controller" => "planilla",
