@@ -1,5 +1,6 @@
 <?php
 
+use Phalcon\Mvc\Model\Validator\Uniqueness;
 class Transporte extends \Phalcon\Mvc\Model
 {
 
@@ -20,6 +21,12 @@ class Transporte extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $transporte_nroInterno;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $transporte_habilitado;
 
     /**
      * Method to set the value of field transporte_id
@@ -61,6 +68,19 @@ class Transporte extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field transporte_habilitado
+     *
+     * @param integer $transporte_habilitado
+     * @return $this
+     */
+    public function setTransporteHabilitado($transporte_habilitado)
+    {
+        $this->transporte_habilitado = $transporte_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field transporte_id
      *
      * @return integer
@@ -88,6 +108,16 @@ class Transporte extends \Phalcon\Mvc\Model
     public function getTransporteNroInterno()
     {
         return $this->transporte_nroInterno;
+    }
+
+    /**
+     * Returns the value of field transporte_habilitado
+     *
+     * @return integer
+     */
+    public function getTransporteHabilitado()
+    {
+        return $this->transporte_habilitado;
     }
 
     /**
@@ -122,4 +152,19 @@ class Transporte extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+
+    public function validation()
+    {
+
+        $this->validate(
+            new Uniqueness(
+                array(
+                    "field"   => "transporte_dominio",
+                    "message" => "El Dominio ya se encuentra registrado."
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }
