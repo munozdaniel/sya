@@ -40,7 +40,7 @@
                     <td>{{ link_to("transporte/edit/"~transporte.getTransporteId(), "Editar") }}</td>
                     <td>
                         {% if transporte.getTransporteHabilitado() == 1 %}
-                        <a href="#confirmarEliminar" role="button" class="" data-toggle="modal">Eliminar</a>
+                        <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  transporte.getTransporteId() }}">Eliminar</a>
                         {% else %}
                             {{ link_to("transporte/habilitar/"~transporte.getTransporteId(), "Habilitar") }}</td>
                         {%endif%}
@@ -81,7 +81,6 @@
                         <!-- START SUBSCRIBE HEADING -->
                         <div class="heading">
                             <h2 class="wow fadeInLeftBig">Esta seguro de continuar con la eliminación? </h2>
-
                             <p>Recuerde que el transporte eliminado no podrá ser utilizado nuevamente.</p>
                         </div>
 
@@ -90,10 +89,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
-                {{ link_to("transporte/delete/"~transporte.getTransporteId(), "Eliminar", 'type':'button','class':'btn btn-outline') }}
+                {{ form('transporte/eliminar','method':'POST') }}
+                <div  id="cuerpo">
+                {{ hidden_field('id','value':'','form') }}
+                {{ submit_button('Eliminar','class':'btn btn-outline') }}
+                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 <!--=========== FIN:ConfirmarEliminar ================-->
-

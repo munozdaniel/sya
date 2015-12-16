@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -10,13 +10,14 @@ class TransporteController extends ControllerBase
         $this->view->setTemplateAfter('principal');
         $this->tag->setTitle('Transporte');
         $miSesion = $this->session->get('auth');
-        if($miSesion['rol_nombre']=='ADMIN')
+        if ($miSesion['rol_nombre'] == 'ADMIN')
             $this->view->admin = 1;
         else
             $this->view->admin = 0;
         parent::initialize();
 
     }
+
     /**
      * Index action
      */
@@ -35,11 +36,17 @@ class TransporteController extends ControllerBase
         $this->assets->collection('footer')
             ->addJs('plugins/datatables/jquery.dataTables.min.js')
             ->addJs('plugins/datatables/dataTables.bootstrap.min.js');
-        $this->assets->collection('footerInline')->addInlineJs('
-        $(function () {
-        $("#tabla_id").DataTable();
-
-        });');
+        $this->assets->collection('footerInline')
+            ->addInlineJs('
+            $(function () {
+            $("#tabla_id").DataTable();
+            });')
+            ->addInlineJs('
+            $(document).on("click", ".enviar-dato", function () {
+                var id = $(this).data("id");
+                $("#cuerpo #id").val( id );
+            });
+        ');
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, "Transporte", $_POST);
@@ -66,7 +73,7 @@ class TransporteController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $transporte,
-            "limit"=> 10,
+            "limit" => 10,
             "page" => $numberPage
         ));
 
@@ -83,8 +90,8 @@ class TransporteController extends ControllerBase
 
     /**
      * Edits a transporte
-     *
      * @param string $transporte_id
+     * @return bool
      */
     public function editAction($transporte_id)
     {
@@ -107,7 +114,7 @@ class TransporteController extends ControllerBase
             $this->tag->setDefault("transporte_dominio", $transporte->getTransporteDominio());
             $this->tag->setDefault("transporte_nroInterno", $transporte->getTransporteNrointerno());
             $this->tag->setDefault("transporte_habilitado", $transporte->getTransporteHabilitado());
-            
+
         }
     }
 
@@ -129,7 +136,7 @@ class TransporteController extends ControllerBase
         $transporte->setTransporteDominio($this->request->getPost("transporte_dominio"));
         $transporte->setTransporteNrointerno($this->request->getPost("transporte_nroInterno"));
         $transporte->setTransporteHabilitado($this->request->getPost("transporte_habilitado"));
-        
+
 
         if (!$transporte->save()) {
             foreach ($transporte->getMessages() as $message) {
@@ -169,7 +176,7 @@ class TransporteController extends ControllerBase
 
         $transporte = Transporte::findFirstBytransporte_id($transporte_id);
         if (!$transporte) {
-            $this->flash->error("El Transporte N° " . $transporte_id. "no existe");
+            $this->flash->error("El Transporte N° " . $transporte_id . "no existe");
 
             return $this->dispatcher->forward(array(
                 "controller" => "transporte",
@@ -180,7 +187,7 @@ class TransporteController extends ControllerBase
         $transporte->setTransporteDominio($this->request->getPost("transporte_dominio"));
         $transporte->setTransporteNrointerno($this->request->getPost("transporte_nroInterno"));
         $transporte->setTransporteHabilitado(1);
-        
+
 
         if (!$transporte->save()) {
 
@@ -205,46 +212,24 @@ class TransporteController extends ControllerBase
     }
 
     /**
-     * Deletes a transporte
+     * Eliminar un transporte de manera logica.
      *
-     * @param string $transporte_id
-     * @return redireccionamiento
+     * @return bool
      */
-    public function deleteAction($transporte_id)
+    public function eliminarAction()
     {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $transporte = Transporte::findFirstBytransporte_id($id);
+            if (!$transporte) {
+                $this->flash->error("El transporte no ha sido encontrado");
 
-        $transporte = Transporte::findFirstBytransporte_id($transporte_id);
-        if (!$transporte) {
-            $this->flash->error("El transporte no ha sido encontrado");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "transporte",
-                "action" => "index"
-            ));
-        }
-        $transporte->transporte_habilitado = 0;
-        if (!$transporte->update()) {
-
-            foreach ($transporte->getMessages() as $message) {
-                $this->flash->error($message);
+                return $this->dispatcher->forward(array(
+                    "controller" => "transporte",
+                    "action" => "index"
+                ));
             }
-
-            return $this->dispatcher->forward(array(
-                "controller" => "transporte",
-                "action" => "search"
-            ));
-        }
-
-        $this->flash->success("El transporte ha sido eliminado correctamente");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "transporte",
-            "action" => "index"
-        ));
-    }
-    public function habilitarAction($idTransporte){
-            $transporte = Transporte::findFirstByTransporte_id($idTransporte);
-            $transporte->transporte_habilitado = 1;
+            $transporte->transporte_habilitado = 0;
             if (!$transporte->update()) {
 
                 foreach ($transporte->getMessages() as $message) {
@@ -257,12 +242,42 @@ class TransporteController extends ControllerBase
                 ));
             }
 
-            $this->flash->success("El transporte ha sido habilitado");
+            $this->flash->success("El transporte ha sido eliminado correctamente");
 
             return $this->dispatcher->forward(array(
                 "controller" => "transporte",
                 "action" => "search"
             ));
+        }
+    }
+
+    /**
+     * Habilitar un transporte.
+     * @param $idTransporte
+     * @return bool
+     */
+    public function habilitarAction($idTransporte)
+    {
+        $transporte = Transporte::findFirstByTransporte_id($idTransporte);
+        $transporte->transporte_habilitado = 1;
+        if (!$transporte->update()) {
+
+            foreach ($transporte->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "transporte",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El transporte ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "transporte",
+            "action" => "search"
+        ));
     }
 
 }
