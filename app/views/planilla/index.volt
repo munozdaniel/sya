@@ -19,12 +19,12 @@
         <div class="form-group">
             {{ text_field("planilla_nombreCliente", "size" : 30) }}
         </div>
-        <label for="planilla_nombreCliente">Fecha de Creacion</label>
+        <label for="planilla_nombreCliente">Fecha de Creación</label>
 
         <div class="form-group">
             {{ date_field("planilla_fecha", "type" : "date") }}
         </div>
-        {# Si no es ADMIN mostrar unicamente los habilitados #}
+        {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
         {% if admin!=1 %}
             {{ hidden_field("planilla_habilitado", "value" : "1" ) }}
         {% endif %}

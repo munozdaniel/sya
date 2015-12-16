@@ -37,7 +37,11 @@
                     {% if admin == 1 %}
                         <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar") }}</td>
                         <td>
-                            <a href="#confirmarEliminar" role="button" class="" data-toggle="modal">Eliminar</a>
+                        {% if planilla.getPlanillaHabilitado() == 1 %}
+                            <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  planilla.getPlanillaId() }}">Eliminar</a>
+                        {% else %}
+                            {{ link_to("planilla/habilitar/"~planilla.getPlanillaId(), "Habilitar") }}
+                        {%endif%}
                         </td>
                     {% else %}
                         <td> sin acceso</td>
@@ -99,8 +103,7 @@
                         <!-- START SUBSCRIBE HEADING -->
                         <div class="heading">
                             <h2 class="wow fadeInLeftBig">Esta seguro de continuar con la eliminación? </h2>
-
-                            <p>Recuerde que se eliminarán todas las ordenes ligadas a la planilla.</p>
+                            <p>Recuerde que la planilla eliminada no podrá ser utilizada nuevamente.</p>
                         </div>
 
                     </div>
@@ -108,7 +111,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
-                {{ link_to("planilla/delete/"~planilla.getPlanillaId(), "Eliminar", 'type':'button','class':'btn btn-outline') }}
+                {{ form('planilla/eliminar','method':'POST') }}
+                <div  id="cuerpo">
+                    {{ hidden_field('id','value':'','form') }}
+                    {{ submit_button('Eliminar','class':'btn btn-outline') }}
+                </div>
+                </form>
             </div>
         </div>
     </div>

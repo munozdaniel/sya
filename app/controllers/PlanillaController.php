@@ -38,11 +38,17 @@ class PlanillaController extends ControllerBase
         $this->assets->collection('footer')
             ->addJs('plugins/datatables/jquery.dataTables.min.js')
             ->addJs('plugins/datatables/dataTables.bootstrap.min.js');
-        $this->assets->collection('footerInline')->addInlineJs('
-        $(function () {
-        $("#id_planilla").DataTable();
-
-        });');
+        $this->assets->collection('footerInline')
+            ->addInlineJs('
+            $(function () {
+            $("#tabla_id").DataTable();
+            });')
+            ->addInlineJs('
+            $(document).on("click", ".enviar-dato", function () {
+                var id = $(this).data("id");
+                $("#cuerpo #id").val( id );
+            });
+        ');
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -211,6 +217,82 @@ class PlanillaController extends ControllerBase
     }
 
     /**
+     * Eliminacion Logica
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $instancia = Planilla::findFirstByPlanilla_id($id);
+            if (!$instancia) {
+                $this->flash->error("La planilla no ha sido encontrada");
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "planilla",
+                    "action" => "index"
+                ));
+            }
+            $instancia->planilla_habilitado = 0;
+            if (!$instancia->update()) {
+
+                foreach ($instancia->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "planilla",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("La planilla ha sido eliminada correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "planilla",
+                "action" => "search"
+            ));
+        }
+    }
+    /**
+     * Habilitacion logica.
+     * @param $id
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $planilla = Planilla::findFirstByPlanilla_id($id);
+
+        if (!$planilla) {
+            $this->flash->error("La planilla no ha sido encontrada");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "planilla",
+                "action" => "index"
+            ));
+        }
+        $planilla->planilla_habilitado = 1;
+        if (!$planilla->update()) {
+
+            foreach ($planilla->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "planilla",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("La planilla ha sido habilitada");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "planilla",
+            "action" => "search"
+        ));
+    }
+    /**
+     * NO SE USA!
      * Eliminar una planilla de manera LOGICA.
      * Al Eliminar una planilla se eliminan todas las ordenes relacionadas (Eliminacion Logica).
      *
