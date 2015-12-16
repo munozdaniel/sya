@@ -42,7 +42,7 @@
                         {% if transporte.getTransporteHabilitado() == 1 %}
                         <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  transporte.getTransporteId() }}">Eliminar</a>
                         {% else %}
-                            {{ link_to("transporte/habilitar/"~transporte.getTransporteId(), "Habilitar") }}</td>
+                            {{ link_to("transporte/habilitar/"~transporte.getTransporteId(), "Habilitar") }}
                         {%endif%}
                     </td>
                     {% else %}

@@ -31,22 +31,8 @@ class TransporteController extends ControllerBase
      */
     public function searchAction()
     {
-        $this->assets->collection('headerCss')
-            ->addCss('plugins/datatables/dataTables.bootstrap.css');
-        $this->assets->collection('footer')
-            ->addJs('plugins/datatables/jquery.dataTables.min.js')
-            ->addJs('plugins/datatables/dataTables.bootstrap.min.js');
-        $this->assets->collection('footerInline')
-            ->addInlineJs('
-            $(function () {
-            $("#tabla_id").DataTable();
-            });')
-            ->addInlineJs('
-            $(document).on("click", ".enviar-dato", function () {
-                var id = $(this).data("id");
-                $("#cuerpo #id").val( id );
-            });
-        ');
+        parent::importarJsSearch();
+
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, "Transporte", $_POST);
@@ -220,7 +206,7 @@ class TransporteController extends ControllerBase
     {
         if ($this->request->isPost()) {
             $id = $this->request->getPost('id');
-            $transporte = Transporte::findFirstBytransporte_id($id);
+            $transporte = Transporte::findFirstByTransporte_id($id);
             if (!$transporte) {
                 $this->flash->error("El transporte no ha sido encontrado");
 
