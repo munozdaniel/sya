@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class ViajeController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Viaje');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class ViajeController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -36,7 +48,7 @@ class ViajeController extends ControllerBase
 
         $viaje = Viaje::find($parameters);
         if (count($viaje) == 0) {
-            $this->flash->notice("The search did not find any viaje");
+            $this->flash->notice("No se encontraron registros");
 
             return $this->dispatcher->forward(array(
                 "controller" => "viaje",
@@ -73,7 +85,7 @@ class ViajeController extends ControllerBase
 
             $viaje = Viaje::findFirstByviaje_id($viaje_id);
             if (!$viaje) {
-                $this->flash->error("viaje was not found");
+                $this->flash->error("El viaje no ha sido encontrado");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "viaje",
@@ -86,6 +98,7 @@ class ViajeController extends ControllerBase
             $this->tag->setDefault("viaje_id", $viaje->getViajeId());
             $this->tag->setDefault("viaje_origen", $viaje->getViajeOrigen());
             $this->tag->setDefault("viaje_concatenado", $viaje->getViajeConcatenado());
+            $this->tag->setDefault("viaje_habilitado", $viaje->getViajeHabilitado());
             
         }
     }
@@ -107,6 +120,7 @@ class ViajeController extends ControllerBase
 
         $viaje->setViajeOrigen($this->request->getPost("viaje_origen"));
         $viaje->setViajeConcatenado($this->request->getPost("viaje_concatenado"));
+        $viaje->setViajeHabilitado($this->request->getPost("viaje_habilitado"));
         
 
         if (!$viaje->save()) {
@@ -120,7 +134,7 @@ class ViajeController extends ControllerBase
             ));
         }
 
-        $this->flash->success("viaje was created successfully");
+        $this->flash->success("El viaje ha sido creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "viaje",
@@ -157,6 +171,7 @@ class ViajeController extends ControllerBase
 
         $viaje->setViajeOrigen($this->request->getPost("viaje_origen"));
         $viaje->setViajeConcatenado($this->request->getPost("viaje_concatenado"));
+        $viaje->setViajeHabilitado(1);
         
 
         if (!$viaje->save()) {
@@ -172,7 +187,7 @@ class ViajeController extends ControllerBase
             ));
         }
 
-        $this->flash->success("viaje was updated successfully");
+        $this->flash->success("El viaje ha sido actualizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "viaje",
@@ -180,26 +195,55 @@ class ViajeController extends ControllerBase
         ));
 
     }
-
     /**
-     * Deletes a viaje
+     * Eliminar un transporte de manera logica.
      *
-     * @param string $viaje_id
+     * @return bool
      */
-    public function deleteAction($viaje_id)
+    public function eliminarAction()
     {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $viaje = Viaje::findFirstByViaje_id($id);
+            if (!$viaje) {
+                $this->flash->error("El viaje no ha sido encontrado");
 
-        $viaje = Viaje::findFirstByviaje_id($viaje_id);
-        if (!$viaje) {
-            $this->flash->error("viaje was not found");
+                return $this->dispatcher->forward(array(
+                    "controller" => "viaje",
+                    "action" => "index"
+                ));
+            }
+            $viaje->viaje_habilitado = 0;
+            if (!$viaje->update()) {
+
+                foreach ($viaje->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "viaje",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El viaje ha sido eliminado correctamente");
 
             return $this->dispatcher->forward(array(
                 "controller" => "viaje",
-                "action" => "index"
+                "action" => "search"
             ));
         }
+    }
 
-        if (!$viaje->delete()) {
+    /**
+     * Habilitar un transporte.
+     * @return bool
+     */
+    public function habilitarAction($idviaje)
+    {
+        $viaje= Viaje::findFirstByViaje_id($idviaje);
+        $viaje->viaje_habilitado = 1;
+        if (!$viaje->update()) {
 
             foreach ($viaje->getMessages() as $message) {
                 $this->flash->error($message);
@@ -211,12 +255,13 @@ class ViajeController extends ControllerBase
             ));
         }
 
-        $this->flash->success("viaje was deleted successfully");
+        $this->flash->success("El viaje ha sido habilitado");
 
         return $this->dispatcher->forward(array(
             "controller" => "viaje",
-            "action" => "index"
+            "action" => "search"
         ));
     }
+
 
 }

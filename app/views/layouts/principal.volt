@@ -41,7 +41,7 @@
                                     <a href="#" class="btn btn-default btn-flat">Perfil</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Salir</a>
+                                    {{ link_to('sesion/cerrar','Salir','class':'btn btn-default btn-flat') }}
                                 </div>
                             </li>
                         </ul>
@@ -77,7 +77,7 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Crear Planilla') }}</li>
+                        <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Crear Planilla') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Agregar Orden') }}</li>
                     </ul>
                 </li>
@@ -100,10 +100,10 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Filtro Personalizado') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Planilla') }}</li>
+                        <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i> Buscar Planilla') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Orden') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Transporte') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Viaje') }}</li>
+                        <li>{{ link_to('viaje/index','<i class="fa fa-circle-o"></i> Buscar Viaje') }}</li>
+                        <li>{{ link_to('transporte/index','<i class="fa fa-circle-o"></i> Buscar Transporte') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tipo Equipo') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tipo Carga') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Chofer') }}</li>
@@ -124,7 +124,8 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Transporte') }}</li>
+                        <li>{{ link_to('transporte/new','<i class="fa fa-circle-o"></i> Agregar Transporte') }}</li>
+                        <li>{{ link_to('viaje/new','<i class="fa fa-circle-o"></i> Agregar Viaje') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Tipo Equipo') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Tipo Carga') }}</li>
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Chofer') }}</li>
@@ -152,7 +153,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 1.0.0
         </div>
-        <strong>Copyright &copy; 2015 <a href="http://almsaeedstudio.com">S&A All Service</a>.</strong> Todos los derechos reservados.
+        <strong><a href="http://syaallservice.com">S&A All Service</a>.</strong>
     </footer>
 
     <!-- Control Sidebar -->

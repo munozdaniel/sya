@@ -1,39 +1,33 @@
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Editar Viaje</h3>
+</div><!-- /.Titulo -->
+
+<!-- Inicio Formulario -->
 {{ content() }}
 {{ form("viaje/save", "method":"post") }}
-
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("viaje", "Go Back") }}</td>
-        <td align="right">{{ submit_button("Save") }}</td>
+        <td align="left">{{ link_to("viaje", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
     </tr>
 </table>
 
-<div align="center">
-    <h1>Edit viaje</h1>
+<!-- Cuerpo -->
+<div class="box-body">
+    <label for="viaje_origen">Origen</label>
+    <div class="form-group">
+        {{ text_field("viaje_origen", "size" : 30) }}
+    </div>
+    {#====================================================#}
+    <label for="viaje_concatenado">Concatenado</label>
+    <div class="form-group">
+        {{ text_field("viaje_concatenado", "size" : 30) }}
+    </div>
+
+</div><!-- /.Cuerpo -->
+<!-- Inicio Footer -->
+<div class="box-footer">
+    {{ hidden_field("viaje_id") }}
+    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="viaje_origen">Viaje Of Origen</label>
-        </td>
-        <td align="left">
-            {{ text_field("viaje_origen", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="viaje_concatenado">Viaje Of Concatenado</label>
-        </td>
-        <td align="left">
-            {{ text_field("viaje_concatenado", "size" : 30) }}
-        </td>
-    </tr>
-
-    <tr>
-        <td>{{ hidden_field("id") }}</td>
-        <td>{{ submit_button("Save") }}</td>
-    </tr>
-</table>
-
 </form>
