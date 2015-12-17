@@ -1,16 +1,13 @@
-<!-- Page title -->
-<div class="page-title">
-    <h5><i class="fa fa-bars"></i> Fixed navbar <small>Blank page</small></h5>
-    <div class="btn-group">
-        <a href="#" class="btn btn-link btn-lg btn-icon dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i><span class="caret"></span></a>
-        <ul class="dropdown-menu dropdown-menu-right">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li>{{ link_to('index/generarExcel','GENERAR EXCEL') }}</li>
-        </ul>
-    </div>
-</div>
-<!-- /page title -->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Tablero Principal
+        <small>Seleccione una opción para comenzar a trabajar</small>
+    </h1>
+</section>
 
-{{ content() }}
+<!-- ===================== Main content =====================-->
+<section class="content">
+    {{ content() }}
+
+</section><!-- /.content -->

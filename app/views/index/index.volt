@@ -9,6 +9,7 @@
             <p class="login-box-msg">Identificarse para iniciar sesión</p>
 
             {{ form('sesion/validar','method':'post') }}
+                {{ content() }}
                 <div class="form-group has-feedback">
                     <input id="sesion_nombre" name="sesion_nombre" type="text" class="form-control" placeholder="Nombre de Usuario">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
