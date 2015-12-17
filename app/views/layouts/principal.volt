@@ -23,12 +23,14 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            {#elemento.getUsuario() #}
                             <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                             <span class="hidden-xs">Alexander Pierce</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
+                                {#elemento.getUsuarioDetalle() #}
                                 <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                                 <p>
                                     Nombre de usuario
@@ -38,7 +40,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                                    {{ link_to('usuario/perfil','Perfil','class':'btn btn-default btn-flat') }}
                                 </div>
                                 <div class="pull-right">
                                     {{ link_to('sesion/cerrar','Salir','class':'btn btn-default btn-flat') }}
@@ -100,20 +102,15 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>{{ link_to('','<i class="fa fa-circle-o"></i> Filtro Personalizado') }}</li>
-                        <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i> Buscar Planilla') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Orden') }}</li>
-                        <li>{{ link_to('viaje/index','<i class="fa fa-circle-o"></i> Buscar Viaje') }}</li>
-                        <li>{{ link_to('transporte/index','<i class="fa fa-circle-o"></i> Buscar Transporte') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tipo Equipo') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tipo Carga') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Chofer') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Tarifa') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Buscar Cliente') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM SENCILLO =======#}
                 <li>
                     {{ link_to('index/dashboard','<i class="fa fa-pie-chart"></i> <span>Estadisticas</span> ') }}
+                </li>
+                {#====== ITEM SENCILLO =======#}
+                <li>
+                    {{ link_to('index/dashboard','<i class="fa fa-upload"></i> <span>Almacenar en el Servidor</span> ') }}
                 </li>
                 {#====== ITEM ARBOL =======#}
                 <li class="header">ADMINISTRADOR</li>
@@ -123,16 +120,16 @@
                         <span>Gestionar</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
-                    <ul class="treeview-menu">
-                        <li>{{ link_to('transporte/new','<i class="fa fa-circle-o"></i> Agregar Transporte') }}</li>
-                        <li>{{ link_to('viaje/new','<i class="fa fa-circle-o"></i> Agregar Viaje') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Tipo Equipo') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Tipo Carga') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Chofer') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Cliente') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Yacimiento') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Equipo/Pozo') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Agregar Centro Costo') }}</li>
+                        <ul class="treeview-menu">
+                            <li>{{ link_to('planilla','<i class="fa fa-circle-o"></i>  Planilla') }}</li>
+                            <li>{{ link_to('orden','<i class="fa fa-circle-o"></i>  Orden') }}</li>
+                            <li>{{ link_to('viaje','<i class="fa fa-circle-o"></i>  Viaje') }}</li>
+                            <li>{{ link_to('transporte','<i class="fa fa-circle-o"></i>  Transporte') }}</li>
+                            <li>{{ link_to('tipoequipo','<i class="fa fa-circle-o"></i>  Tipo Equipo') }}</li>
+                            <li>{{ link_to('tipocarga','<i class="fa fa-circle-o"></i>  Tipo Carga') }}</li>
+                            <li>{{ link_to('chofer','<i class="fa fa-circle-o"></i>  Chofer') }}</li>
+                            <li>{{ link_to('tarifa','<i class="fa fa-circle-o"></i>  Tarifa') }}</li>
+                            <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
                     </ul>
                 </li>
 
