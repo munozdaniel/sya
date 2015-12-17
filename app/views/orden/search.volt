@@ -32,6 +32,7 @@
             <th>Orden Of Conformidad</th>
             <th>Orden Of NoConformidad</th>
             <th>Orden Of CreadoPor</th>
+            <th>Orden Of Habilitado</th>
          </tr>
     </thead>
     <tbody>
@@ -55,6 +56,7 @@
             <td>{{ orden.getOrdenConformidad() }}</td>
             <td>{{ orden.getOrdenNoconformidad() }}</td>
             <td>{{ orden.getOrdenCreadopor() }}</td>
+            <td>{{ orden.getOrdenHabilitado() }}</td>
             <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
             <td>{{ link_to("orden/delete/"~orden.getOrdenId(), "Delete") }}</td>
         </tr>

@@ -141,6 +141,14 @@
             {{ text_field("orden_creadoPor", "type" : "numeric") }}
         </td>
     </tr>
+    <tr>
+        <td align="right">
+            <label for="orden_habilitado">Orden Of Habilitado</label>
+        </td>
+        <td align="left">
+            {{ text_field("orden_habilitado", "type" : "numeric") }}
+        </td>
+    </tr>
 
     <tr>
         <td>{{ hidden_field("id") }}</td>

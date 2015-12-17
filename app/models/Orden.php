@@ -106,6 +106,12 @@ class Orden extends \Phalcon\Mvc\Model
     protected $orden_creadoPor;
 
     /**
+     *
+     * @var integer
+     */
+    protected $orden_habilitado;
+
+    /**
      * Method to set the value of field orden_id
      *
      * @param integer $orden_id
@@ -327,6 +333,19 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field orden_habilitado
+     *
+     * @param integer $orden_habilitado
+     * @return $this
+     */
+    public function setOrdenHabilitado($orden_habilitado)
+    {
+        $this->orden_habilitado = $orden_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field orden_id
      *
      * @return integer
@@ -497,6 +516,16 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field orden_habilitado
+     *
+     * @return integer
+     */
+    public function getOrdenHabilitado()
+    {
+        return $this->orden_habilitado;
+    }
+
+    /**
      * Returns table name mapped in the model.
      *
      * @return string
@@ -526,6 +555,23 @@ class Orden extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+    /**
+     * Utilizado cuando se elimina una planilla de manera logica, se buscan todas las ordenes
+     * relacionadas con la planilla, y se las inhabilita.
+     * @param planilla_id
+     * @return boolean
+     */
+    public static function eliminarByPlanilla_id($planilla_id)
+    {
+        $ordenes = Orden::findByOrden_planilla($planilla_id);
+        foreach($ordenes as $unaOrden)
+        {
+            $unaOrden->orden_habilitado = 0;
+            if(!$unaOrden->update())
+                return false;
+        }
+        return true;
     }
 
 }

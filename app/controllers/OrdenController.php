@@ -100,6 +100,7 @@ class OrdenController extends ControllerBase
             $this->tag->setDefault("orden_conformidad", $orden->getOrdenConformidad());
             $this->tag->setDefault("orden_noConformidad", $orden->getOrdenNoconformidad());
             $this->tag->setDefault("orden_creadoPor", $orden->getOrdenCreadopor());
+            $this->tag->setDefault("orden_habilitado", $orden->getOrdenHabilitado());
             
         }
     }
@@ -135,6 +136,7 @@ class OrdenController extends ControllerBase
         $orden->setOrdenConformidad($this->request->getPost("orden_conformidad"));
         $orden->setOrdenNoconformidad($this->request->getPost("orden_noConformidad"));
         $orden->setOrdenCreadopor($this->request->getPost("orden_creadoPor"));
+        $orden->setOrdenHabilitado($this->request->getPost("orden_habilitado"));
         
 
         if (!$orden->save()) {
@@ -199,6 +201,7 @@ class OrdenController extends ControllerBase
         $orden->setOrdenConformidad($this->request->getPost("orden_conformidad"));
         $orden->setOrdenNoconformidad($this->request->getPost("orden_noConformidad"));
         $orden->setOrdenCreadopor($this->request->getPost("orden_creadoPor"));
+        $orden->setOrdenHabilitado($this->request->getPost("orden_habilitado"));
         
 
         if (!$orden->save()) {
