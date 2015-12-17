@@ -16,6 +16,12 @@ class Tipocarga extends \Phalcon\Mvc\Model
     protected $tipoCarga_nombre;
 
     /**
+     *
+     * @var integer
+     */
+    protected $tipoCarga_habilitado;
+
+    /**
      * Method to set the value of field tipoCarga_id
      *
      * @param integer $tipoCarga_id
@@ -42,6 +48,19 @@ class Tipocarga extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field tipoCarga_habilitado
+     *
+     * @param integer $tipoCarga_habilitado
+     * @return $this
+     */
+    public function setTipoCargaHabilitado($tipoCarga_habilitado)
+    {
+        $this->tipoCarga_habilitado = $tipoCarga_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field tipoCarga_id
      *
      * @return integer
@@ -59,6 +78,16 @@ class Tipocarga extends \Phalcon\Mvc\Model
     public function getTipoCargaNombre()
     {
         return $this->tipoCarga_nombre;
+    }
+
+    /**
+     * Returns the value of field tipoCarga_habilitado
+     *
+     * @return integer
+     */
+    public function getTipoCargaHabilitado()
+    {
+        return $this->tipoCarga_habilitado;
     }
 
     /**
