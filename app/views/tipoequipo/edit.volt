@@ -4,11 +4,11 @@
 </div><!-- /.Titulo -->
 <!-- Inicio Formulario -->
 {{ content() }}
-{{ form("tipoEquipo/save", "method":"post") }}
+{{ form("tipoequipo/save", "method":"post") }}
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("tipoEquipo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
+        <td align="left">{{ link_to("tipoequipo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
     </tr>
 </table>
 <!-- Cuerpo -->

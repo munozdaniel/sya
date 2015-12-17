@@ -5,12 +5,12 @@
 <!-- Formulario -->
 {{ content() }}
 
-{{ form("tipoEquipo/create", "method":"post") }}
+{{ form("tipoequipo/create", "method":"post") }}
 
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("tipoEquipo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+            {{ link_to("tipoequipo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
 </table>

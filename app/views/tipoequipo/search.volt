@@ -34,14 +34,13 @@
                 <tr>
                     <td>{{ tipoEquipo.getTipoequipoId() }}</td>
                     <td>{{ tipoEquipo.getTipoequipoNombre() }}</td>
-                    <td>{{ viaje.getViajeConcatenado() }}</td>
                     {% if admin == 1 %}
-                        <td>{{ link_to("viaje/edit/"~tipoEquipo.getTipoequipoId(), "Editar") }}</td>
+                        <td>{{ link_to("tipoequipo/edit/"~tipoEquipo.getTipoequipoId(), "Editar") }}</td>
                         <td>
                             {% if tipoEquipo.getTipoequipoHabilitado() == 1 %}
                                 <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  tipoEquipo.getTipoequipoId() }}">Eliminar</a>
                             {% else %}
-                                {{ link_to("viaje/habilitar/"~tipoEquipo.getTipoequipoId(), "Habilitar") }}
+                                {{ link_to("tipoequipo/habilitar/"~tipoEquipo.getTipoequipoId(), "Habilitar") }}
                             {%endif%}
                         </td>
                     {% else %}

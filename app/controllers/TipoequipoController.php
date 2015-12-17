@@ -51,7 +51,7 @@ class TipoequipoController extends ControllerBase
             $this->flash->notice("No se encontraron registros");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "index"
             ));
         }
@@ -88,7 +88,7 @@ class TipoequipoController extends ControllerBase
                 $this->flash->error("El tipo de Equipo no ha sido encontrado");
 
                 return $this->dispatcher->forward(array(
-                    "controller" => "tipoEquipo",
+                    "controller" => "tipoequipo",
                     "action" => "index"
                 ));
             }
@@ -110,7 +110,7 @@ class TipoequipoController extends ControllerBase
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "index"
             ));
         }
@@ -118,7 +118,7 @@ class TipoequipoController extends ControllerBase
         $tipoEquipo = new Tipoequipo();
 
         $tipoEquipo->setTipoequipoNombre($this->request->getPost("tipoEquipo_nombre"));
-        $tipoEquipo->setTipoequipoHabilitado($this->request->getPost("tipoEquipo_habilitado"));
+        $tipoEquipo->setTipoequipoHabilitado(1);
         
 
         if (!$tipoEquipo->save()) {
@@ -127,7 +127,7 @@ class TipoequipoController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "new"
             ));
         }
@@ -135,7 +135,7 @@ class TipoequipoController extends ControllerBase
         $this->flash->success("El tipo de equipo ha sido creado correctamente");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tipoEquipo",
+            "controller" => "tipoequipo",
             "action" => "index"
         ));
 
@@ -150,7 +150,7 @@ class TipoequipoController extends ControllerBase
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "index"
             ));
         }
@@ -159,17 +159,16 @@ class TipoequipoController extends ControllerBase
 
         $tipoEquipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
         if (!$tipoEquipo) {
-            $this->flash->error("tipoEquipo does not exist " . $tipoEquipo_id);
+            $this->flash->error("El tipo de Equipo con el ID: " . $tipoEquipo_id." no se ha encontrado");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "index"
             ));
         }
 
         $tipoEquipo->setTipoequipoNombre($this->request->getPost("tipoEquipo_nombre"));
-        $tipoEquipo->setTipoequipoHabilitado($this->request->getPost("tipoEquipo_habilitado"));
-        
+
 
         if (!$tipoEquipo->save()) {
 
@@ -178,7 +177,7 @@ class TipoequipoController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "edit",
                 "params" => array($tipoEquipo->tipoEquipo_id)
             ));
@@ -187,7 +186,7 @@ class TipoequipoController extends ControllerBase
         $this->flash->success("El tipo de equipo ha sido actualizado correctamente");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tipoEquipo",
+            "controller" => "tipoequipo",
             "action" => "index"
         ));
 
@@ -206,7 +205,7 @@ class TipoequipoController extends ControllerBase
             $this->flash->error("El tipo de equipo no ha sido encontrado");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "index"
             ));
         }
@@ -218,7 +217,7 @@ class TipoequipoController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoEquipo",
+                "controller" => "tipoequipo",
                 "action" => "search"
             ));
         }
@@ -226,7 +225,7 @@ class TipoequipoController extends ControllerBase
         $this->flash->success("el tipo de equipo ha sido eliminado correctamente");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tipoEquipo",
+            "controller" => "tipoequipo",
             "action" => "index"
         ));
     }
@@ -274,9 +273,9 @@ class TipoequipoController extends ControllerBase
      * Habilitar.
      * @return bool
      */
-    public function habilitarAction($idviaje)
+    public function habilitarAction($id)
     {
-        $tipoEquipo= Tipoequipo::findFirstByTipoEquipo_id($idviaje);
+        $tipoEquipo= Tipoequipo::findFirstByTipoEquipo_id($id);
         $tipoEquipo->tipoEquipo_habilitado = 1;
         if (!$tipoEquipo->update()) {
 
