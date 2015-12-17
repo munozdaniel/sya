@@ -26,12 +26,17 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         {#FIN Archivos Globales#}
-        {#Js Particulares#}
-        {%  if (assets.collection("header")) %}
-            {{  assets.outputJs("header") }}
+        {#Css Particulares#}
+        {%  if (assets.collection("headerCss")) %}
+            {{  assets.outputCss("headerCss") }}
         {% endif %}
-        {%  if (assets.collection("headerInline")) %}
-            {{  assets.outputInlineJs("headerInline") }}
+        {#Fin: Css Particulares#}
+        {#Js Particulares#}
+        {%  if (assets.collection("headerJs")) %}
+            {{  assets.outputJs("headerJs") }}
+        {% endif %}
+        {%  if (assets.collection("headerJsInline")) %}
+            {{  assets.outputInlineJs("headerJsInline") }}
         {% endif %}
         {#Fin: Js Particulares#}
     </head>
@@ -56,5 +61,6 @@
             {{  assets.outputInlineJs("footerInline") }}
         {% endif %}
         {#Fin: Js Particulares#}
+
     </body>
 </html>
