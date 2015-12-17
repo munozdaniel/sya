@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class TipocargaController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Tipo Carga');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class TipocargaController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -36,7 +48,7 @@ class TipocargaController extends ControllerBase
 
         $tipocarga = Tipocarga::find($parameters);
         if (count($tipocarga) == 0) {
-            $this->flash->notice("The search did not find any tipocarga");
+            $this->flash->notice("No se encontraron registros en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "tipocarga",
@@ -73,7 +85,7 @@ class TipocargaController extends ControllerBase
 
             $tipocarga = Tipocarga::findFirstBytipoCarga_id($tipoCarga_id);
             if (!$tipocarga) {
-                $this->flash->error("tipocarga was not found");
+                $this->flash->error("El Tipo de Carga no se ha encontrado");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "tipocarga",
@@ -85,6 +97,7 @@ class TipocargaController extends ControllerBase
 
             $this->tag->setDefault("tipoCarga_id", $tipocarga->getTipocargaId());
             $this->tag->setDefault("tipoCarga_nombre", $tipocarga->getTipocargaNombre());
+            $this->tag->setDefault("tipoCarga_habilitado", $tipocarga->getTipocargaHabilitado());
             
         }
     }
@@ -105,6 +118,7 @@ class TipocargaController extends ControllerBase
         $tipocarga = new Tipocarga();
 
         $tipocarga->setTipocargaNombre($this->request->getPost("tipoCarga_nombre"));
+        $tipocarga->setTipocargaHabilitado(1);
         
 
         if (!$tipocarga->save()) {
@@ -118,7 +132,7 @@ class TipocargaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("tipocarga was created successfully");
+        $this->flash->success("El tipo de Carga ha sido creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "tipocarga",
@@ -145,7 +159,7 @@ class TipocargaController extends ControllerBase
 
         $tipocarga = Tipocarga::findFirstBytipoCarga_id($tipoCarga_id);
         if (!$tipocarga) {
-            $this->flash->error("tipocarga does not exist " . $tipoCarga_id);
+            $this->flash->error("El tipo de Carga con el ID: " . $tipoCarga_id." no se ha encontrado");
 
             return $this->dispatcher->forward(array(
                 "controller" => "tipocarga",
@@ -154,6 +168,7 @@ class TipocargaController extends ControllerBase
         }
 
         $tipocarga->setTipocargaNombre($this->request->getPost("tipoCarga_nombre"));
+        $tipocarga->setTipocargaHabilitado($this->request->getPost("tipoCarga_habilitado"));
         
 
         if (!$tipocarga->save()) {
@@ -169,7 +184,7 @@ class TipocargaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("tipocarga was updated successfully");
+        $this->flash->success("El tipo de Carga ha sido actualizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "tipocarga",
@@ -188,7 +203,7 @@ class TipocargaController extends ControllerBase
 
         $tipocarga = Tipocarga::findFirstBytipoCarga_id($tipoCarga_id);
         if (!$tipocarga) {
-            $this->flash->error("tipocarga was not found");
+            $this->flash->error("El tipo de carga no ha sido encontrado");
 
             return $this->dispatcher->forward(array(
                 "controller" => "tipocarga",
@@ -208,12 +223,78 @@ class TipocargaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("tipocarga was deleted successfully");
+        $this->flash->success("El tipo de carga ha sido eliminado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "tipocarga",
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $tipoCarga = Tipocarga::findFirstByTipoCarga_id($id);
+            if (!$tipoCarga) {
+                $this->flash->error("El Tipo de Carga no ha sido encontrado");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "tipocarga",
+                    "action" => "index"
+                ));
+            }
+            $tipoCarga->tipoCarga_habilitado = 0;
+            if (!$tipoCarga->update()) {
+
+                foreach ($tipoCarga->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "tipocarga",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El Tipo de Carga ha sido eliminado correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "tipocarga",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $tipoCarga = Tipocarga::findFirstByTipoCarga_id($id);
+        $tipoCarga->tipoCarga_habilitado = 1;
+        if (!$tipoCarga->update()) {
+
+            foreach ($tipoCarga->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "tipocarga",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El Tipo de Carga ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "tipocarga",
+            "action" => "search"
+        ));
+    }
 }
