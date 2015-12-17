@@ -1,33 +1,30 @@
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Crear Tipo de Equipo</h3>
+</div><!-- /.Titulo -->
+<!-- Formulario -->
+{{ content() }}
 
-{{ form("tipoequipo/create", "method":"post") }}
+{{ form("tipoEquipo/create", "method":"post") }}
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("tipoequipo", "Go Back") }}</td>
-        <td align="right">{{ submit_button("Save") }}</td>
-    </tr>
-</table>
-
-{{ content() }}
-
-<div align="center">
-    <h1>Create tipoequipo</h1>
-</div>
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="tipoEquipo_nombre">TipoEquipo Of Nombre</label>
-        </td>
         <td align="left">
-            {{ text_field("tipoEquipo_nombre", "size" : 30) }}
+            {{ link_to("tipoEquipo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
-
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Save") }}</td>
-    </tr>
 </table>
+<!-- Cuerpo -->
+<div class="box-body">
+    <label for="transporte_dominio">Nombre del Equipo</label>
 
+    <div class="form-group">
+        {{ text_field("tipoEquipo_nombre", "size" : 30) }}
+    </div>
+    {#==================================================#}
+</div><!-- /. Cuerpo -->
+<!-- Footer -->
+<div class="box-footer">
+    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
+</div>
 </form>

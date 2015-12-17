@@ -15,7 +15,7 @@ class TipoequipoController extends ControllerBase
     }
 
     /**
-     * Searches for tipoequipo
+     * Searches for tipoEquipo
      */
     public function searchAction()
     {
@@ -34,18 +34,18 @@ class TipoequipoController extends ControllerBase
         }
         $parameters["order"] = "tipoEquipo_id";
 
-        $tipoequipo = Tipoequipo::find($parameters);
-        if (count($tipoequipo) == 0) {
-            $this->flash->notice("The search did not find any tipoequipo");
+        $tipoEquipo = Tipoequipo::find($parameters);
+        if (count($tipoEquipo) == 0) {
+            $this->flash->notice("The search did not find any tipoEquipo");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "index"
             ));
         }
 
         $paginator = new Paginator(array(
-            "data" => $tipoequipo,
+            "data" => $tipoEquipo,
             "limit"=> 10,
             "page" => $numberPage
         ));
@@ -62,7 +62,7 @@ class TipoequipoController extends ControllerBase
     }
 
     /**
-     * Edits a tipoequipo
+     * Edits a tipoEquipo
      *
      * @param string $tipoEquipo_id
      */
@@ -71,64 +71,66 @@ class TipoequipoController extends ControllerBase
 
         if (!$this->request->isPost()) {
 
-            $tipoequipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
-            if (!$tipoequipo) {
-                $this->flash->error("tipoequipo was not found");
+            $tipoEquipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
+            if (!$tipoEquipo) {
+                $this->flash->error("tipoEquipo was not found");
 
                 return $this->dispatcher->forward(array(
-                    "controller" => "tipoequipo",
+                    "controller" => "tipoEquipo",
                     "action" => "index"
                 ));
             }
 
-            $this->view->tipoEquipo_id = $tipoequipo->tipoEquipo_id;
+            $this->view->tipoEquipo_id = $tipoEquipo->tipoEquipo_id;
 
-            $this->tag->setDefault("tipoEquipo_id", $tipoequipo->getTipoequipoId());
-            $this->tag->setDefault("tipoEquipo_nombre", $tipoequipo->getTipoequipoNombre());
+            $this->tag->setDefault("tipoEquipo_id", $tipoEquipo->getTipoequipoId());
+            $this->tag->setDefault("tipoEquipo_nombre", $tipoEquipo->getTipoequipoNombre());
+            $this->tag->setDefault("tipoEquipo_habilitado", $tipoEquipo->getTipoequipoHabilitado());
             
         }
     }
 
     /**
-     * Creates a new tipoequipo
+     * Creates a new tipoEquipo
      */
     public function createAction()
     {
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "index"
             ));
         }
 
-        $tipoequipo = new Tipoequipo();
+        $tipoEquipo = new Tipoequipo();
 
-        $tipoequipo->setTipoequipoNombre($this->request->getPost("tipoEquipo_nombre"));
+        $tipoEquipo->setTipoequipoNombre($this->request->getPost("tipoEquipo_nombre"));
+        $tipoEquipo->setTipoequipoHabilitado($this->request->getPost("tipoEquipo_habilitado"));
         
 
-        if (!$tipoequipo->save()) {
-            foreach ($tipoequipo->getMessages() as $message) {
+        if (!$tipoEquipo->save()) {
+            foreach ($tipoEquipo->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "new"
             ));
         }
 
-        $this->flash->success("tipoequipo was created successfully");
+        $this->flash->success("tipoEquipo was created successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tipoequipo",
+            "controller" => "tipoEquipo",
             "action" => "index"
         ));
 
     }
 
     /**
-     * Saves a tipoequipo edited
+     * Saves a tipoEquipo edited
      *
      */
     public function saveAction()
@@ -136,82 +138,83 @@ class TipoequipoController extends ControllerBase
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "index"
             ));
         }
 
         $tipoEquipo_id = $this->request->getPost("tipoEquipo_id");
 
-        $tipoequipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
-        if (!$tipoequipo) {
-            $this->flash->error("tipoequipo does not exist " . $tipoEquipo_id);
+        $tipoEquipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
+        if (!$tipoEquipo) {
+            $this->flash->error("tipoEquipo does not exist " . $tipoEquipo_id);
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "index"
             ));
         }
 
-        $tipoequipo->setTipoequipoNombre($this->request->getPost("tipoEquipo_nombre"));
+        $tipoEquipo->setTipoequipoNombre($this->request->getPost("tipoEquipo_nombre"));
+        $tipoEquipo->setTipoequipoHabilitado($this->request->getPost("tipoEquipo_habilitado"));
         
 
-        if (!$tipoequipo->save()) {
+        if (!$tipoEquipo->save()) {
 
-            foreach ($tipoequipo->getMessages() as $message) {
+            foreach ($tipoEquipo->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "edit",
-                "params" => array($tipoequipo->tipoEquipo_id)
+                "params" => array($tipoEquipo->tipoEquipo_id)
             ));
         }
 
-        $this->flash->success("tipoequipo was updated successfully");
+        $this->flash->success("tipoEquipo was updated successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tipoequipo",
+            "controller" => "tipoEquipo",
             "action" => "index"
         ));
 
     }
 
     /**
-     * Deletes a tipoequipo
+     * Deletes a tipoEquipo
      *
      * @param string $tipoEquipo_id
      */
     public function deleteAction($tipoEquipo_id)
     {
 
-        $tipoequipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
-        if (!$tipoequipo) {
-            $this->flash->error("tipoequipo was not found");
+        $tipoEquipo = Tipoequipo::findFirstBytipoEquipo_id($tipoEquipo_id);
+        if (!$tipoEquipo) {
+            $this->flash->error("tipoEquipo was not found");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "index"
             ));
         }
 
-        if (!$tipoequipo->delete()) {
+        if (!$tipoEquipo->delete()) {
 
-            foreach ($tipoequipo->getMessages() as $message) {
+            foreach ($tipoEquipo->getMessages() as $message) {
                 $this->flash->error($message);
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tipoequipo",
+                "controller" => "tipoEquipo",
                 "action" => "search"
             ));
         }
 
-        $this->flash->success("tipoequipo was deleted successfully");
+        $this->flash->success("tipoEquipo was deleted successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tipoequipo",
+            "controller" => "tipoEquipo",
             "action" => "index"
         ));
     }

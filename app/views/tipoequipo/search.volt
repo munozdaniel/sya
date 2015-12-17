@@ -4,10 +4,10 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("tipoequipo/index", "Go Back") }}
+            {{ link_to("tipoEquipo/index", "Go Back") }}
         </td>
         <td align="right">
-            {{ link_to("tipoequipo/new", "Create ") }}
+            {{ link_to("tipoEquipo/new", "Create ") }}
         </td>
     </tr>
 </table>
@@ -17,16 +17,18 @@
         <tr>
             <th>TipoEquipo</th>
             <th>TipoEquipo Of Nombre</th>
+            <th>TipoEquipo Of Habilitado</th>
          </tr>
     </thead>
     <tbody>
     {% if page.items is defined %}
-    {% for tipoequipo in page.items %}
+    {% for tipoEquipo in page.items %}
         <tr>
-            <td>{{ tipoequipo.getTipoequipoId() }}</td>
-            <td>{{ tipoequipo.getTipoequipoNombre() }}</td>
-            <td>{{ link_to("tipoequipo/edit/"~tipoequipo.getTipoequipoId(), "Edit") }}</td>
-            <td>{{ link_to("tipoequipo/delete/"~tipoequipo.getTipoequipoId(), "Delete") }}</td>
+            <td>{{ tipoEquipo.getTipoequipoId() }}</td>
+            <td>{{ tipoEquipo.getTipoequipoNombre() }}</td>
+            <td>{{ tipoEquipo.getTipoequipoHabilitado() }}</td>
+            <td>{{ link_to("tipoEquipo/edit/"~tipoEquipo.getTipoequipoId(), "Edit") }}</td>
+            <td>{{ link_to("tipoEquipo/delete/"~tipoEquipo.getTipoequipoId(), "Delete") }}</td>
         </tr>
     {% endfor %}
     {% endif %}
@@ -36,10 +38,10 @@
             <td colspan="2" align="right">
                 <table align="center">
                     <tr>
-                        <td>{{ link_to("tipoequipo/search", "First") }}</td>
-                        <td>{{ link_to("tipoequipo/search?page="~page.before, "Previous") }}</td>
-                        <td>{{ link_to("tipoequipo/search?page="~page.next, "Next") }}</td>
-                        <td>{{ link_to("tipoequipo/search?page="~page.last, "Last") }}</td>
+                        <td>{{ link_to("tipoEquipo/search", "First") }}</td>
+                        <td>{{ link_to("tipoEquipo/search?page="~page.before, "Previous") }}</td>
+                        <td>{{ link_to("tipoEquipo/search?page="~page.next, "Next") }}</td>
+                        <td>{{ link_to("tipoEquipo/search?page="~page.last, "Last") }}</td>
                         <td>{{ page.current~"/"~page.total_pages }}</td>
                     </tr>
                 </table>

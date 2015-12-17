@@ -16,6 +16,12 @@ class Tipoequipo extends \Phalcon\Mvc\Model
     protected $tipoEquipo_nombre;
 
     /**
+     *
+     * @var integer
+     */
+    protected $tipoEquipo_habilitado;
+
+    /**
      * Method to set the value of field tipoEquipo_id
      *
      * @param integer $tipoEquipo_id
@@ -42,6 +48,19 @@ class Tipoequipo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field tipoEquipo_habilitado
+     *
+     * @param integer $tipoEquipo_habilitado
+     * @return $this
+     */
+    public function setTipoEquipoHabilitado($tipoEquipo_habilitado)
+    {
+        $this->tipoEquipo_habilitado = $tipoEquipo_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field tipoEquipo_id
      *
      * @return integer
@@ -62,13 +81,31 @@ class Tipoequipo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field tipoEquipo_habilitado
+     *
+     * @return integer
+     */
+    public function getTipoEquipoHabilitado()
+    {
+        return $this->tipoEquipo_habilitado;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->setSource("'tipoEquipo'");
+    }
+
+    /**
      * Returns table name mapped in the model.
      *
      * @return string
      */
     public function getSource()
     {
-        return 'tipoequipo';
+        return 'tipoEquipo';
     }
 
     /**
