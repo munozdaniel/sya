@@ -5,7 +5,7 @@
 <!-- Formulario -->
 {{ content() }}
 
-{{ form("tipoequipo/create", "method":"post") }}
+{{ form("tipocarga/create", "method":"post") }}
 <table width="100%">
     <tr>
         <td align="left">

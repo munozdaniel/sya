@@ -48,7 +48,7 @@ class TipocargaController extends ControllerBase
 
         $tipocarga = Tipocarga::find($parameters);
         if (count($tipocarga) == 0) {
-            $this->flash->notice("No se encontraron registros en la busqueda");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "tipocarga",
