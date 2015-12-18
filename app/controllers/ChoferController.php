@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class ChoferController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Chofer');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,8 +30,10 @@ class ChoferController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
+
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, "Chofer", $_POST);
             $this->persistent->parameters = $query->getParams();
@@ -36,7 +49,7 @@ class ChoferController extends ControllerBase
 
         $chofer = Chofer::find($parameters);
         if (count($chofer) == 0) {
-            $this->flash->notice("The search did not find any chofer");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "chofer",
@@ -73,7 +86,7 @@ class ChoferController extends ControllerBase
 
             $chofer = Chofer::findFirstBychofer_id($chofer_id);
             if (!$chofer) {
-                $this->flash->error("chofer was not found");
+                $this->flash->error("El chofer no ha sido encontrado");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "chofer",
@@ -87,6 +100,7 @@ class ChoferController extends ControllerBase
             $this->tag->setDefault("chofer_nombreCompleto", $chofer->getChoferNombrecompleto());
             $this->tag->setDefault("chofer_dni", $chofer->getChoferDni());
             $this->tag->setDefault("chofer_esFletero", $chofer->getChoferEsfletero());
+            $this->tag->setDefault("chofer_habilitado", $chofer->getChoferHabilitado());
             
         }
     }
@@ -109,6 +123,7 @@ class ChoferController extends ControllerBase
         $chofer->setChoferNombrecompleto($this->request->getPost("chofer_nombreCompleto"));
         $chofer->setChoferDni($this->request->getPost("chofer_dni"));
         $chofer->setChoferEsfletero($this->request->getPost("chofer_esFletero"));
+        $chofer->setChoferHabilitado($this->request->getPost("chofer_habilitado"));
         
 
         if (!$chofer->save()) {
@@ -122,7 +137,7 @@ class ChoferController extends ControllerBase
             ));
         }
 
-        $this->flash->success("chofer was created successfully");
+        $this->flash->success("El chofer has sido creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "chofer",
@@ -149,7 +164,7 @@ class ChoferController extends ControllerBase
 
         $chofer = Chofer::findFirstBychofer_id($chofer_id);
         if (!$chofer) {
-            $this->flash->error("chofer does not exist " . $chofer_id);
+            $this->flash->error("El Chofer con el ID: " . $chofer_id." no existe");
 
             return $this->dispatcher->forward(array(
                 "controller" => "chofer",
@@ -159,7 +174,8 @@ class ChoferController extends ControllerBase
 
         $chofer->setChoferNombrecompleto($this->request->getPost("chofer_nombreCompleto"));
         $chofer->setChoferDni($this->request->getPost("chofer_dni"));
-        $chofer->setChoferEsfletero($this->request->getPost("chofer_esFletero"));
+        $chofer->setChoferEsfletero($this->request->getPost('chofer_esFletero'));
+        $chofer->setChoferHabilitado(1);
         
 
         if (!$chofer->save()) {
@@ -175,7 +191,7 @@ class ChoferController extends ControllerBase
             ));
         }
 
-        $this->flash->success("chofer was updated successfully");
+        $this->flash->success("El chofer ha sido actulizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "chofer",
@@ -194,7 +210,7 @@ class ChoferController extends ControllerBase
 
         $chofer = Chofer::findFirstBychofer_id($chofer_id);
         if (!$chofer) {
-            $this->flash->error("chofer was not found");
+            $this->flash->error("El chofer no se ha encontrado");
 
             return $this->dispatcher->forward(array(
                 "controller" => "chofer",
@@ -214,12 +230,78 @@ class ChoferController extends ControllerBase
             ));
         }
 
-        $this->flash->success("chofer was deleted successfully");
+        $this->flash->success("El chofer ha sido eliminado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "chofer",
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $chofer = chofer::findFirstByChofer_id($id);
+            if (!$chofer) {
+                $this->flash->error("El Chofer no ha sido encontrado");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "chofer",
+                    "action" => "index"
+                ));
+            }
+            $chofer->chofer_habilitado = 0;
+            if (!$chofer->update()) {
+
+                foreach ($chofer->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "chofer",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El Chofer ha sido eliminado correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "chofer",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $chofer = Chofer::findFirstByChofer_id($id);
+        $chofer->chofer_habilitado = 1;
+        if (!$chofer->update()) {
+
+            foreach ($chofer->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "chofer",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El Chofer ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "chofer",
+            "action" => "search"
+        ));
+    }
 }

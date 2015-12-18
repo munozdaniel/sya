@@ -28,6 +28,12 @@ class Chofer extends \Phalcon\Mvc\Model
     protected $chofer_esFletero;
 
     /**
+     *
+     * @var integer
+     */
+    protected $chofer_habilitado;
+
+    /**
      * Method to set the value of field chofer_id
      *
      * @param integer $chofer_id
@@ -80,6 +86,19 @@ class Chofer extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field chofer_habilitado
+     *
+     * @param integer $chofer_habilitado
+     * @return $this
+     */
+    public function setChoferHabilitado($chofer_habilitado)
+    {
+        $this->chofer_habilitado = $chofer_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field chofer_id
      *
      * @return integer
@@ -117,6 +136,16 @@ class Chofer extends \Phalcon\Mvc\Model
     public function getChoferEsFletero()
     {
         return $this->chofer_esFletero;
+    }
+
+    /**
+     * Returns the value of field chofer_habilitado
+     *
+     * @return integer
+     */
+    public function getChoferHabilitado()
+    {
+        return $this->chofer_habilitado;
     }
 
     /**

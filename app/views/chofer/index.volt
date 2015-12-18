@@ -1,54 +1,61 @@
-
-{{ content() }}
-
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Buscar Chofer</h3>
+</div><!-- /.Titulo -->
 <div align="right">
-    {{ link_to("chofer/new", "Create chofer") }}
+    {{ link_to("chofer/new", "crear transporte",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
-
+{{ content() }}
 {{ form("chofer/search", "method":"post", "autocomplete" : "off") }}
 
-<div align="center">
-    <h1>Search chofer</h1>
+<!-- Cuerpo -->
+<div class="box-body">
+    {#===============================================#}
+    <label for="chofer_id">N° de Chofer</label>
+
+    <div class="form-group">
+        {{ text_field("chofer_id", "type" : "numeric") }}
+    </div>
+    {#===============================================#}
+    <label for="chofer_nombreCompleto">Nombre Completo</label>
+
+    <div class="form-group">
+        {{ text_field("chofer_nombreCompleto", "size" : 30) }}
+    </div>
+    {#===============================================#}
+    <label for="chofer_dni">Nro de Documento</label>
+
+    <div class="form-group">
+        {{ text_field("chofer_dni", "type" : "numeric") }}
+    </div>
+    {#===============================================#}
+    <label for="fletero">Fletero</label>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="chofer_esFletero" name="chofer_esFletero" value="1">
+                SI
+            </label>
+            <label>
+                <input type="checkbox" id="chofer_esFletero" name="chofer_esFletero" value="0">
+                NO
+            </label>
+            <label>
+                <input type="checkbox" id="chofer_esFletero" name="chofer_esFletero" value="" checked>
+                AMBOS
+            </label>
+        </div>
+
+    </div>
+    {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
+    {% if admin!=1 %}
+        {{ hidden_field("chofer_habilitado", "value" : "1" ) }}
+    {% endif %}
+</div><!-- /.Cuerpo -->
+<!-- Footer -->
+<div class="box-footer">
+    {{ submit_button("Buscar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="chofer_id">Chofer</label>
-        </td>
-        <td align="left">
-            {{ text_field("chofer_id", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="chofer_nombreCompleto">Chofer Of NombreCompleto</label>
-        </td>
-        <td align="left">
-            {{ text_field("chofer_nombreCompleto", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="chofer_dni">Chofer Of Dni</label>
-        </td>
-        <td align="left">
-            {{ text_field("chofer_dni", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="chofer_esFletero">Chofer Of EsFletero</label>
-        </td>
-        <td align="left">
-            {{ text_field("chofer_esFletero", "type" : "numeric") }}
-        </td>
-    </tr>
-
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Search") }}</td>
-    </tr>
-</table>
 
 </form>
