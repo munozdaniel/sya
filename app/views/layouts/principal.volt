@@ -110,7 +110,7 @@
                 </li>
                 {#====== ITEM SENCILLO =======#}
                 <li>
-                    {{ link_to('index/dashboard','<i class="fa fa-upload"></i> <span>Almacenar en el Servidor</span> ') }}
+                    {{ link_to('archivo','<i class="fa fa-upload"></i> <span>Almacenar en el Servidor</span> ') }}
                 </li>
                 {#====== ITEM ARBOL =======#}
                 <li class="header">ADMINISTRADOR</li>
@@ -121,16 +121,13 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                         <ul class="treeview-menu">
-                            <li>{{ link_to('planilla','<i class="fa fa-circle-o"></i>  Planilla') }}</li>
-                            <li>{{ link_to('orden','<i class="fa fa-circle-o"></i>  Orden') }}</li>
-                            <li>{{ link_to('viaje','<i class="fa fa-circle-o"></i>  Viaje') }}</li>
+                            <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
+                            <li>{{ link_to('chofer','<i class="fa fa-circle-o"></i>  Chofer') }}</li>
                             <li>{{ link_to('transporte','<i class="fa fa-circle-o"></i>  Transporte') }}</li>
                             <li>{{ link_to('tipoequipo','<i class="fa fa-circle-o"></i>  Tipo Equipo') }}</li>
                             <li>{{ link_to('tipocarga','<i class="fa fa-circle-o"></i>  Tipo Carga') }}</li>
-                            <li>{{ link_to('chofer','<i class="fa fa-circle-o"></i>  Chofer') }}</li>
-                            <li>{{ link_to('tarifa','<i class="fa fa-circle-o"></i>  Tarifa') }}</li>
-                            <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
-                    </ul>
+                            <li>{{ link_to('viaje','<i class="fa fa-circle-o"></i>  Viaje') }}</li>
+                        </ul>
                 </li>
 
 
