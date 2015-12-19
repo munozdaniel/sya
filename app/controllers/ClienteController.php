@@ -36,7 +36,7 @@ class ClienteController extends ControllerBase
 
         $cliente = Cliente::find($parameters);
         if (count($cliente) == 0) {
-            $this->flash->notice("The search did not find any cliente");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "cliente",
@@ -84,10 +84,12 @@ class ClienteController extends ControllerBase
             $this->view->cliente_id = $cliente->cliente_id;
 
             $this->tag->setDefault("cliente_id", $cliente->getClienteId());
+            $this->tag->setDefault("cliente_nombre", $cliente->getClienteNombre());
             $this->tag->setDefault("cliente_operadora", $cliente->getClienteOperadora());
             $this->tag->setDefault("cliente_frs", $cliente->getClienteFrs());
             $this->tag->setDefault("cliente_linea", $cliente->getClienteLinea());
             $this->tag->setDefault("cliente_yacimiento", $cliente->getClienteYacimiento());
+            $this->tag->setDefault("cliente_habilitado", $cliente->getClienteHabilitado());
             
         }
     }
@@ -107,10 +109,12 @@ class ClienteController extends ControllerBase
 
         $cliente = new Cliente();
 
+        $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
         $cliente->setClienteOperadora($this->request->getPost("cliente_operadora"));
         $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
         $cliente->setClienteLinea($this->request->getPost("cliente_linea"));
         $cliente->setClienteYacimiento($this->request->getPost("cliente_yacimiento"));
+        $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
         
 
         if (!$cliente->save()) {
@@ -159,10 +163,12 @@ class ClienteController extends ControllerBase
             ));
         }
 
+        $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
         $cliente->setClienteOperadora($this->request->getPost("cliente_operadora"));
         $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
         $cliente->setClienteLinea($this->request->getPost("cliente_linea"));
         $cliente->setClienteYacimiento($this->request->getPost("cliente_yacimiento"));
+        $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
         
 
         if (!$cliente->save()) {

@@ -85,6 +85,7 @@ class EquipopozoController extends ControllerBase
 
             $this->tag->setDefault("equipoPozo_id", $equipopozo->getEquipopozoId());
             $this->tag->setDefault("equipoPozo_nombre", $equipopozo->getEquipopozoNombre());
+            $this->tag->setDefault("equipoPozo_habilitado", $equipopozo->getEquipopozoHabilitado());
             
         }
     }
@@ -105,6 +106,7 @@ class EquipopozoController extends ControllerBase
         $equipopozo = new Equipopozo();
 
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
+        $equipopozo->setEquipopozoHabilitado($this->request->getPost("equipoPozo_habilitado"));
         
 
         if (!$equipopozo->save()) {
@@ -154,6 +156,7 @@ class EquipopozoController extends ControllerBase
         }
 
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
+        $equipopozo->setEquipopozoHabilitado($this->request->getPost("equipoPozo_habilitado"));
         
 
         if (!$equipopozo->save()) {

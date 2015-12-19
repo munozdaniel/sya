@@ -22,6 +22,12 @@ class Yacimiento extends \Phalcon\Mvc\Model
     protected $yacimiento_equipoPozo;
 
     /**
+     *
+     * @var integer
+     */
+    protected $yacimiento_habilitado;
+
+    /**
      * Method to set the value of field yacimiento_id
      *
      * @param integer $yacimiento_id
@@ -61,6 +67,19 @@ class Yacimiento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field yacimiento_habilitado
+     *
+     * @param integer $yacimiento_habilitado
+     * @return $this
+     */
+    public function setYacimientoHabilitado($yacimiento_habilitado)
+    {
+        $this->yacimiento_habilitado = $yacimiento_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field yacimiento_id
      *
      * @return integer
@@ -88,6 +107,16 @@ class Yacimiento extends \Phalcon\Mvc\Model
     public function getYacimientoEquipoPozo()
     {
         return $this->yacimiento_equipoPozo;
+    }
+
+    /**
+     * Returns the value of field yacimiento_habilitado
+     *
+     * @return integer
+     */
+    public function getYacimientoHabilitado()
+    {
+        return $this->yacimiento_habilitado;
     }
 
     /**

@@ -16,6 +16,12 @@ class Equipopozo extends \Phalcon\Mvc\Model
     protected $equipoPozo_nombre;
 
     /**
+     *
+     * @var integer
+     */
+    protected $equipoPozo_habilitado;
+
+    /**
      * Method to set the value of field equipoPozo_id
      *
      * @param integer $equipoPozo_id
@@ -42,6 +48,19 @@ class Equipopozo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field equipoPozo_habilitado
+     *
+     * @param integer $equipoPozo_habilitado
+     * @return $this
+     */
+    public function setEquipoPozoHabilitado($equipoPozo_habilitado)
+    {
+        $this->equipoPozo_habilitado = $equipoPozo_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field equipoPozo_id
      *
      * @return integer
@@ -59,6 +78,16 @@ class Equipopozo extends \Phalcon\Mvc\Model
     public function getEquipoPozoNombre()
     {
         return $this->equipoPozo_nombre;
+    }
+
+    /**
+     * Returns the value of field equipoPozo_habilitado
+     *
+     * @return integer
+     */
+    public function getEquipoPozoHabilitado()
+    {
+        return $this->equipoPozo_habilitado;
     }
 
     /**

@@ -18,6 +18,7 @@
             <th>Yacimiento</th>
             <th>Yacimiento Of Destino</th>
             <th>Yacimiento Of EquipoPozo</th>
+            <th>Yacimiento Of Habilitado</th>
          </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
             <td>{{ yacimiento.getYacimientoId() }}</td>
             <td>{{ yacimiento.getYacimientoDestino() }}</td>
             <td>{{ yacimiento.getYacimientoEquipopozo() }}</td>
+            <td>{{ yacimiento.getYacimientoHabilitado() }}</td>
             <td>{{ link_to("yacimiento/edit/"~yacimiento.getYacimientoId(), "Edit") }}</td>
             <td>{{ link_to("yacimiento/delete/"~yacimiento.getYacimientoId(), "Delete") }}</td>
         </tr>

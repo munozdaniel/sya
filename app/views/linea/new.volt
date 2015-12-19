@@ -31,6 +31,14 @@
             {{ text_field("linea_centroCosto", "type" : "numeric") }}
         </td>
     </tr>
+    <tr>
+        <td align="right">
+            <label for="linea_habilitado">Linea Of Habilitado</label>
+        </td>
+        <td align="left">
+            {{ text_field("linea_habilitado", "type" : "numeric") }}
+        </td>
+    </tr>
 
     <tr>
         <td></td>

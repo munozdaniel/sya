@@ -13,6 +13,12 @@ class Cliente extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $cliente_nombre;
+
+    /**
+     *
+     * @var string
+     */
     protected $cliente_operadora;
 
     /**
@@ -34,6 +40,12 @@ class Cliente extends \Phalcon\Mvc\Model
     protected $cliente_yacimiento;
 
     /**
+     *
+     * @var integer
+     */
+    protected $cliente_habilitado;
+
+    /**
      * Method to set the value of field cliente_id
      *
      * @param integer $cliente_id
@@ -42,6 +54,19 @@ class Cliente extends \Phalcon\Mvc\Model
     public function setClienteId($cliente_id)
     {
         $this->cliente_id = $cliente_id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field cliente_nombre
+     *
+     * @param string $cliente_nombre
+     * @return $this
+     */
+    public function setClienteNombre($cliente_nombre)
+    {
+        $this->cliente_nombre = $cliente_nombre;
 
         return $this;
     }
@@ -99,6 +124,19 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field cliente_habilitado
+     *
+     * @param integer $cliente_habilitado
+     * @return $this
+     */
+    public function setClienteHabilitado($cliente_habilitado)
+    {
+        $this->cliente_habilitado = $cliente_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field cliente_id
      *
      * @return integer
@@ -106,6 +144,16 @@ class Cliente extends \Phalcon\Mvc\Model
     public function getClienteId()
     {
         return $this->cliente_id;
+    }
+
+    /**
+     * Returns the value of field cliente_nombre
+     *
+     * @return string
+     */
+    public function getClienteNombre()
+    {
+        return $this->cliente_nombre;
     }
 
     /**
@@ -146,6 +194,16 @@ class Cliente extends \Phalcon\Mvc\Model
     public function getClienteYacimiento()
     {
         return $this->cliente_yacimiento;
+    }
+
+    /**
+     * Returns the value of field cliente_habilitado
+     *
+     * @return integer
+     */
+    public function getClienteHabilitado()
+    {
+        return $this->cliente_habilitado;
     }
 
     /**

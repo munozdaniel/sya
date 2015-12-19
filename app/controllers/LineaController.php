@@ -86,6 +86,7 @@ class LineaController extends ControllerBase
             $this->tag->setDefault("linea_id", $linea->getLineaId());
             $this->tag->setDefault("linea_nombre", $linea->getLineaNombre());
             $this->tag->setDefault("linea_centroCosto", $linea->getLineaCentrocosto());
+            $this->tag->setDefault("linea_habilitado", $linea->getLineaHabilitado());
             
         }
     }
@@ -107,6 +108,7 @@ class LineaController extends ControllerBase
 
         $linea->setLineaNombre($this->request->getPost("linea_nombre"));
         $linea->setLineaCentrocosto($this->request->getPost("linea_centroCosto"));
+        $linea->setLineaHabilitado($this->request->getPost("linea_habilitado"));
         
 
         if (!$linea->save()) {
@@ -157,6 +159,7 @@ class LineaController extends ControllerBase
 
         $linea->setLineaNombre($this->request->getPost("linea_nombre"));
         $linea->setLineaCentrocosto($this->request->getPost("linea_centroCosto"));
+        $linea->setLineaHabilitado($this->request->getPost("linea_habilitado"));
         
 
         if (!$linea->save()) {

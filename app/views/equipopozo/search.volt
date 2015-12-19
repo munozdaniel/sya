@@ -17,6 +17,7 @@
         <tr>
             <th>EquipoPozo</th>
             <th>EquipoPozo Of Nombre</th>
+            <th>EquipoPozo Of Habilitado</th>
          </tr>
     </thead>
     <tbody>
@@ -25,6 +26,7 @@
         <tr>
             <td>{{ equipopozo.getEquipopozoId() }}</td>
             <td>{{ equipopozo.getEquipopozoNombre() }}</td>
+            <td>{{ equipopozo.getEquipopozoHabilitado() }}</td>
             <td>{{ link_to("equipopozo/edit/"~equipopozo.getEquipopozoId(), "Edit") }}</td>
             <td>{{ link_to("equipopozo/delete/"~equipopozo.getEquipopozoId(), "Delete") }}</td>
         </tr>

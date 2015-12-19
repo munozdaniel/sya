@@ -29,6 +29,14 @@
             {{ text_field("yacimiento_equipoPozo", "type" : "numeric") }}
         </td>
     </tr>
+    <tr>
+        <td align="right">
+            <label for="yacimiento_habilitado">Yacimiento Of Habilitado</label>
+        </td>
+        <td align="left">
+            {{ text_field("yacimiento_habilitado", "type" : "numeric") }}
+        </td>
+    </tr>
 
     <tr>
         <td>{{ hidden_field("id") }}</td>

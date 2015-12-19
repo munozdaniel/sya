@@ -18,6 +18,7 @@
             <th>Linea</th>
             <th>Linea Of Nombre</th>
             <th>Linea Of CentroCosto</th>
+            <th>Linea Of Habilitado</th>
          </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
             <td>{{ linea.getLineaId() }}</td>
             <td>{{ linea.getLineaNombre() }}</td>
             <td>{{ linea.getLineaCentrocosto() }}</td>
+            <td>{{ linea.getLineaHabilitado() }}</td>
             <td>{{ link_to("linea/edit/"~linea.getLineaId(), "Edit") }}</td>
             <td>{{ link_to("linea/delete/"~linea.getLineaId(), "Delete") }}</td>
         </tr>

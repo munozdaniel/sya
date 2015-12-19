@@ -22,6 +22,12 @@ class Linea extends \Phalcon\Mvc\Model
     protected $linea_centroCosto;
 
     /**
+     *
+     * @var integer
+     */
+    protected $linea_habilitado;
+
+    /**
      * Method to set the value of field linea_id
      *
      * @param integer $linea_id
@@ -61,6 +67,19 @@ class Linea extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field linea_habilitado
+     *
+     * @param integer $linea_habilitado
+     * @return $this
+     */
+    public function setLineaHabilitado($linea_habilitado)
+    {
+        $this->linea_habilitado = $linea_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field linea_id
      *
      * @return integer
@@ -88,6 +107,16 @@ class Linea extends \Phalcon\Mvc\Model
     public function getLineaCentroCosto()
     {
         return $this->linea_centroCosto;
+    }
+
+    /**
+     * Returns the value of field linea_habilitado
+     *
+     * @return integer
+     */
+    public function getLineaHabilitado()
+    {
+        return $this->linea_habilitado;
     }
 
     /**

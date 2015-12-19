@@ -21,6 +21,14 @@
             {{ text_field("equipoPozo_nombre", "size" : 30) }}
         </td>
     </tr>
+    <tr>
+        <td align="right">
+            <label for="equipoPozo_habilitado">EquipoPozo Of Habilitado</label>
+        </td>
+        <td align="left">
+            {{ text_field("equipoPozo_habilitado", "type" : "numeric") }}
+        </td>
+    </tr>
 
     <tr>
         <td>{{ hidden_field("id") }}</td>

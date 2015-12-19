@@ -15,6 +15,14 @@
 <table>
     <tr>
         <td align="right">
+            <label for="cliente_nombre">Cliente Of Nombre</label>
+        </td>
+        <td align="left">
+            {{ text_field("cliente_nombre", "size" : 30) }}
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
             <label for="cliente_operadora">Cliente Of Operadora</label>
         </td>
         <td align="left">
@@ -43,6 +51,14 @@
         </td>
         <td align="left">
             {{ text_field("cliente_yacimiento", "type" : "numeric") }}
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
+            <label for="cliente_habilitado">Cliente Of Habilitado</label>
+        </td>
+        <td align="left">
+            {{ text_field("cliente_habilitado", "type" : "numeric") }}
         </td>
     </tr>
 

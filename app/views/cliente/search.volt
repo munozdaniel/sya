@@ -16,10 +16,12 @@
     <thead>
         <tr>
             <th>Cliente</th>
+            <th>Cliente Of Nombre</th>
             <th>Cliente Of Operadora</th>
             <th>Cliente Of Frs</th>
             <th>Cliente Of Linea</th>
             <th>Cliente Of Yacimiento</th>
+            <th>Cliente Of Habilitado</th>
          </tr>
     </thead>
     <tbody>
@@ -27,10 +29,12 @@
     {% for cliente in page.items %}
         <tr>
             <td>{{ cliente.getClienteId() }}</td>
+            <td>{{ cliente.getClienteNombre() }}</td>
             <td>{{ cliente.getClienteOperadora() }}</td>
             <td>{{ cliente.getClienteFrs() }}</td>
             <td>{{ cliente.getClienteLinea() }}</td>
             <td>{{ cliente.getClienteYacimiento() }}</td>
+            <td>{{ cliente.getClienteHabilitado() }}</td>
             <td>{{ link_to("cliente/edit/"~cliente.getClienteId(), "Edit") }}</td>
             <td>{{ link_to("cliente/delete/"~cliente.getClienteId(), "Delete") }}</td>
         </tr>

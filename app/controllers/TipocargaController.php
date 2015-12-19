@@ -58,7 +58,7 @@ class TipocargaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $tipocarga,
-            "limit"=> 10000,
+            "limit"=> 10,
             "page" => $numberPage
         ));
 

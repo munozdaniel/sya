@@ -86,6 +86,7 @@ class YacimientoController extends ControllerBase
             $this->tag->setDefault("yacimiento_id", $yacimiento->getYacimientoId());
             $this->tag->setDefault("yacimiento_destino", $yacimiento->getYacimientoDestino());
             $this->tag->setDefault("yacimiento_equipoPozo", $yacimiento->getYacimientoEquipopozo());
+            $this->tag->setDefault("yacimiento_habilitado", $yacimiento->getYacimientoHabilitado());
             
         }
     }
@@ -107,6 +108,7 @@ class YacimientoController extends ControllerBase
 
         $yacimiento->setYacimientoDestino($this->request->getPost("yacimiento_destino"));
         $yacimiento->setYacimientoEquipopozo($this->request->getPost("yacimiento_equipoPozo"));
+        $yacimiento->setYacimientoHabilitado($this->request->getPost("yacimiento_habilitado"));
         
 
         if (!$yacimiento->save()) {
@@ -157,6 +159,7 @@ class YacimientoController extends ControllerBase
 
         $yacimiento->setYacimientoDestino($this->request->getPost("yacimiento_destino"));
         $yacimiento->setYacimientoEquipopozo($this->request->getPost("yacimiento_equipoPozo"));
+        $yacimiento->setYacimientoHabilitado($this->request->getPost("yacimiento_habilitado"));
         
 
         if (!$yacimiento->save()) {
