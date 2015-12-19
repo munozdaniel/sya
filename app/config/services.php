@@ -124,3 +124,13 @@ $di->set('dispatcher', function() use ($di)
 
     return $dispatcher;
 });
+/**
+ * Ajax Plugin
+ */
+$di->set("jquery",function(){
+    $jquery= new Ajax\JsUtils(array("driver"=>"Jquery"));
+    $jquery->ui(new Ajax\JqueryUI());//optional for JQuery UI
+    $jquery->bootstrap(new Ajax\Bootstrap());//Optional for Twitter Bootstrap
+
+    return $jquery;
+});

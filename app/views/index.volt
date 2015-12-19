@@ -9,6 +9,8 @@
         {{ getTitle() }}
         <link rel="shortcut icon" type="image/png" href="{{ url('favicon.ico') }}">
         {#Archivos Globales#}
+        {#Plugin PhalconJquery#}
+        {{jquery}}
         {# Bootstrap 3.3.5 #}
         {{ stylesheet_link('bootstrap/css/bootstrap.min.css') }}
         {#  Font Awesome #}
