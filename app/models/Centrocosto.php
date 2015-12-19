@@ -16,6 +16,12 @@ class Centrocosto extends \Phalcon\Mvc\Model
     protected $centroCosto_codigo;
 
     /**
+     *
+     * @var integer
+     */
+    protected $centroCosto_habilitado;
+
+    /**
      * Method to set the value of field centroCosto_id
      *
      * @param integer $centroCosto_id
@@ -42,6 +48,19 @@ class Centrocosto extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field centroCosto_habilitado
+     *
+     * @param integer $centroCosto_habilitado
+     * @return $this
+     */
+    public function setCentroCostoHabilitado($centroCosto_habilitado)
+    {
+        $this->centroCosto_habilitado = $centroCosto_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field centroCosto_id
      *
      * @return integer
@@ -59,6 +78,16 @@ class Centrocosto extends \Phalcon\Mvc\Model
     public function getCentroCostoCodigo()
     {
         return $this->centroCosto_codigo;
+    }
+
+    /**
+     * Returns the value of field centroCosto_habilitado
+     *
+     * @return integer
+     */
+    public function getCentroCostoHabilitado()
+    {
+        return $this->centroCosto_habilitado;
     }
 
     /**

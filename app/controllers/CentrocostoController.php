@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class CentrocostoController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Centro Costo');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class CentrocostoController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -36,7 +48,7 @@ class CentrocostoController extends ControllerBase
 
         $centrocosto = Centrocosto::find($parameters);
         if (count($centrocosto) == 0) {
-            $this->flash->notice("The search did not find any centrocosto");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "centrocosto",
@@ -46,7 +58,7 @@ class CentrocostoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $centrocosto,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 
@@ -73,7 +85,7 @@ class CentrocostoController extends ControllerBase
 
             $centrocosto = Centrocosto::findFirstBycentroCosto_id($centroCosto_id);
             if (!$centrocosto) {
-                $this->flash->error("centrocosto was not found");
+                $this->flash->error("Centro Costo no ha sido encontrado");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "centrocosto",
@@ -85,6 +97,7 @@ class CentrocostoController extends ControllerBase
 
             $this->tag->setDefault("centroCosto_id", $centrocosto->getCentrocostoId());
             $this->tag->setDefault("centroCosto_codigo", $centrocosto->getCentrocostoCodigo());
+            $this->tag->setDefault("centroCosto_habilitado", $centrocosto->getCentrocostoHabilitado());
             
         }
     }
@@ -105,6 +118,7 @@ class CentrocostoController extends ControllerBase
         $centrocosto = new Centrocosto();
 
         $centrocosto->setCentrocostoCodigo($this->request->getPost("centroCosto_codigo"));
+        $centrocosto->setCentrocostoHabilitado(1);
         
 
         if (!$centrocosto->save()) {
@@ -118,7 +132,7 @@ class CentrocostoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("centrocosto was created successfully");
+        $this->flash->success("Centro Costo ha sido creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "centrocosto",
@@ -145,7 +159,7 @@ class CentrocostoController extends ControllerBase
 
         $centrocosto = Centrocosto::findFirstBycentroCosto_id($centroCosto_id);
         if (!$centrocosto) {
-            $this->flash->error("centrocosto does not exist " . $centroCosto_id);
+            $this->flash->error("Centro Costo no existe - ID: " . $centroCosto_id);
 
             return $this->dispatcher->forward(array(
                 "controller" => "centrocosto",
@@ -154,6 +168,7 @@ class CentrocostoController extends ControllerBase
         }
 
         $centrocosto->setCentrocostoCodigo($this->request->getPost("centroCosto_codigo"));
+        $centrocosto->setCentrocostoHabilitado($this->request->getPost("centroCosto_habilitado"));
         
 
         if (!$centrocosto->save()) {
@@ -169,7 +184,7 @@ class CentrocostoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("centrocosto was updated successfully");
+        $this->flash->success("Centro Costo ha sido actualizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "centrocosto",
@@ -188,7 +203,7 @@ class CentrocostoController extends ControllerBase
 
         $centrocosto = Centrocosto::findFirstBycentroCosto_id($centroCosto_id);
         if (!$centrocosto) {
-            $this->flash->error("centrocosto was not found");
+            $this->flash->error("Centro Costo no ha sido encontrado");
 
             return $this->dispatcher->forward(array(
                 "controller" => "centrocosto",
@@ -208,12 +223,78 @@ class CentrocostoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("centrocosto was deleted successfully");
+        $this->flash->success("Centro Costo ha sido eliminado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "centrocosto",
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $centrocosto = centrocosto::findFirstByCentroCosto_id($id);
+            if (!$centrocosto) {
+                $this->flash->error("El Centro Costo  no ha sido encontrado");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "centrocosto",
+                    "action" => "index"
+                ));
+            }
+            $centrocosto->centroCosto_habilitado = 0;
+            if (!$centrocosto->update()) {
+
+                foreach ($centrocosto->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "centrocosto",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El Centro Costo ha sido eliminado correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "centrocosto",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $centrocosto = Centrocosto::findFirstByCentroCosto_id($id);
+        $centrocosto->centroCosto_habilitado = 1;
+        if (!$centrocosto->update()) {
+
+            foreach ($centrocosto->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "centrocosto",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El Centro Costo ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "centrocosto",
+            "action" => "search"
+        ));
+    }
 }
