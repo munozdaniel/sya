@@ -5,7 +5,7 @@
 
 
 <div align="right">
-    {{ link_to("transporte/new", "crear transporte",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("transporte/new", "Crear Transporte",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 <!-- Inicio Formulario -->
 {{ content() }}

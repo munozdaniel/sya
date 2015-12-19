@@ -46,7 +46,7 @@ class OrdenController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $orden,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 

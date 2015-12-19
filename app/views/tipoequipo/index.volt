@@ -3,7 +3,7 @@
     <h3 class="box-title">Buscar Tipo de Equipo</h3>
 </div><!-- /.Titulo -->
 <div align="right">
-    {{ link_to("tipoequipo/new", "crear transporte",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("tipoequipo/new", "Crear Tipo de Equipo",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 <!-- Inicio Formulario -->
 {{ content() }}

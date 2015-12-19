@@ -58,7 +58,7 @@ class TipoequipoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $tipoEquipo,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 

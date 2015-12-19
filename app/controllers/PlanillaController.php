@@ -33,22 +33,7 @@ class PlanillaController extends ControllerBase
      */
     public function searchAction()
     {
-        $this->assets->collection('headerCss')
-            ->addCss('plugins/datatables/dataTables.bootstrap.css');
-        $this->assets->collection('footer')
-            ->addJs('plugins/datatables/jquery.dataTables.min.js')
-            ->addJs('plugins/datatables/dataTables.bootstrap.min.js');
-        $this->assets->collection('footerInline')
-            ->addInlineJs('
-            $(function () {
-            $("#tabla_id").DataTable();
-            });')
-            ->addInlineJs('
-            $(document).on("click", ".enviar-dato", function () {
-                var id = $(this).data("id");
-                $("#cuerpo #id").val( id );
-            });
-        ');
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -76,7 +61,7 @@ class PlanillaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $planilla,
-            "limit" => 10,
+            "limit" => 10000,
             "page" => $numberPage
         ));
 

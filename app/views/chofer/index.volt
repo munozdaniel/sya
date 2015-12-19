@@ -3,7 +3,7 @@
     <h3 class="box-title">Buscar Chofer</h3>
 </div><!-- /.Titulo -->
 <div align="right">
-    {{ link_to("chofer/new", "crear transporte",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("chofer/new", "Crear Chofer",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 {{ content() }}
 {{ form("chofer/search", "method":"post", "autocomplete" : "off") }}

@@ -4,7 +4,7 @@
 </div><!-- /.Titulo -->
 
 <div align="right">
-    {{ link_to("viaje/new", "crear transporte",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("viaje/new", "Crear Viaje",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 
 <!-- Inicio Formulario -->

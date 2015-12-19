@@ -58,7 +58,7 @@ class ViajeController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $viaje,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 
