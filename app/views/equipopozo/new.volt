@@ -1,41 +1,30 @@
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Crear Equipo/Pozo</h3>
+</div><!-- /.Titulo -->
+<!-- Formulario -->
+{{ content() }}
 
 {{ form("equipopozo/create", "method":"post") }}
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("equipopozo", "Go Back") }}</td>
-        <td align="right">{{ submit_button("Save") }}</td>
+        <td align="left">
+            {{ link_to("equipopozo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+        </td>
     </tr>
 </table>
-
-{{ content() }}
-
-<div align="center">
-    <h1>Create equipopozo</h1>
+<!-- Cuerpo -->
+<div class="box-body">
+    {#======================================================#}
+    <label for="equipoPozo_nombre">Nombre </label>
+    <div class="form-group">
+        {{ text_field("equipoPozo_nombre", "size" : 30) }}
+    </div>
+    {#======================================================#}
+</div><!-- /. Cuerpo -->
+<!-- Footer -->
+<div class="box-footer">
+    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="equipoPozo_nombre">EquipoPozo Of Nombre</label>
-        </td>
-        <td align="left">
-            {{ text_field("equipoPozo_nombre", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="equipoPozo_habilitado">EquipoPozo Of Habilitado</label>
-        </td>
-        <td align="left">
-            {{ text_field("equipoPozo_habilitado", "type" : "numeric") }}
-        </td>
-    </tr>
-
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Save") }}</td>
-    </tr>
-</table>
-
 </form>

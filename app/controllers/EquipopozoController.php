@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class EquipopozoController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Equipo/Pozo');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class EquipopozoController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -36,7 +48,7 @@ class EquipopozoController extends ControllerBase
 
         $equipopozo = Equipopozo::find($parameters);
         if (count($equipopozo) == 0) {
-            $this->flash->notice("The search did not find any equipopozo");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "equipopozo",
@@ -73,7 +85,7 @@ class EquipopozoController extends ControllerBase
 
             $equipopozo = Equipopozo::findFirstByequipoPozo_id($equipoPozo_id);
             if (!$equipopozo) {
-                $this->flash->error("equipopozo was not found");
+                $this->flash->error("El Equipo/Pozo no se encontró");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "equipopozo",
@@ -120,7 +132,7 @@ class EquipopozoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("equipopozo was created successfully");
+        $this->flash->success("El Equipo/Pozo se ha actualizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "equipopozo",
@@ -147,7 +159,7 @@ class EquipopozoController extends ControllerBase
 
         $equipopozo = Equipopozo::findFirstByequipoPozo_id($equipoPozo_id);
         if (!$equipopozo) {
-            $this->flash->error("equipopozo does not exist " . $equipoPozo_id);
+            $this->flash->error("El Equipo/Pozo no existe - ID: " . $equipoPozo_id);
 
             return $this->dispatcher->forward(array(
                 "controller" => "equipopozo",
@@ -156,7 +168,7 @@ class EquipopozoController extends ControllerBase
         }
 
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
-        $equipopozo->setEquipopozoHabilitado($this->request->getPost("equipoPozo_habilitado"));
+        $equipopozo->setEquipopozoHabilitado(1);
         
 
         if (!$equipopozo->save()) {
@@ -172,7 +184,7 @@ class EquipopozoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("equipopozo was updated successfully");
+        $this->flash->success("El Equipo/Pozo se ha creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "equipopozo",
@@ -191,7 +203,7 @@ class EquipopozoController extends ControllerBase
 
         $equipopozo = Equipopozo::findFirstByequipoPozo_id($equipoPozo_id);
         if (!$equipopozo) {
-            $this->flash->error("equipopozo was not found");
+            $this->flash->error("El Equipo/Pozo no se encontró");
 
             return $this->dispatcher->forward(array(
                 "controller" => "equipopozo",
@@ -211,12 +223,79 @@ class EquipopozoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("equipopozo was deleted successfully");
+        $this->flash->success("El Equipo/Pozo ha sido eliminado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "equipopozo",
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar un equipopozo de manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $equipopozo = Equipopozo::findFirstByEquipopozo_id($id);
+            if (!$equipopozo) {
+                $this->flash->error("El Equipo/Pozo no ha sido encontrado");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "equipopozo",
+                    "action" => "index"
+                ));
+            }
+            $equipopozo->equipoPozo_habilitado = 0;
+            if (!$equipopozo->update()) {
+
+                foreach ($equipopozo->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "equipopozo",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El Equipo/Pozo ha sido eliminado correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "equipopozo",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar un equipopozo.
+     * @param $idTransporte
+     * @return bool
+     */
+    public function habilitarAction($idTransporte)
+    {
+        $equipopozo = Equipopozo::findFirstByEquipopozo_id($idTransporte);
+        $equipopozo->equipoPozo_habilitado = 1;
+        if (!$equipopozo->update()) {
+
+            foreach ($equipopozo->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "equipopozo",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El Equipo/Pozo ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "equipopozo",
+            "action" => "search"
+        ));
+    }
 }
