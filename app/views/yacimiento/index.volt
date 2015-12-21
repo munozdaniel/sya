@@ -4,7 +4,7 @@
 </div><!-- /.Titulo -->
 
 <div align="right">
-    {{ link_to("viaje/new", "Crear Viaje",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("yacimiento/new", "Crear Viaje",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 
 <!-- Inicio Formulario -->
@@ -26,7 +26,7 @@
 
     {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
     {% if admin!=1 %}
-        {{ hidden_field("viaje_habilitado", "value" : "1" ) }}
+        {{ hidden_field("yacimiento_habilitado", "value" : "1" ) }}
     {% endif %}
 </div><!-- /.Cuerpo -->
 <!-- Footer -->
