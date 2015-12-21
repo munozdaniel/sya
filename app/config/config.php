@@ -20,6 +20,8 @@ return new \Phalcon\Config(array(
         'libraryDir'     => APP_PATH . '/app/library/',
         'excelDir'     => APP_PATH . '/app/library/excel/',
         'ajaxDir'     => APP_PATH . '/app/library/Ajax/',
+        'formDir'     => APP_PATH . '/app/forms/',
+        'componenteDir'     => APP_PATH . '/app/library/componentes/',
         'utilesDir'     => APP_PATH . '/app/library/utiles/',
         'cacheDir'       => APP_PATH . '/app/cache/',
         'baseUri'        => '/sya/',

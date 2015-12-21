@@ -14,6 +14,8 @@ $loader->registerDirs(
         $config->application->utilesDir,
         $config->application->excelDir,
         $config->application->ajaxDir,
+        $config->application->formDir,
+        $config->application->componenteDir,
         $config->application->modelsDir
     )
 )->register();
