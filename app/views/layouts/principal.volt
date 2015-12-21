@@ -122,6 +122,10 @@
                     </a>
                         <ul class="treeview-menu">
                             <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
+                            <li>{{ link_to('centrocosto','<i class="fa fa-circle-o"></i>  Centro Costo') }}</li>
+                            <li>{{ link_to('linea','<i class="fa fa-circle-o"></i>  Linea') }}</li>
+                            <li>{{ link_to('equipopozo','<i class="fa fa-circle-o"></i>  Equipo/Pozo') }}</li>
+                            <li>{{ link_to('yacimiento','<i class="fa fa-circle-o"></i>  Yacimiento') }}</li>
                             <li>{{ link_to('chofer','<i class="fa fa-circle-o"></i>  Chofer') }}</li>
                             <li>{{ link_to('transporte','<i class="fa fa-circle-o"></i>  Transporte') }}</li>
                             <li>{{ link_to('tipoequipo','<i class="fa fa-circle-o"></i>  Tipo Equipo') }}</li>
