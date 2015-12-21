@@ -28,19 +28,24 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         $atributosInput = $this->getAttributes ()[0];
         $atributosLista = $this->getAttributes ()[1];
         $campos = $this->getAttributes ()[2];
-        $html = "<input type='text' id='" . $this->getName() ."' name='" . $this->getName() ."' list='list_" . $this->getName()."' ";
+        $html = "<input type='text' id='" . $this->getName() ."' name='" . $this->getName() ."' list='list_" . $this->getName()."'";
         foreach($atributosInput as $atributo => $valor)
         {
             $html .= " $atributo = ' $valor '";
         }
-        $html .= ">";
-        $html .= "<datalist  id=\"list_" . $this->getName() ."\" >";
+        $html .= ">\n ";
+        $html .= "<datalist  id=\"list_" . $this->getName() ."\"  >";
         foreach($atributosLista as $option => $valor)
         {
-            $html .= "<option value=\"" . $valor-> $campos[0]. "\" data-value=\"".$valor-> $campos[1]."\">";
-            $html .= "</option>";
+            $html .= "<option data-value=\"" . $valor->$campos[0]. "\" value=\"".$valor-> $campos[1]."\">";
+            $html .= "</option> \n ";
         }
         $html .="</datalist>";
+        $html .= "<input type='hidden' id=".$this->getName()."_field name=".$this->getName()."_field >";
+        $html .= "\n <script>";
+        $html .= "\n   $(document).ready(function () { \n $('#submit').click(function () {\n ";
+        $html .= "var value = $('#".$this->getName()."').val()\n ";
+        $html .= "document.getElementById('".$this->getName()."_field').value = $('#list_".$this->getName()." [value=' + value + ']').data('value') ; }); \n});\n   </script>";
         return $html;
     }
 }
