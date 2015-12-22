@@ -1,49 +1,32 @@
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Crear Linea</h3>
+</div><!-- /.Titulo -->
+<!-- Formulario -->
+{{ content() }}
 
 {{ form("linea/create", "method":"post") }}
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("linea", "Go Back") }}</td>
-        <td align="right">{{ submit_button("Save") }}</td>
+        <td align="left">
+            {{ link_to("linea", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+        </td>
     </tr>
 </table>
 
-{{ content() }}
+<!-- Cuerpo -->
+<div class="box-body">
+    <label for="linea_nombre">Nombre de la Linea</label>
 
-<div align="center">
-    <h1>Create linea</h1>
+    <div class="form-group">
+        {{ text_field("linea_nombre", "size" : 30) }}
+    </div>
+    {#==================================================#}
+</div><!-- /. Cuerpo -->
+<!-- Footer -->
+<div class="box-footer">
+    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="linea_nombre">Linea Of Nombre</label>
-        </td>
-        <td align="left">
-            {{ text_field("linea_nombre", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="linea_centroCosto">Linea Of CentroCosto</label>
-        </td>
-        <td align="left">
-            {{ text_field("linea_centroCosto", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="linea_habilitado">Linea Of Habilitado</label>
-        </td>
-        <td align="left">
-            {{ text_field("linea_habilitado", "type" : "numeric") }}
-        </td>
-    </tr>
-
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Save") }}</td>
-    </tr>
-</table>
-
 </form>
+

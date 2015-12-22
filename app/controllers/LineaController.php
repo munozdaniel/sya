@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class LineaController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Linea');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class LineaController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -36,7 +48,7 @@ class LineaController extends ControllerBase
 
         $linea = Linea::find($parameters);
         if (count($linea) == 0) {
-            $this->flash->notice("The search did not find any linea");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "linea",
@@ -46,7 +58,7 @@ class LineaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $linea,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 
@@ -73,7 +85,7 @@ class LineaController extends ControllerBase
 
             $linea = Linea::findFirstBylinea_id($linea_id);
             if (!$linea) {
-                $this->flash->error("linea was not found");
+                $this->flash->error("La linea no se encontró");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "linea",
@@ -85,7 +97,6 @@ class LineaController extends ControllerBase
 
             $this->tag->setDefault("linea_id", $linea->getLineaId());
             $this->tag->setDefault("linea_nombre", $linea->getLineaNombre());
-            $this->tag->setDefault("linea_centroCosto", $linea->getLineaCentrocosto());
             $this->tag->setDefault("linea_habilitado", $linea->getLineaHabilitado());
             
         }
@@ -107,8 +118,7 @@ class LineaController extends ControllerBase
         $linea = new Linea();
 
         $linea->setLineaNombre($this->request->getPost("linea_nombre"));
-        $linea->setLineaCentrocosto($this->request->getPost("linea_centroCosto"));
-        $linea->setLineaHabilitado($this->request->getPost("linea_habilitado"));
+        $linea->setLineaHabilitado(1);
         
 
         if (!$linea->save()) {
@@ -122,7 +132,7 @@ class LineaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("linea was created successfully");
+        $this->flash->success("La linea ha sido creada correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "linea",
@@ -149,7 +159,7 @@ class LineaController extends ControllerBase
 
         $linea = Linea::findFirstBylinea_id($linea_id);
         if (!$linea) {
-            $this->flash->error("linea does not exist " . $linea_id);
+            $this->flash->error("La linea no existe - ID: " . $linea_id);
 
             return $this->dispatcher->forward(array(
                 "controller" => "linea",
@@ -158,8 +168,7 @@ class LineaController extends ControllerBase
         }
 
         $linea->setLineaNombre($this->request->getPost("linea_nombre"));
-        $linea->setLineaCentrocosto($this->request->getPost("linea_centroCosto"));
-        $linea->setLineaHabilitado($this->request->getPost("linea_habilitado"));
+        $linea->setLineaHabilitado(1);
         
 
         if (!$linea->save()) {
@@ -175,7 +184,7 @@ class LineaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("linea was updated successfully");
+        $this->flash->success("La linea ha sido actualizada correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "linea",
@@ -194,7 +203,7 @@ class LineaController extends ControllerBase
 
         $linea = Linea::findFirstBylinea_id($linea_id);
         if (!$linea) {
-            $this->flash->error("linea was not found");
+            $this->flash->error("La linea no se encontró");
 
             return $this->dispatcher->forward(array(
                 "controller" => "linea",
@@ -214,12 +223,78 @@ class LineaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("linea was deleted successfully");
+        $this->flash->success("La linea se ha eliminado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "linea",
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $linea = Linea::findFirstByLinea_id($id);
+            if (!$linea) {
+                $this->flash->error("La Linea no ha sido encontrada");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "linea",
+                    "action" => "index"
+                ));
+            }
+            $linea->linea_habilitado = 0;
+            if (!$linea->update()) {
+
+                foreach ($linea->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "linea",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("La Linea ha sido eliminada correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "linea",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $linea = Linea::findFirstByLinea_id($id);
+        $linea->linea_habilitado = 1;
+        if (!$linea->update()) {
+
+            foreach ($linea->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "linea",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("La Linea ha sido habilitada");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "linea",
+            "action" => "search"
+        ));
+    }
 }
