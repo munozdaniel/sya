@@ -121,5 +121,18 @@ class Yacimiento extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    public function validation()
+    {
 
+        $this->validate(
+            new \Phalcon\Mvc\Model\Validator\Uniqueness(
+                array(
+                    "field"   => "yacimiento_destino",
+                    "message" => "El Destino ya existe"
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }

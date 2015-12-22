@@ -59,7 +59,7 @@ class YacimientoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $yacimiento,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 
