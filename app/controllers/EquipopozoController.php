@@ -58,7 +58,7 @@ class EquipopozoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $equipopozo,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 

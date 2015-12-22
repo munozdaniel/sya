@@ -1,6 +1,6 @@
 <!-- Titulo -->
 <div class="box-header">
-    <h3 class="box-title">Listado de Tipos de Carga</h3>
+    <h3 class="box-title">Listado de Equipo/Pozo</h3>
 
     <table width="100%">
         <tr>
