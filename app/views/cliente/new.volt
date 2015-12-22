@@ -1,18 +1,58 @@
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Crear Cliente</h3>
+</div><!-- /.Titulo -->
+<!-- Formulario -->
+{{ content() }}
 
 {{ form("cliente/create", "method":"post") }}
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("cliente", "Go Back") }}</td>
-        <td align="right">{{ submit_button("Save") }}</td>
+        <td align="left">
+            {{ link_to("cliente", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+        </td>
     </tr>
 </table>
+<!-- Cuerpo -->
+<div class="box-body">
+    {#======================================================#}
+    {{ formCliente.label('cliente_nombre') }}
+    <div class="form-group">
+        {{ formCliente.render('cliente_nombre') }}
+    </div>
+    {#======================================================#}
+    {{ formCliente.label('cliente_operadora') }}
+    <div class="form-group">
+        {{ formCliente.render('cliente_operadora') }}
+    </div>
+    {#======================================================#}
+    {{ formCliente.label('yacimiento_destino') }}
+    <div class="form-group">
+        {{ formCliente.render('yacimiento_destino') }}
+    </div>
+    {#======================================================#}
+    {{ formCliente.label('equipoPozo_nombre') }}
+    <div class="form-group">
+        {{ formCliente.render('equipoPozo_nombre') }}
+    </div>
+    {#======================================================#}
+    {{ formCliente.label('linea_nombre') }}
+    <div class="form-group">
+        {{ formCliente.render('linea_nombre') }}
+    </div>
+    {#======================================================#}
+    {{ formCliente.label('centroCosto_codigo') }}
+    <div class="form-group">
+        {{ formCliente.render('centroCosto_codigo') }}
+    </div>
 
-{{ content() }}
-
-<div align="center">
-    <h1>Create cliente</h1>
+</div><!-- /. Cuerpo -->
+<!-- Footer -->
+<div class="box-footer">
+    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
+</form>
 
 <table>
     <tr>

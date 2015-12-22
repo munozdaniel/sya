@@ -1,10 +1,11 @@
+<!-- Titulo -->
 <div class="box-header with-border">
     <h3 class="box-title">Buscar planilla</h3>
-</div><!-- /.box-header -->
-<!-- form start -->
+</div><!-- /.Titulo -->
+<!-- Formulario-->
 
 <div align="right">
-    {{ link_to("planilla/new", "crear planilla",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("planilla/new", "Crear Planilla",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 {{ content() }}
 {{ form("planilla/search", "method":"post", "autocomplete" : "") }}

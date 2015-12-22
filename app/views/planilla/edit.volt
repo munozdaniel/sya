@@ -4,7 +4,7 @@
 <!-- form start -->
 
 {{ content() }}
-                {{ form("planilla/save", "method":"post") }}
+{{ form("planilla/save", "method":"post") }}
 <table width="100%">
     <tr>
         <td align="left">

@@ -14,9 +14,9 @@
 </table>
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="tipoEquipo_nombre">Nombre del Equipo</label>
+    <label for="tipoCarga_nombre">Nombre del Equipo</label>
     <div class="form-group">
-        {{ text_field("tipoEquipo_nombre", "size" : 30) }}
+        {{ text_field("tipoCarga_nombre", "size" : 30) }}
     </div>
 </div><!-- /.Cuerpo -->
 
