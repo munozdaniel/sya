@@ -46,7 +46,7 @@ class TarifaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $tarifa,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 

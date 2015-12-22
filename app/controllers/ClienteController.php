@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class ClienteController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Cliente');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class ClienteController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -58,7 +70,7 @@ class ClienteController extends ControllerBase
      */
     public function newAction()
     {
-
+        $this->view->formCliente= new ClienteForm();
     }
 
     /**
@@ -73,7 +85,7 @@ class ClienteController extends ControllerBase
 
             $cliente = Cliente::findFirstBycliente_id($cliente_id);
             if (!$cliente) {
-                $this->flash->error("cliente was not found");
+                $this->flash->error("El cliente no ha sido encontrado");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "cliente",
@@ -114,7 +126,7 @@ class ClienteController extends ControllerBase
         $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
         $cliente->setClienteLinea($this->request->getPost("cliente_linea"));
         $cliente->setClienteYacimiento($this->request->getPost("cliente_yacimiento"));
-        $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
+        $cliente->setClienteHabilitado(1);
         
 
         if (!$cliente->save()) {
@@ -128,7 +140,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("cliente was created successfully");
+        $this->flash->success("El Cliente se ha creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
@@ -155,7 +167,7 @@ class ClienteController extends ControllerBase
 
         $cliente = Cliente::findFirstBycliente_id($cliente_id);
         if (!$cliente) {
-            $this->flash->error("cliente does not exist " . $cliente_id);
+            $this->flash->error("El Cliente con el ID: " . $cliente_id." no existe");
 
             return $this->dispatcher->forward(array(
                 "controller" => "cliente",
@@ -184,7 +196,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("cliente was updated successfully");
+        $this->flash->success("El cliente se ha actualizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
@@ -203,7 +215,7 @@ class ClienteController extends ControllerBase
 
         $cliente = Cliente::findFirstBycliente_id($cliente_id);
         if (!$cliente) {
-            $this->flash->error("cliente was not found");
+            $this->flash->error("El cliente no se ha encontrado");
 
             return $this->dispatcher->forward(array(
                 "controller" => "cliente",
@@ -223,7 +235,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("cliente was deleted successfully");
+        $this->flash->success("El cliente ha sido eliminado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
