@@ -45,7 +45,10 @@ $di->setShared('view', function () use ($config) {
                 'compiledPath' => $config->application->cacheDir,
                 'compiledSeparator' => '_'
             ));
-
+            /*Agregado para los formularios: Verifica si un elemento es intancia de alguna clase ingresada por parametro*/
+            $compiler = $volt->getCompiler();
+            $compiler->addFunction('is_a', 'is_a');
+            /*Fin*/
             return $volt;
         },
         '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
