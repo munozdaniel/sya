@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -17,6 +17,7 @@ class EquipopozoController extends ControllerBase
         parent::initialize();
 
     }
+
     /**
      * Index action
      */
@@ -60,7 +61,7 @@ class EquipopozoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $equipopozo,
-            "limit"=> 10000,
+            "limit" => 10000,
             "page" => $numberPage
         ));
 
@@ -94,13 +95,20 @@ class EquipopozoController extends ControllerBase
                     "action" => "index"
                 ));
             }
-
+            $this->view->equipoPozoForm = new EquipoPozoForm($equipopozo, array('edit' => true));
             $this->view->equipoPozo_id = $equipopozo->equipoPozo_id;
 
             $this->tag->setDefault("equipoPozo_id", $equipopozo->getEquipopozoId());
             $this->tag->setDefault("equipoPozo_nombre", $equipopozo->getEquipopozoNombre());
             $this->tag->setDefault("equipoPozo_habilitado", $equipopozo->getEquipopozoHabilitado());
-            
+
+            $destino = Yacimiento::findFirstByYacimiento_id($equipopozo->getEquipoPozoYacimientoId())->yacimiento_destino;
+            $this->assets->collection('footerInline')->addInlineJs("
+                                            function cargarCombo() {
+                                                document.getElementById('equipoPozo_yacimiento').value='$destino';
+                                            }
+                                            window.onload = cargarCombo;
+                                        ");
         }
     }
 
@@ -118,22 +126,20 @@ class EquipopozoController extends ControllerBase
         }
 
         $equipopozo = new Equipopozo();
-        if($this->request->getPost("nuevoYacimiento")==1)//Nuevo Yacimiento? 1:SI
+        if ($this->request->getPost("nuevoYacimiento") == 1)//Nuevo Yacimiento? 1:SI
         {
             $yacimiento = new Yacimiento();
             $yacimiento->assign(array(
                 'yacimiento_destino' => $this->request->getPost('yacimiento_destino'),
                 'yacimiento_habilitado' => 1,
             ));
-            if(!$yacimiento->save())
-            {
+            if (!$yacimiento->save()) {
                 foreach ($yacimiento->getMessages() as $message) {
                     $this->flash->error($message);
                 }
             }
             $equipopozo->setEquipoPozoYacimientoId($yacimiento->getYacimientoId());
-        }
-        else{
+        } else {
             $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
         }
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
@@ -184,10 +190,25 @@ class EquipopozoController extends ControllerBase
                 "action" => "index"
             ));
         }
-
+        if ($this->request->getPost("nuevoYacimiento") == 1)//Nuevo Yacimiento? 1:SI
+        {
+            $yacimiento = new Yacimiento();
+            $yacimiento->assign(array(
+                'yacimiento_destino' => $this->request->getPost('yacimiento_destino'),
+                'yacimiento_habilitado' => 1,
+            ));
+            if (!$yacimiento->save()) {
+                foreach ($yacimiento->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+            }
+            $equipopozo->setEquipoPozoYacimientoId($yacimiento->getYacimientoId());
+        } else {
+            $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
+        }
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
         $equipopozo->setEquipopozoHabilitado(1);
-        
+
 
         if (!$equipopozo->save()) {
 
@@ -248,6 +269,7 @@ class EquipopozoController extends ControllerBase
             "action" => "index"
         ));
     }
+
     /**
      * Eliminar un equipopozo de manera logica.
      *
