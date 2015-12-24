@@ -23,6 +23,7 @@
         <tr>
             <th>#</th>
             <th>Codigo</th>
+            <th>Linea</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -34,6 +35,7 @@
                 <tr>
                     <td>{{ centrocosto.getCentrocostoId() }}</td>
                     <td>{{ centrocosto.getCentrocostoCodigo() }}</td>
+                    <td>{{ centrocosto.getNombreLinea(centrocosto.getCentrocostoLineaId()) }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("centrocosto/edit/"~centrocosto.getCentrocostoId(), "Editar") }}</td>
                         <td>

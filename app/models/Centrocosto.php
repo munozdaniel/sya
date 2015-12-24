@@ -22,6 +22,12 @@ class Centrocosto extends \Phalcon\Mvc\Model
     protected $centroCosto_habilitado;
 
     /**
+     *
+     * @var integer
+     */
+    protected $centroCosto_lineaId;
+
+    /**
      * Method to set the value of field centroCosto_id
      *
      * @param integer $centroCosto_id
@@ -61,6 +67,19 @@ class Centrocosto extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field centroCosto_lineaId
+     *
+     * @param integer $centroCosto_lineaId
+     * @return $this
+     */
+    public function setCentroCostoLineaId($centroCosto_lineaId)
+    {
+        $this->centroCosto_lineaId = $centroCosto_lineaId;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field centroCosto_id
      *
      * @return integer
@@ -88,6 +107,25 @@ class Centrocosto extends \Phalcon\Mvc\Model
     public function getCentroCostoHabilitado()
     {
         return $this->centroCosto_habilitado;
+    }
+
+    /**
+     * Returns the value of field centroCosto_lineaId
+     *
+     * @return integer
+     */
+    public function getCentroCostoLineaId()
+    {
+        return $this->centroCosto_lineaId;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('centroCosto_id', 'Cliente', 'cliente_centroCostoId', array('alias' => 'Cliente'));
+        $this->belongsTo('centroCosto_lineaId', 'Linea', 'linea_id', array('alias' => 'Linea'));
     }
 
     /**
@@ -135,5 +173,11 @@ class Centrocosto extends \Phalcon\Mvc\Model
 
         return $this->validationHasFailed() != true;
     }
-
+    public function getNombreLinea($linea_id)
+    {
+        $linea = Linea::findFirstByLinea_id($linea_id);
+        if($linea)
+            return $linea->getLineaNombre();
+        return "";
+    }
 }

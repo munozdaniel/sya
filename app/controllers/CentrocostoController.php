@@ -23,6 +23,8 @@ class CentrocostoController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        $this->view->centroCostoForm = new CentroCostoForm();
+
     }
 
     /**
@@ -70,6 +72,7 @@ class CentrocostoController extends ControllerBase
      */
     public function newAction()
     {
+        $this->view->centroCostoForm = new CentroCostoForm(null, array('edit' => true));
 
     }
 
@@ -92,13 +95,24 @@ class CentrocostoController extends ControllerBase
                     "action" => "index"
                 ));
             }
+            $this->view->centroCostoForm = new CentroCostoForm($centrocosto, array('edit' => true));
 
             $this->view->centroCosto_id = $centrocosto->centroCosto_id;
 
             $this->tag->setDefault("centroCosto_id", $centrocosto->getCentrocostoId());
             $this->tag->setDefault("centroCosto_codigo", $centrocosto->getCentrocostoCodigo());
             $this->tag->setDefault("centroCosto_habilitado", $centrocosto->getCentrocostoHabilitado());
-            
+            //Asignado valor por defecto al datalist centroCosto_linea
+            $linea = Linea::findFirstByLinea_id($centrocosto->centroCosto_lineaId);
+            if($linea){
+                $nombre = $linea->linea_nombre;
+                $this->assets->collection('footerInline')->addInlineJs("
+                                            function cargarCombo() {
+                                                document.getElementById('centroCosto_linea').value='$nombre';
+                                            }
+                                            window.onload = cargarCombo;
+                                        ");
+            }
         }
     }
 
@@ -116,7 +130,21 @@ class CentrocostoController extends ControllerBase
         }
 
         $centrocosto = new Centrocosto();
+        if ($this->request->getPost("nuevaLinea") == 1)//Checkbox: Nueva Linea? 1:SI
+        {
+            $linea = new Linea();
+            $linea->assign(array('linea_nombre'=>$this->request->getPost('linea_nombre'),
+                'linea_habilitado'=>1));//el input linea_nombre es para crear una nueva linea
+            if(!$linea->save()){
+                foreach ($linea->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+            }
 
+            $centrocosto->setCentroCostoLineaId($linea->getLineaId());
+        } else {
+            $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
+        }
         $centrocosto->setCentrocostoCodigo($this->request->getPost("centroCosto_codigo"));
         $centrocosto->setCentrocostoHabilitado(1);
         
@@ -166,9 +194,23 @@ class CentrocostoController extends ControllerBase
                 "action" => "index"
             ));
         }
+        if ($this->request->getPost("nuevaLinea") == 1)//Checkbox: Nueva Linea? 1:SI
+        {
+            $linea = new Linea();
+            $linea->assign(array('linea_nombre'=>$this->request->getPost('linea_nombre'),
+                'linea_habilitado'=>1));//el input linea_nombre es para crear una nueva linea
+            if(!$linea->save()){
+                foreach ($linea->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+            }
 
+            $centrocosto->setCentroCostoLineaId($linea->getLineaId());
+        } else {
+            $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
+        }
         $centrocosto->setCentrocostoCodigo($this->request->getPost("centroCosto_codigo"));
-        $centrocosto->setCentrocostoHabilitado($this->request->getPost("centroCosto_habilitado"));
+        $centrocosto->setCentrocostoHabilitado(1);
         
 
         if (!$centrocosto->save()) {

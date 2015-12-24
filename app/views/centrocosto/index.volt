@@ -12,27 +12,25 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
+    {% for element in centroCostoForm %}
+        {% if admin!=1 %}
+            {{ hidden_field("centroCosto_habilitado", "value" : "1" ) }}
+        {% endif %}
+        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+            {{ element }}
+        {% else %}
+            {{ element.label(['class': 'control-label']) }}
+            <div class="form-group">
+                {{ element }}
+            </div>
+        {% endif %}
+    {% endfor %}
     {#===============================================#}
-    <label for="centroCosto_id">N° Centro Costo</label>
-
-    <div class="form-group">
-        {{ text_field("centroCosto_id", "type" : "numeric") }}
-    </div>
-    {#===============================================#}
-    <label for="centroCosto_codigo">Codigo</label>
-
-    <div class="form-group">
-        {{ text_field("centroCosto_codigo", "size" : 30) }}
-    </div>
-    {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
-    {% if admin!=1 %}
-        {{ hidden_field("centroCosto_habilitado", "value" : "1" ) }}
-    {% endif %}
 </div><!-- /.Cuerpo -->
 <!-- /.Cuerpo -->
 <!-- Footer -->
 <div class="box-footer">
-    {{ submit_button("Buscar",'class':'btn btn-large btn-primary btn-flat') }}
+    {{ submit_button("Buscar",'id':'submit','class':'btn btn-large btn-primary btn-flat') }}
 </div>
 
 </form>
