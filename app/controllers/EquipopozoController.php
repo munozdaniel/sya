@@ -23,6 +23,7 @@ class EquipopozoController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        $this->view->equipoPozoForm = new EquipoPozoForm();
     }
 
     /**
@@ -34,6 +35,7 @@ class EquipopozoController extends ControllerBase
 
         $numberPage = 1;
         if ($this->request->isPost()) {
+            //$query = parent::fromInput($this->di, 'Equipopozo', $this->request->getPost());
             $query = Criteria::fromInput($this->di, "Equipopozo", $_POST);
             $this->persistent->parameters = $query->getParams();
         } else {
@@ -70,7 +72,7 @@ class EquipopozoController extends ControllerBase
      */
     public function newAction()
     {
-
+        $this->view->equipoPozoForm = new EquipoPozoForm(null, array('edit' => true));
     }
 
     /**
@@ -116,10 +118,26 @@ class EquipopozoController extends ControllerBase
         }
 
         $equipopozo = new Equipopozo();
-
+        if($this->request->getPost("nuevoYacimiento")==1)//Nuevo Yacimiento? 1:SI
+        {
+            $yacimiento = new Yacimiento();
+            $yacimiento->assign(array(
+                'yacimiento_destino' => $this->request->getPost('yacimiento_destino'),
+                'yacimiento_habilitado' => 1,
+            ));
+            if(!$yacimiento->save())
+            {
+                foreach ($yacimiento->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+            }
+            $equipopozo->setEquipoPozoYacimientoId($yacimiento->getYacimientoId());
+        }
+        else{
+            $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
+        }
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
-        $equipopozo->setEquipopozoHabilitado($this->request->getPost("equipoPozo_habilitado"));
-        
+        $equipopozo->setEquipopozoHabilitado(1);
 
         if (!$equipopozo->save()) {
             foreach ($equipopozo->getMessages() as $message) {
