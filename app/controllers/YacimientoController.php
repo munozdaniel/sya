@@ -49,7 +49,7 @@ class YacimientoController extends ControllerBase
 
         $yacimiento = Yacimiento::find($parameters);
         if (count($yacimiento) == 0) {
-            $this->flash->notice("No se encontraron resultados");
+            $this->flash->notice("No se encontraron resultados en la busqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "yacimiento",
@@ -78,6 +78,7 @@ class YacimientoController extends ControllerBase
      * Edits a yacimiento
      *
      * @param string $yacimiento_id
+     * @return boolean
      */
     public function editAction($yacimiento_id)
     {
@@ -198,6 +199,7 @@ class YacimientoController extends ControllerBase
      * Deletes a yacimiento
      *
      * @param string $yacimiento_id
+     * @return string
      */
     public function deleteAction($yacimiento_id)
     {

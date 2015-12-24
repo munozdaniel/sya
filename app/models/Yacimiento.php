@@ -91,6 +91,14 @@ class Yacimiento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('yacimiento_id', 'Equipopozo', 'equipoPozo_yacimientoId', array('alias' => 'Equipopozo'));
+    }
+
+    /**
      * Returns table name mapped in the model.
      *
      * @return string
