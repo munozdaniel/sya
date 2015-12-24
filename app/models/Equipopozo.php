@@ -22,6 +22,12 @@ class Equipopozo extends \Phalcon\Mvc\Model
     protected $equipoPozo_habilitado;
 
     /**
+     *
+     * @var integer
+     */
+    protected $equipoPozo_yacimientoId;
+
+    /**
      * Method to set the value of field equipoPozo_id
      *
      * @param integer $equipoPozo_id
@@ -61,6 +67,19 @@ class Equipopozo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field equipoPozo_yacimientoId
+     *
+     * @param integer $equipoPozo_yacimientoId
+     * @return $this
+     */
+    public function setEquipoPozoYacimientoId($equipoPozo_yacimientoId)
+    {
+        $this->equipoPozo_yacimientoId = $equipoPozo_yacimientoId;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field equipoPozo_id
      *
      * @return integer
@@ -88,6 +107,25 @@ class Equipopozo extends \Phalcon\Mvc\Model
     public function getEquipoPozoHabilitado()
     {
         return $this->equipoPozo_habilitado;
+    }
+
+    /**
+     * Returns the value of field equipoPozo_yacimientoId
+     *
+     * @return integer
+     */
+    public function getEquipoPozoYacimientoId()
+    {
+        return $this->equipoPozo_yacimientoId;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('equipoPozo_id', 'Cliente', 'cliente_equipoPozoId', array('alias' => 'Cliente'));
+        $this->belongsTo('equipoPozo_yacimientoId', 'Yacimiento', 'yacimiento_id', array('alias' => 'Yacimiento'));
     }
 
     /**
@@ -134,5 +172,12 @@ class Equipopozo extends \Phalcon\Mvc\Model
         );
 
         return $this->validationHasFailed() != true;
+    }
+    public  function getNombreYacimiento($yacimiento_id)
+    {
+        $yacimiento = Yacimiento::findFirstByYacimiento_id($yacimiento_id);
+        if($yacimiento)
+            return $yacimiento->getYacimientoDestino();
+        return "";
     }
 }
