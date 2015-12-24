@@ -12,27 +12,26 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
+    {% for element in equipoPozoForm %}
+        {% if admin!=1 %}
+            {{ hidden_field("equipoPozo_habilitado", "value" : "1" ) }}
+        {% endif %}
+        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+            {{ element }}
+        {% else %}
+            {{ element.label(['class': 'control-label']) }}
+            <div class="form-group">
+                    {{ element }}
+            </div>
+        {% endif %}
+    {% endfor %}
     {#===============================================#}
-    <label for="equipoPozo_id">N° EquipoPozo</label>
 
-    <div class="form-group">
-        {{ text_field("equipoPozo_id", "type" : "numeric") }}
-    </div>
-    {#===============================================#}
-    <label for="equipoPozo_nombre">Nombre </label>
-
-    <div class="form-group">
-        {{ text_field("equipoPozo_nombre", "size" : 30) }}
-    </div>
-    {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
-    {% if admin!=1 %}
-        {{ hidden_field("equipoPozo_habilitado", "value" : "1" ) }}
-    {% endif %}
 </div><!-- /.Cuerpo -->
 
 <!-- Footer -->
 <div class="box-footer">
-    {{ submit_button("Buscar",'class':'btn btn-large btn-primary btn-flat') }}
+    {{ submit_button("Buscar",'id':'submit','class':'btn btn-large btn-primary btn-flat') }}
 </div>
 
 </form>
