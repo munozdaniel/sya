@@ -49,7 +49,7 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
             $html .= "</option> \n ";
         }
         $html .="</datalist>";
-        $html .= "<input type='text' id=".$claveCampo." name=".$claveCampo." >";
+        $html .= "<input type='hidden' id=".$claveCampo." name=".$claveCampo." >";
         $html .= "\n<script>\n";
         $html .= "$(document).ready(function () {\n";
         $html .= "$('#submit').click(function () {\n";
