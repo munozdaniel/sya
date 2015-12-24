@@ -22,6 +22,7 @@
         <tr>
             <th>#</th>
             <th>Equipo/Pozo</th>
+            <th>Yacimiento</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -33,6 +34,7 @@
                 <tr>
                     <td>{{ equipopozo.getEquipopozoId() }}</td>
                     <td>{{ equipopozo.getEquipopozoNombre() }}</td>
+                    <td>{{ equipopozo.getNombreYacimiento(equipopozo.getEquipopozoYacimientoId()) }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("equipopozo/edit/"~equipopozo.getEquipopozoId(), "Editar") }}</td>
                         <td>

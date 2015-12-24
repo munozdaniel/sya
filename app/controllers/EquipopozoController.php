@@ -101,14 +101,16 @@ class EquipopozoController extends ControllerBase
             $this->tag->setDefault("equipoPozo_id", $equipopozo->getEquipopozoId());
             $this->tag->setDefault("equipoPozo_nombre", $equipopozo->getEquipopozoNombre());
             $this->tag->setDefault("equipoPozo_habilitado", $equipopozo->getEquipopozoHabilitado());
-
-            $destino = Yacimiento::findFirstByYacimiento_id($equipopozo->getEquipoPozoYacimientoId())->yacimiento_destino;
+            $yacimiento = Yacimiento::findFirstByYacimiento_id($equipopozo->getEquipoPozoYacimientoId());
+            if($yacimiento){
+            $destino = $yacimiento->yacimiento_destino;
             $this->assets->collection('footerInline')->addInlineJs("
                                             function cargarCombo() {
                                                 document.getElementById('equipoPozo_yacimiento').value='$destino';
                                             }
                                             window.onload = cargarCombo;
                                         ");
+            }
         }
     }
 
@@ -279,7 +281,7 @@ class EquipopozoController extends ControllerBase
     {
         if ($this->request->isPost()) {
             $id = $this->request->getPost('id');
-            $equipopozo = Equipopozo::findFirstByEquipopozo_id($id);
+            $equipopozo = Equipopozo::findFirstByEquipoPozo_id($id);
             if (!$equipopozo) {
                 $this->flash->error("El Equipo/Pozo no ha sido encontrado");
 
@@ -317,7 +319,7 @@ class EquipopozoController extends ControllerBase
      */
     public function habilitarAction($idTransporte)
     {
-        $equipopozo = Equipopozo::findFirstByEquipopozo_id($idTransporte);
+        $equipopozo = Equipopozo::findFirstByEquipoPozo_id($idTransporte);
         $equipopozo->equipoPozo_habilitado = 1;
         if (!$equipopozo->update()) {
 
