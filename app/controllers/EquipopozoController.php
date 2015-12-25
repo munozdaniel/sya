@@ -101,10 +101,11 @@ class EquipopozoController extends ControllerBase
             $this->tag->setDefault("equipoPozo_id", $equipopozo->getEquipopozoId());
             $this->tag->setDefault("equipoPozo_nombre", $equipopozo->getEquipopozoNombre());
             $this->tag->setDefault("equipoPozo_habilitado", $equipopozo->getEquipopozoHabilitado());
+            //Default Yacimiento
             $yacimiento = Yacimiento::findFirstByYacimiento_id($equipopozo->getEquipoPozoYacimientoId());
             if($yacimiento){
-            $destino = $yacimiento->yacimiento_destino;
-            $this->assets->collection('footerInline')->addInlineJs("
+                $destino = $yacimiento->yacimiento_destino;
+                $this->assets->collection('footerInline')->addInlineJs("
                                             function cargarCombo() {
                                                 document.getElementById('equipoPozo_yacimiento').value='$destino';
                                             }
