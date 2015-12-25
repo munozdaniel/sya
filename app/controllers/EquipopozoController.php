@@ -103,7 +103,7 @@ class EquipopozoController extends ControllerBase
             $this->tag->setDefault("equipoPozo_habilitado", $equipopozo->getEquipopozoHabilitado());
             //Default Yacimiento
             $yacimiento = Yacimiento::findFirstByYacimiento_id($equipopozo->getEquipoPozoYacimientoId());
-            if($yacimiento){
+            if ($yacimiento) {
                 $destino = $yacimiento->yacimiento_destino;
                 $this->assets->collection('footerInline')->addInlineJs("
                                             function cargarCombo() {
@@ -140,10 +140,23 @@ class EquipopozoController extends ControllerBase
                 foreach ($yacimiento->getMessages() as $message) {
                     $this->flash->error($message);
                 }
+                return $this->dispatcher->forward(array(
+                    "controller" => "equipopozo",
+                    "action" => "new"
+                ));
             }
             $equipopozo->setEquipoPozoYacimientoId($yacimiento->getYacimientoId());
         } else {
-            $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
+            if ($this->request->getPost("equipoPozo_yacimientoId") != NULL)
+                $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
+            else {
+                $this->flash->error("Seleccione un Yacimiento");
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "equipopozo",
+                    "action" => "new"
+                ));
+            }
         }
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
         $equipopozo->setEquipopozoHabilitado(1);
@@ -204,10 +217,25 @@ class EquipopozoController extends ControllerBase
                 foreach ($yacimiento->getMessages() as $message) {
                     $this->flash->error($message);
                 }
+                return $this->dispatcher->forward(array(
+                    "controller" => "equipopozo",
+                    "action" => "edit",
+                    "params" => array($equipopozo->equipoPozo_id)
+                ));
             }
             $equipopozo->setEquipoPozoYacimientoId($yacimiento->getYacimientoId());
         } else {
-            $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
+            if ($this->request->getPost("equipoPozo_yacimientoId") != NULL)
+                $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
+            else {
+                $this->flash->error("Seleccione un Yacimiento");
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "equipopozo",
+                    "action" => "edit",
+                    "params" => array($equipopozo->equipoPozo_id)
+                ));
+            }
         }
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
         $equipopozo->setEquipopozoHabilitado(1);
