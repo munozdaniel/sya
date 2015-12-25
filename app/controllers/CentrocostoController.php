@@ -139,11 +139,24 @@ class CentrocostoController extends ControllerBase
                 foreach ($linea->getMessages() as $message) {
                     $this->flash->error($message);
                 }
+                return $this->dispatcher->forward(array(
+                    "controller" => "centrocosto",
+                    "action" => "new"
+                ));
             }
 
             $centrocosto->setCentroCostoLineaId($linea->getLineaId());
         } else {
-            $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
+
+            if($this->request->getPost("centroCosto_lineaId")!=NULL)
+                $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
+            else{
+                $this->flash->error("SELECCIONE LA LINEA");
+                return $this->dispatcher->forward(array(
+                    "controller" => "centrocosto",
+                    "action" => "new"
+                ));
+            }
         }
         $centrocosto->setCentrocostoCodigo($this->request->getPost("centroCosto_codigo"));
         $centrocosto->setCentrocostoHabilitado(1);
@@ -194,6 +207,7 @@ class CentrocostoController extends ControllerBase
                 "action" => "index"
             ));
         }
+
         if ($this->request->getPost("nuevaLinea") == 1)//Checkbox: Nueva Linea? 1:SI
         {
             $linea = new Linea();
@@ -203,11 +217,25 @@ class CentrocostoController extends ControllerBase
                 foreach ($linea->getMessages() as $message) {
                     $this->flash->error($message);
                 }
+                return $this->dispatcher->forward(array(
+                    "controller" => "centrocosto",
+                    "action" => "edit",
+                    "params" => array($centrocosto->centroCosto_id)
+                ));
             }
 
             $centrocosto->setCentroCostoLineaId($linea->getLineaId());
         } else {
-            $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
+            if($this->request->getPost("centroCosto_lineaId")!=NULL)
+                $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
+            else{
+                $this->flash->error("SELECCIONE LA LINEA");
+                return $this->dispatcher->forward(array(
+                    "controller" => "centrocosto",
+                    "action" => "edit",
+                    "params" => array($centrocosto->centroCosto_id)
+                ));
+            }
         }
         $centrocosto->setCentrocostoCodigo($this->request->getPost("centroCosto_codigo"));
         $centrocosto->setCentrocostoHabilitado(1);

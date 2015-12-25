@@ -37,20 +37,21 @@ class CentroCostoForm  extends Form
         $equipoPozo_nombre->setLabel("Centro Costo");
         $equipoPozo_nombre->setFilters(array('striptags', 'string'));
         $equipoPozo_nombre->addValidators(array(
-            new \Phalcon\Validation\Validator\PresenceOf(array(
+            new PresenceOf(array(
                 'message' => 'El Codigo es Requerido'
             ))
         ));
         $this->add($equipoPozo_nombre);
-        /*======================== YACIMIENTO =========================*/
+        /*======================== LINEA =========================*/
         //"centroCosto_lineaId" .... linea_id - linea_nombre
-        $listaYacimiento = new DataListElement('centroCosto_linea',
+        $listaLinea = new DataListElement('centroCosto_linea',
             array(array('placeholder' => 'LINEA', 'maxlength' => 50),
                 Linea::find(),
                 array('linea_id', 'linea_nombre'),'centroCosto_lineaId'
             ));
-        $listaYacimiento->setLabel('Linea');
-        $this->add($listaYacimiento);
+        $listaLinea->setLabel('Linea');
+
+        $this->add($listaLinea);
         /*VERIFICAR SI ES NECESARIO EL PRESENCEOF*/
 
     }
