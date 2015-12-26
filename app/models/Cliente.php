@@ -31,19 +31,19 @@ class Cliente extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $cliente_linea;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $cliente_yacimiento;
-
-    /**
-     *
-     * @var integer
-     */
     protected $cliente_habilitado;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $cliente_equipoPozoId;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $cliente_centroCostoId;
 
     /**
      * Method to set the value of field cliente_id
@@ -98,32 +98,6 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field cliente_linea
-     *
-     * @param integer $cliente_linea
-     * @return $this
-     */
-    public function setClienteLinea($cliente_linea)
-    {
-        $this->cliente_linea = $cliente_linea;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field cliente_yacimiento
-     *
-     * @param integer $cliente_yacimiento
-     * @return $this
-     */
-    public function setClienteYacimiento($cliente_yacimiento)
-    {
-        $this->cliente_yacimiento = $cliente_yacimiento;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field cliente_habilitado
      *
      * @param integer $cliente_habilitado
@@ -132,6 +106,32 @@ class Cliente extends \Phalcon\Mvc\Model
     public function setClienteHabilitado($cliente_habilitado)
     {
         $this->cliente_habilitado = $cliente_habilitado;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field cliente_equipoPozoId
+     *
+     * @param integer $cliente_equipoPozoId
+     * @return $this
+     */
+    public function setClienteEquipoPozoId($cliente_equipoPozoId)
+    {
+        $this->cliente_equipoPozoId = $cliente_equipoPozoId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field cliente_centroCostoId
+     *
+     * @param integer $cliente_centroCostoId
+     * @return $this
+     */
+    public function setClienteCentroCostoId($cliente_centroCostoId)
+    {
+        $this->cliente_centroCostoId = $cliente_centroCostoId;
 
         return $this;
     }
@@ -177,26 +177,6 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field cliente_linea
-     *
-     * @return integer
-     */
-    public function getClienteLinea()
-    {
-        return $this->cliente_linea;
-    }
-
-    /**
-     * Returns the value of field cliente_yacimiento
-     *
-     * @return integer
-     */
-    public function getClienteYacimiento()
-    {
-        return $this->cliente_yacimiento;
-    }
-
-    /**
      * Returns the value of field cliente_habilitado
      *
      * @return integer
@@ -204,6 +184,36 @@ class Cliente extends \Phalcon\Mvc\Model
     public function getClienteHabilitado()
     {
         return $this->cliente_habilitado;
+    }
+
+    /**
+     * Returns the value of field cliente_equipoPozoId
+     *
+     * @return integer
+     */
+    public function getClienteEquipoPozoId()
+    {
+        return $this->cliente_equipoPozoId;
+    }
+
+    /**
+     * Returns the value of field cliente_centroCostoId
+     *
+     * @return integer
+     */
+    public function getClienteCentroCostoId()
+    {
+        return $this->cliente_centroCostoId;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('cliente_id', 'Orden', 'orden_clienteId', array('alias' => 'Orden'));
+        $this->belongsTo('cliente_equipoPozoId', 'Equipopozo', 'equipoPozo_id', array('alias' => 'Equipopozo'));
+        $this->belongsTo('cliente_centroCostoId', 'Centrocosto', 'centroCosto_id', array('alias' => 'Centrocosto'));
     }
 
     /**
