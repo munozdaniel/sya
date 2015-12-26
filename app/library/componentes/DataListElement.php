@@ -39,7 +39,7 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         $listNombre = "list_".$nombre;
         $atributosInput = $this->getAttributes ()[0];
 
-        $html = "<input type='text' id='$nombre' name='$nombre' list='$listNombre'";
+        $html = "<input type='text' id='$nombre' name='$nombre' list='$listNombre' ";
         foreach($atributosInput as $atributo => $valor)
         {
             $html .= " $atributo = ' $valor '";
@@ -51,7 +51,7 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         $atributosModelo = $this->getAttributes ()[1];
         $columnas = $this->getAttributes ()[2];
 
-        $html .= "<datalist  id=\"" . $listNombre ."\"  >";
+        $html .= "<datalist  id=\"" . $listNombre ."\" >";
         if($atributosModelo != null){
             foreach($atributosModelo as $option => $valor)
             {
@@ -64,17 +64,17 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         /*========================== HIDDEN ================================*/
 
         $idHidden = $this->getAttributes ()[3];
-        $html .= "<input type='hidden' id=".$idHidden." name=".$idHidden." >";
+        $html .= "<input type='hidden' id=".$idHidden." name=".$idHidden."   >";
 
         /*========================== SCRIPT ================================*/
 
         $html .= "\n<script>\n";
         $html .= "$(document).ready(function () {\n";
-        $html .= "$('#submit').click(function () {\n";
+        $html .= " $(\"#$nombre\").blur(function (event) {\n";
         $html .= "var value = $('#".$nombre."').val();\n";
         $html .= "var clave = $('#".$listNombre." [value=\"' + value + '\"]').data('value');\n";
         $html .= "if (typeof clave != 'undefined')\n";
-        $html .= "document.getElementById('".$idHidden."').value = clave ;\n";
+        $html .= "document.getElementById('".$idHidden."').value = clave ;\n alert(\" CARGAR HIDDEN \"+document.getElementById('".$idHidden."').value);\n ";
         $html .= " });\n";
         $html .= "});\n";
         $html .= "</script>\n";

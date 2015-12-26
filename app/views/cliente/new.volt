@@ -1,12 +1,10 @@
 <!-- Titulo -->
 <div class="box-header with-border">
-    <h3 class="box-title">Crear Cliente</h3>
+    <h3 class="box-title">Crear Centro Costo</h3>
 </div><!-- /.Titulo -->
 <!-- Formulario -->
 {{ content() }}
-
 {{ form("cliente/create", "method":"post") }}
-
 <table width="100%">
     <tr>
         <td align="left">
@@ -14,100 +12,93 @@
         </td>
     </tr>
 </table>
-<!-- Cuerpo -->
-<div class="box-body">
-    {#======================================================#}
-    {{ formCliente.label('cliente_nombre') }}
-    <div class="form-group">
-        {{ formCliente.render('cliente_nombre') }}
-    </div>
-    {#======================================================#}
-    {{ formCliente.label('cliente_operadora') }}
-    <div class="form-group">
-        {{ formCliente.render('cliente_operadora') }}
-    </div>
-    {#======================================================#}
-    {{ formCliente.label('yacimiento_destino') }}
-    <div class="form-group">
-        {{ formCliente.render('yacimiento_destino') }}
-    </div>
-    {#======================================================#}
-    {{ formCliente.label('equipoPozo_nombre') }}
-    <div class="form-group">
-        {{ formCliente.render('equipoPozo_nombre') }}
-    </div>
-    {#======================================================#}
-    {{ formCliente.label('linea_nombre') }}
-    <div class="form-group">
-        {{ formCliente.render('linea_nombre') }}
-    </div>
-    {#======================================================#}
-    {{ formCliente.label('centroCosto_codigo') }}
-    <div class="form-group">
-        {{ formCliente.render('centroCosto_codigo') }}
-    </div>
 
+<!-- Cuerpo -->
+<div id="perro" class="box-body">
+    {% for element in clienteForm %}
+        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+            {{ element }}
+        {% else %}
+            {{ element.label() }}
+            <div class="form-group">
+                {{ element.render(['class': '']) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {#===============================================#}
+    <div class="col-md-12">
+        {{ select("provincia", provincia, 'using': ['linea_id', 'linea_nombre']) }}
+
+        {{ select('ciudad', ciudad,'useEmpty': true, 'emptyText': 'Seleccione una ciudad...','emptyValue': '@') }}
+    </div>
 </div><!-- /. Cuerpo -->
 <!-- Footer -->
 <div class="box-footer">
-    {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
+    {{ submit_button("Guardar",'id':'submit','class':'btn btn-large btn-primary btn-flat') }}
 </div>
 </form>
+<script >
+    $("#provincia").change(function (event) {
+        var value = $(this).val();
 
-<table>
-    <tr>
-        <td align="right">
-            <label for="cliente_nombre">Cliente Of Nombre</label>
-        </td>
-        <td align="left">
-            {{ text_field("cliente_nombre", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="cliente_operadora">Cliente Of Operadora</label>
-        </td>
-        <td align="left">
-            {{ text_field("cliente_operadora", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="cliente_frs">Cliente Of Frs</label>
-        </td>
-        <td align="left">
-            {{ text_field("cliente_frs", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="cliente_linea">Cliente Of Linea</label>
-        </td>
-        <td align="left">
-            {{ text_field("cliente_linea", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="cliente_yacimiento">Cliente Of Yacimiento</label>
-        </td>
-        <td align="left">
-            {{ text_field("cliente_yacimiento", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="cliente_habilitado">Cliente Of Habilitado</label>
-        </td>
-        <td align="left">
-            {{ text_field("cliente_habilitado", "type" : "numeric") }}
-        </td>
-    </tr>
+        var getResultsUrl = 'buscarCiudades';
+        $.ajax({
+            data: {"provincia": value},
+            method: "POST",
+            url: "<?php echo $this->url->get('cliente/buscar') ?>",
+            success: function (response) {
+                $("#ciudad").empty();
+                parsed = $.parseJSON(response);
+                var html = "";
+                for(datos in parsed.listaCiudades)
+                {
+                    html += '<option value="'+parsed.listaCiudades[datos]['centroCosto_id']+'">'+
+                    parsed.listaCiudades[datos]['centroCosto_codigo']+'</option>';
 
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Save") }}</td>
-    </tr>
-</table>
+                }
+                $('select#ciudad').html(html);
 
-</form>
+                console.log(response);
+
+
+            },
+            error: function (error) {
+                alert("ERROR : "+error.statusText) ;
+                console.log(error);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+    $("#centroCosto_linea").blur(function (event) {
+
+        var value = document.getElementById('centroCosto_lineaId').value ;
+        alert("LEER HIDDEN "+value);
+        var getResultsUrl = 'cliente/buscarCentroCosto';
+        $.ajax({
+            data: {"id": value},
+            method: "POST",
+            url: "<?php echo $this->url->get('cliente/buscarCentroCosto') ?>",
+            success: function (response) {
+                $("#cliente_centroCosto").empty();
+                parsed = $.parseJSON(response);
+                var html = "";
+
+                for(datos in parsed.lista)
+                {
+                    html += '<option data-value="'+parsed.lista[datos]['centroCosto_id']+'" value="'+parsed.lista[datos]['centroCosto_codigo']+'"></option>';
+                }
+                $('datalist#list_cliente_centroCosto').html(html);
+
+                console.log(response);
+
+
+            },
+            error: function (error) {
+                alert("ERROR : "+error.statusText) ;
+                console.log(error);
+            }
+        });
+    })});
+</script>
