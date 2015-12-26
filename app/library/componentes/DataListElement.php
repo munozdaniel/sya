@@ -33,13 +33,11 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
      */
     public function render($attributes = null)
     {
-        $atributosInput = $this->getAttributes ()[0];
-        $atributosModelo = $this->getAttributes ()[1];
-        $columnas = $this->getAttributes ()[2];
-        $idHidden = $this->getAttributes ()[3];
+        /*========================== INPUT ================================*/
 
         $nombre = $this->getName();
         $listNombre = "list_".$nombre;
+        $atributosInput = $this->getAttributes ()[0];
 
         $html = "<input type='text' id='$nombre' name='$nombre' list='$listNombre'";
         foreach($atributosInput as $atributo => $valor)
@@ -47,6 +45,12 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
             $html .= " $atributo = ' $valor '";
         }
         $html .= ">\n ";
+
+        /*========================== DATALIST ================================*/
+
+        $atributosModelo = $this->getAttributes ()[1];
+        $columnas = $this->getAttributes ()[2];
+
         $html .= "<datalist  id=\"" . $listNombre ."\"  >";
         if($atributosModelo != null){
             foreach($atributosModelo as $option => $valor)
@@ -56,7 +60,14 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
             }
         }
         $html .="</datalist>";
+
+        /*========================== HIDDEN ================================*/
+
+        $idHidden = $this->getAttributes ()[3];
         $html .= "<input type='hidden' id=".$idHidden." name=".$idHidden." >";
+
+        /*========================== SCRIPT ================================*/
+
         $html .= "\n<script>\n";
         $html .= "$(document).ready(function () {\n";
         $html .= "$('#submit').click(function () {\n";
@@ -67,10 +78,7 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         $html .= " });\n";
         $html .= "});\n";
         $html .= "</script>\n";
-        //$html .= "\n <script>";
-        //$html .= "\n   $(document).ready(function () { \n $('#submit').click(function () {\n alert('document.getElementById('".$this->getName()."_field').value');\n ";
-        //$html .= "var value = $('#".$this->getName()."').val();\n ";
-        //$html .= "document.getElementById('".$this->getName()."_field').value = $('#list_".$this->getName()." [value=' + value + ']').data('value') ; }); \n});\n   </script>";
+
         return $html;
     }
 }
