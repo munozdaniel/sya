@@ -86,18 +86,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $listaEquipoPozo->setLabel('Equipo/Pozo');
         $this->add($listaEquipoPozo);
 
-        //UnionElementScript: La lista dinamica del EquipoPozo
-        $script = new DataListScript('equipoPozo_lineaScript',
-            array(
-                'url'               =>'/sya/cliente/buscarEquipoPozo',
-                'id_principal'      =>'equipoPozo_yacimiento',
-                'id_hidden_ppal'    =>'equipoPozo_yacimientoId',
-                'id_dependiente'    =>'cliente_equipoPozo',
-                'columnas'          =>  array('equipoPozo_id','equipoPozo_nombre')
-            )
-        );
-        $script->setLabel(" ");
-        $this->add($script);
+
 
         /*======================== CLIENTE - CENTRO COSTO - LINEA =========================*/
         //DataList Dependientes: Linea
@@ -124,6 +113,20 @@ class ClienteForm  extends \Phalcon\Forms\Form
             ));
         $listaCentroCosto->setLabel('Centro Costo');
         $this->add($listaCentroCosto);
+
+        /*===============================SCRIPT PARA LOS DATALIST DEPENDIENTES=====================*/
+        //UnionElementScript: La lista dinamica del EquipoPozo
+        $script = new DataListScript('equipoPozo_lineaScript',
+            array(
+                'url'               =>'/sya/cliente/buscarEquipoPozo',
+                'id_principal'      =>'equipoPozo_yacimiento',
+                'id_hidden_ppal'    =>'equipoPozo_yacimientoId',
+                'id_dependiente'    =>'cliente_equipoPozo',
+                'columnas'          =>  array('equipoPozo_id','equipoPozo_nombre')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
 
         //UnionElementScript
         $script = new DataListScript('centroCosto_lineaScript',
