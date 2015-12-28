@@ -63,7 +63,41 @@ class ClienteForm  extends \Phalcon\Forms\Form
         ));
         $this->add($operadora);
         /*======================= CLIENTE - EQUIPO/POZO - YACIMIENTO ==============================*/
+        //Primero El PRINCIPAL.
+        $listaYacimiento = new DataListElement('equipoPozo_yacimiento',
+            array(
+                array('placeholder' => 'DESTINO', 'maxlength' => 50),
+                Yacimiento::find(),
+                array('yacimiento_id', 'yacimiento_destino'),
+                'equipoPozo_yacimientoId'
+            ));
+        $listaYacimiento->setLabel('Yacimiento');
+        $this->add($listaYacimiento);
 
+        //DataList Dependientes: EquipoPozo - Segun el Yacimiento, mostrará los nombres que le correspondan.
+
+        $listaEquipoPozo = new DataListElement('cliente_equipoPozo',
+            array(
+                array('placeholder' => 'NOMBRE', 'maxlength' => 50),
+                null,
+                array('equipoPozo_id', 'equipoPozo_nombre'),
+                'cliente_equipoPozoId'
+            ));
+        $listaEquipoPozo->setLabel('Equipo/Pozo');
+        $this->add($listaEquipoPozo);
+
+        //UnionElementScript: La lista dinamica del EquipoPozo
+        $script = new DataListScript('equipoPozo_lineaScript',
+            array(
+                'url'               =>'/sya/cliente/buscarEquipoPozo',
+                'id_principal'      =>'equipoPozo_yacimiento',
+                'id_hidden_ppal'    =>'equipoPozo_yacimientoId',
+                'id_dependiente'    =>'cliente_equipoPozo',
+                'columnas'          =>  array('equipoPozo_id','equipoPozo_nombre')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
 
         /*======================== CLIENTE - CENTRO COSTO - LINEA =========================*/
         //DataList Dependientes: Linea
@@ -101,6 +135,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
                 'columnas'          =>  array('centroCosto_id','centroCosto_codigo')
                 )
         );
+        $script->setLabel(" ");
         $this->add($script);
 
     }

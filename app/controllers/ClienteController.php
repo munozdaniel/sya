@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -17,6 +17,7 @@ class ClienteController extends ControllerBase
         parent::initialize();
 
     }
+
     /**
      * Index action
      */
@@ -48,7 +49,7 @@ class ClienteController extends ControllerBase
 
         $cliente = Cliente::find($parameters);
         if (count($cliente) == 0) {
-            $this->flash->notice("No se encontraron resultados en la busqueda");
+            $this->flash->notice("The search did not find any cliente");
 
             return $this->dispatcher->forward(array(
                 "controller" => "cliente",
@@ -58,7 +59,7 @@ class ClienteController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $cliente,
-            "limit"=> 10,
+            "limit" => 100000,
             "page" => $numberPage
         ));
 
@@ -70,7 +71,56 @@ class ClienteController extends ControllerBase
      */
     public function newAction()
     {
-        $this->view->formCliente= new ClienteForm();
+        $this->view->clienteForm = new ClienteForm(null, array('edit' => true));
+    }
+
+    public function buscarCentroCostoAction()
+    {
+        $this->view->disable();
+
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+                $lista = Centrocosto::findByCentroCosto_lineaId($id);
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("centroCosto_id" => $item->centroCosto_id, "centroCosto_codigo" => $item->centroCosto_codigo);
+                }
+
+
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }
+                $this->response->send();
+            }
+        }
+
+    }
+    public function buscarEquipoPozoAction()
+    {
+        $this->view->disable();
+
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+                $lista = Equipopozo::findByEquipoPozo_yacimientoId($id);
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("equipoPozo_id" => $item->equipoPozo_id, "equipoPozo_nombre" => $item->equipoPozo_nombre);
+                }
+
+
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }
+                $this->response->send();
+            }
+        }
+
     }
 
     /**
@@ -85,7 +135,7 @@ class ClienteController extends ControllerBase
 
             $cliente = Cliente::findFirstBycliente_id($cliente_id);
             if (!$cliente) {
-                $this->flash->error("El cliente no ha sido encontrado");
+                $this->flash->error("cliente was not found");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "cliente",
@@ -99,10 +149,10 @@ class ClienteController extends ControllerBase
             $this->tag->setDefault("cliente_nombre", $cliente->getClienteNombre());
             $this->tag->setDefault("cliente_operadora", $cliente->getClienteOperadora());
             $this->tag->setDefault("cliente_frs", $cliente->getClienteFrs());
-            $this->tag->setDefault("cliente_linea", $cliente->getClienteLinea());
-            $this->tag->setDefault("cliente_yacimiento", $cliente->getClienteYacimiento());
             $this->tag->setDefault("cliente_habilitado", $cliente->getClienteHabilitado());
-            
+            $this->tag->setDefault("cliente_equipoPozoId", $cliente->getClienteEquipopozoid());
+            $this->tag->setDefault("cliente_centroCostoId", $cliente->getClienteCentrocostoid());
+
         }
     }
 
@@ -124,10 +174,10 @@ class ClienteController extends ControllerBase
         $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
         $cliente->setClienteOperadora($this->request->getPost("cliente_operadora"));
         $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
-        $cliente->setClienteLinea($this->request->getPost("cliente_linea"));
-        $cliente->setClienteYacimiento($this->request->getPost("cliente_yacimiento"));
-        $cliente->setClienteHabilitado(1);
-        
+        $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
+        $cliente->setClienteEquipopozoid($this->request->getPost("cliente_equipoPozoId"));
+        $cliente->setClienteCentrocostoid($this->request->getPost("cliente_centroCostoId"));
+
 
         if (!$cliente->save()) {
             foreach ($cliente->getMessages() as $message) {
@@ -140,7 +190,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("El Cliente se ha creado correctamente");
+        $this->flash->success("cliente was created successfully");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
@@ -167,7 +217,7 @@ class ClienteController extends ControllerBase
 
         $cliente = Cliente::findFirstBycliente_id($cliente_id);
         if (!$cliente) {
-            $this->flash->error("El Cliente con el ID: " . $cliente_id." no existe");
+            $this->flash->error("cliente does not exist " . $cliente_id);
 
             return $this->dispatcher->forward(array(
                 "controller" => "cliente",
@@ -178,10 +228,10 @@ class ClienteController extends ControllerBase
         $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
         $cliente->setClienteOperadora($this->request->getPost("cliente_operadora"));
         $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
-        $cliente->setClienteLinea($this->request->getPost("cliente_linea"));
-        $cliente->setClienteYacimiento($this->request->getPost("cliente_yacimiento"));
         $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
-        
+        $cliente->setClienteEquipopozoid($this->request->getPost("cliente_equipoPozoId"));
+        $cliente->setClienteCentrocostoid($this->request->getPost("cliente_centroCostoId"));
+
 
         if (!$cliente->save()) {
 
@@ -196,7 +246,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("El cliente se ha actualizado correctamente");
+        $this->flash->success("cliente was updated successfully");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
@@ -215,7 +265,7 @@ class ClienteController extends ControllerBase
 
         $cliente = Cliente::findFirstBycliente_id($cliente_id);
         if (!$cliente) {
-            $this->flash->error("El cliente no se ha encontrado");
+            $this->flash->error("cliente was not found");
 
             return $this->dispatcher->forward(array(
                 "controller" => "cliente",
@@ -235,7 +285,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("El cliente ha sido eliminado correctamente");
+        $this->flash->success("cliente was deleted successfully");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
