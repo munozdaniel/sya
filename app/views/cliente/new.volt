@@ -14,25 +14,48 @@
 </table>
 
 <!-- Cuerpo -->
-<div class="col-md-6 col-md-offset-3 box-body">
-    {% for element in clienteForm %}
-        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
-            <div class="col-md-12">
-                {{ element }}
-            </div>
-        {% else %}
-            {% if loop.index==2%}
-                <div class="col-md-12">
-            {% else %}
-                <div class="col-md-6">
-            {% endif %}
-                {{ element.label() }}
-                <div class="form-group">
-                    {{ element.render(['class': '']) }}
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
+<div class=" box-body">
+
+    <div class="col-md-4 form-group">
+        {{ clienteForm.label('cliente_nombre') }}
+        {{ clienteForm.render('cliente_nombre') }}
+    </div>
+    <div class="col-md-4 form-group">
+        {{ clienteForm.label('cliente_operadoraID') }}
+        {{ clienteForm.render('cliente_operadoraID') }}
+    </div>
+    <div class="col-md-4 form-group">
+        {{ clienteForm.label('cliente_frsId') }}
+        {{ clienteForm.render('cliente_frsId') }}
+    </div>
+    <div class="col-md-12">
+        <hr>
+    </div>
+    <div class="col-md-6 form-group">
+        {{ clienteForm.label('equipoPozo_yacimiento') }}
+        {{ clienteForm.render('equipoPozo_yacimiento') }}
+    </div>
+    <div class="col-md-6 form-group">
+        {{ clienteForm.label('cliente_equipoPozo') }}
+        {{ clienteForm.render('cliente_equipoPozo') }}
+    </div>
+    <div class="col-md-12">
+        <hr>
+    </div>
+    <div class="col-md-6 form-group">
+        {{ clienteForm.label('centroCosto_linea') }}
+        {{ clienteForm.render('centroCosto_linea') }}
+    </div>
+    <div class="col-md-6 form-group">
+        {{ clienteForm.label('cliente_centroCosto') }}
+        {{ clienteForm.render('cliente_centroCosto') }}
+    </div>
+    <div class="col-md-4 form-group">
+        {{ clienteForm.render('equipoPozo_lineaScript') }}
+    </div>
+    <div class="col-md-4 form-group">
+        {{ clienteForm.render('centroCosto_lineaScript') }}
+    </div>
     {#===============================================#}
 </div><!-- /. Cuerpo -->
 <!-- Footer -->

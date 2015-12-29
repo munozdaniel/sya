@@ -11,7 +11,7 @@ use Phalcon\Forms\Element\Text;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Forms\Element\Date;
 use Phalcon\Validation\Validator\Numericality;
-use Phalcon\Forms\Element\Hidden;
+use Phalcon\Forms\Element\Hidden;use Phalcon\Forms\Element\Check;
 class ClienteForm  extends \Phalcon\Forms\Form
 {
 
@@ -29,9 +29,10 @@ class ClienteForm  extends \Phalcon\Forms\Form
         }
         /*======================= CLIENTE_NOMBRE ==============================*/
         $nombre = new Text("cliente_nombre",array(
-            'maxlength'   => 60,
+            'maxlength'   => 60, 'class'=>'form-control',
+            'placeholder'=>'NOMBRE DEL CLIENTE', 'required'=>'true'
         ));
-        $nombre->setLabel("Nombre");
+        $nombre->setLabel("Ingrese un Nombre");
         $nombre->setFilters(array('striptags', 'string'));
         $nombre->addValidators(array(
             new \Phalcon\Validation\Validator\PresenceOf(array(
@@ -40,33 +41,34 @@ class ClienteForm  extends \Phalcon\Forms\Form
         ));
         $this->add($nombre);
         /*======================= CLIENTE_OPERADORA ==============================*/
-        $operadora = new Text("cliente_operadora",array(
-            'maxlength'   => 50));
-        $operadora->setLabel("Operadora");
-        $operadora->setFilters(array('striptags', 'string'));
-        $operadora->addValidators(array(
-            new \Phalcon\Validation\Validator\PresenceOf(array(
-                'message' => 'La Operadora es Requerida'
-            ))
-        ));
-        $this->add($operadora);
+        //Primero El PRINCIPAL.
+        $dl_operadora = new DataListElement('cliente_operadoraID',
+            array(
+                array('placeholder' => 'NOMBRE', 'required'=>'true', 'class'=>'form-control', 'maxlength' => 50),
+                Operadora::find(),
+                array('operadora_id', 'operadora_nombre'),
+                'operadora_nombre'
+            ));
+        $dl_operadora->setLabel('Operadora');
+        $this->add($dl_operadora);
+        //Script checkbox
         /*======================= CLIENTE_FRS ==============================*/
 
-        $cliente_frs = new Text("cliente_frs",array(
-            'maxlength'   => 50));
-        $cliente_frs->setLabel("FRS");
-        $cliente_frs->setFilters(array('striptags', 'string'));
-        $cliente_frs->addValidators(array(
-            new \Phalcon\Validation\Validator\PresenceOf(array(
-                'message' => 'FRS requerido'
-            ))
-        ));
-        $this->add($operadora);
+        //Primero El PRINCIPAL.
+        $dl_frs = new DataListElement('cliente_frsId',
+            array(
+                array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control'),
+                Operadora::find(),
+                array('frs_id', 'frs_codigo'),
+                'operadora_nombre'
+            ));
+        $dl_frs->setLabel('FRS');
+        $this->add($dl_frs);
         /*======================= CLIENTE - EQUIPO/POZO - YACIMIENTO ==============================*/
         //Primero El PRINCIPAL.
         $listaYacimiento = new DataListElement('equipoPozo_yacimiento',
             array(
-                array('placeholder' => 'DESTINO', 'maxlength' => 50),
+                array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
                 Yacimiento::find(),
                 array('yacimiento_id', 'yacimiento_destino'),
                 'equipoPozo_yacimientoId'
@@ -78,7 +80,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
 
         $listaEquipoPozo = new DataListElement('cliente_equipoPozo',
             array(
-                array('placeholder' => 'NOMBRE', 'maxlength' => 50),
+                array('placeholder' => 'SELECCIONE UN YACIMENTO', 'maxlength' => 50, 'class'=>'form-control'),
                 null,
                 array('equipoPozo_id', 'equipoPozo_nombre'),
                 'cliente_equipoPozoId'
@@ -94,7 +96,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
 
         $listaLinea = new DataListElement('centroCosto_linea',
             array(
-                array('placeholder' => 'LINEA', 'maxlength' => 50),
+                array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
                 Linea::find(),
                 array('linea_id', 'linea_nombre'),
                 'centroCosto_lineaId'
@@ -106,7 +108,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
 
         $listaCentroCosto = new DataListElement('cliente_centroCosto',
             array(
-                array('placeholder' => 'CODIGO', 'maxlength' => 50),
+                array('placeholder' => 'SELECCIONE UNA LINEA', 'maxlength' => 50, 'class'=>'form-control'),
                 null,
                 array('centroCosto_id', 'centroCosto_codigo'),
                 'cliente_centroCostoId'
