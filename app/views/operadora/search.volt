@@ -34,7 +34,6 @@
                 <tr>
                     <td>{{ operadora.getOperadoraId() }}</td>
                     <td>{{ operadora.getOperadoraNombre() }}</td>
-                    <td>{{ operadora.getOperadoraHabilitado() }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("operadora/edit/"~ operadora.getOperadoraId(), "Editar") }}</td>
                         <td>
