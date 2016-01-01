@@ -58,9 +58,9 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $dl_frs = new DataListElement('cliente_frsId',
             array(
                 array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control'),
-                Operadora::find(),
+                Frs::find(),
                 array('frs_id', 'frs_codigo'),
-                'operadora_nombre'
+                'frs_codigo'
             ));
         $dl_frs->setLabel('FRS');
         $this->add($dl_frs);
