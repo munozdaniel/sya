@@ -23,6 +23,8 @@
     <div class="col-md-4 form-group">
         {{ clienteForm.label('cliente_operadoraID') }}
         {{ clienteForm.render('cliente_operadoraID') }}
+        <a href="#nuevaOperadora" role="button" data-toggle="modal"><i class="fa  fa-plus-circle"></i> Agregar</a>
+
     </div>
     <div class="col-md-4 form-group">
         {{ clienteForm.label('cliente_frsId') }}
@@ -67,3 +69,4 @@
     </div>
 </div>
 </form>
+{{ partial('cliente/parcial/mOperadora') }}
