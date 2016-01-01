@@ -48,7 +48,7 @@ class OperadoraController extends ControllerBase
 
         $operadora = Operadora::find($parameters);
         if (count($operadora) == 0) {
-            $this->flash->notice("The search did not find any operadora");
+            $this->flash->notice("No se han encontrado resultados");
 
             return $this->dispatcher->forward(array(
                 "controller" => "operadora",
