@@ -1,5 +1,5 @@
 <!--=========== MODAL CREAR OPERADORA ================-->
-<div id="nuevaOperadora" class="modal fade modal-info">
+<div id="nuevaOperadora" class="modal fade modal-info" tabindex="-1">
 
     <div class="modal-dialog">
         <div class="modal-content">
@@ -18,7 +18,7 @@
                         </div>
 
                         <div class="form-group">
-                            {{ text_field("operadora_nombreNew", "size" : 30,'class':'text-black') }}
+                            {{ text_field("operadora_nombreNew", "size" : 30,'class':'text-black','autofocus':'') }}
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,13 @@
 </div>
 <!--===========  MODAL CREAR OPERADORA ================-->
 <script>
+    $('#nuevaOperadora').on('shown.bs.modal', function () {
+        setTimeout(function (){
+            $('#operadora_nombreNew').focus();
+        }, 1000);
+    });
     $(document).ready(function () {
+
         $("#agregarOperadora").click(function (event) {
             var value = document.getElementById('operadora_nombreNew').value;
             var getResultsUrl = '/sya/operadora/agregar';
