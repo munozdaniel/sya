@@ -17,15 +17,15 @@ class Cliente extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var string
+     * @var integer
      */
-    protected $cliente_operadora;
+    protected $cliente_operadoraId;
 
     /**
      *
-     * @var string
+     * @var integer
      */
-    protected $cliente_frs;
+    protected $cliente_frsId;
 
     /**
      *
@@ -72,27 +72,27 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field cliente_operadora
+     * Method to set the value of field cliente_operadoraId
      *
-     * @param string $cliente_operadora
+     * @param integer $cliente_operadoraId
      * @return $this
      */
-    public function setClienteOperadora($cliente_operadora)
+    public function setClienteOperadoraId($cliente_operadoraId)
     {
-        $this->cliente_operadora = $cliente_operadora;
+        $this->cliente_operadoraId = $cliente_operadoraId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field cliente_frs
+     * Method to set the value of field cliente_frsId
      *
-     * @param string $cliente_frs
+     * @param integer $cliente_frsId
      * @return $this
      */
-    public function setClienteFrs($cliente_frs)
+    public function setClienteFrsId($cliente_frsId)
     {
-        $this->cliente_frs = $cliente_frs;
+        $this->cliente_frsId = $cliente_frsId;
 
         return $this;
     }
@@ -157,23 +157,23 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field cliente_operadora
+     * Returns the value of field cliente_operadoraId
      *
-     * @return string
+     * @return integer
      */
-    public function getClienteOperadora()
+    public function getClienteOperadoraId()
     {
-        return $this->cliente_operadora;
+        return $this->cliente_operadoraId;
     }
 
     /**
-     * Returns the value of field cliente_frs
+     * Returns the value of field cliente_frsId
      *
-     * @return string
+     * @return integer
      */
-    public function getClienteFrs()
+    public function getClienteFrsId()
     {
-        return $this->cliente_frs;
+        return $this->cliente_frsId;
     }
 
     /**
@@ -214,6 +214,8 @@ class Cliente extends \Phalcon\Mvc\Model
         $this->hasMany('cliente_id', 'Orden', 'orden_clienteId', array('alias' => 'Orden'));
         $this->belongsTo('cliente_equipoPozoId', 'Equipopozo', 'equipoPozo_id', array('alias' => 'Equipopozo'));
         $this->belongsTo('cliente_centroCostoId', 'Centrocosto', 'centroCosto_id', array('alias' => 'Centrocosto'));
+        $this->belongsTo('cliente_operadoraId', 'Operadora', 'operadora_id', array('alias' => 'Operadora'));
+        $this->belongsTo('cliente_frsId', 'Frs', 'frs_id', array('alias' => 'Frs'));
     }
 
     /**

@@ -16,6 +16,12 @@ class Frs extends \Phalcon\Mvc\Model
     protected $frs_codigo;
 
     /**
+     *
+     * @var integer
+     */
+    protected $frs_habilitado;
+
+    /**
      * Method to set the value of field frs_id
      *
      * @param integer $frs_id
@@ -42,6 +48,19 @@ class Frs extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field frs_habilitado
+     *
+     * @param integer $frs_habilitado
+     * @return $this
+     */
+    public function setFrsHabilitado($frs_habilitado)
+    {
+        $this->frs_habilitado = $frs_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field frs_id
      *
      * @return integer
@@ -59,6 +78,16 @@ class Frs extends \Phalcon\Mvc\Model
     public function getFrsCodigo()
     {
         return $this->frs_codigo;
+    }
+
+    /**
+     * Returns the value of field frs_habilitado
+     *
+     * @return integer
+     */
+    public function getFrsHabilitado()
+    {
+        return $this->frs_habilitado;
     }
 
     /**

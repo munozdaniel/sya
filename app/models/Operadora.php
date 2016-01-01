@@ -16,6 +16,12 @@ class Operadora extends \Phalcon\Mvc\Model
     protected $operadora_nombre;
 
     /**
+     *
+     * @var integer
+     */
+    protected $operadora_habilitado;
+
+    /**
      * Method to set the value of field operadora_id
      *
      * @param integer $operadora_id
@@ -42,6 +48,19 @@ class Operadora extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field operadora_habilitado
+     *
+     * @param integer $operadora_habilitado
+     * @return $this
+     */
+    public function setOperadoraHabilitado($operadora_habilitado)
+    {
+        $this->operadora_habilitado = $operadora_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field operadora_id
      *
      * @return integer
@@ -59,6 +78,16 @@ class Operadora extends \Phalcon\Mvc\Model
     public function getOperadoraNombre()
     {
         return $this->operadora_nombre;
+    }
+
+    /**
+     * Returns the value of field operadora_habilitado
+     *
+     * @return integer
+     */
+    public function getOperadoraHabilitado()
+    {
+        return $this->operadora_habilitado;
     }
 
     /**
@@ -107,7 +136,7 @@ class Operadora extends \Phalcon\Mvc\Model
             new \Phalcon\Mvc\Model\Validator\Uniqueness(
                 array(
                     "field"   => "operadora_nombre",
-                    "message" => "El Nombre de la operadora ya existe"
+                    "message" => "La Operadora ya existe"
                 )
             )
         );
