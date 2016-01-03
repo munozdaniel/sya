@@ -30,7 +30,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         /*======================= CLIENTE_NOMBRE ==============================*/
         $nombre = new Text("cliente_nombre",array(
             'maxlength'   => 60, 'class'=>'form-control',
-            'placeholder'=>'NOMBRE DEL CLIENTE', 'required'=>'true'
+            'placeholder'=>'NOMBRE DEL CLIENTE'
         ));
         $nombre->setLabel("Ingrese un Nombre");
         $nombre->setFilters(array('striptags', 'string'));
@@ -42,12 +42,12 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $this->add($nombre);
         /*======================= CLIENTE_OPERADORA ==============================*/
         //Primero El PRINCIPAL.
-        $dl_operadora = new DataListElement('cliente_operadoraID',
+        $dl_operadora = new DataListElement('operadora_nombre',
             array(
-                array('placeholder' => 'NOMBRE', 'required'=>'true', 'class'=>'form-control', 'maxlength' => 50),
+                array('placeholder' => 'NOMBRE', 'class'=>'form-control', 'maxlength' => 50),
                 Operadora::find(array('operadora_habilitado=1','order'=>'operadora_nombre')),
                 array('operadora_id', 'operadora_nombre'),
-                'operadora_nombre'
+                'operadora_id'
             ));
         $dl_operadora->setLabel('Operadora');
         $this->add($dl_operadora);
@@ -55,35 +55,35 @@ class ClienteForm  extends \Phalcon\Forms\Form
         /*======================= CLIENTE_FRS ==============================*/
 
         //Primero El PRINCIPAL.
-        $dl_frs = new DataListElement('cliente_frsId',
+        $dl_frs = new DataListElement('frs_codigo',
             array(
                 array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control'),
                 Frs::find(array('frs_habilitado=1','order'=>'frs_codigo')),
                 array('frs_id', 'frs_codigo'),
-                'frs_codigo'
+                'frs_id'
             ));
         $dl_frs->setLabel('FRS');
         $this->add($dl_frs);
         /*======================= CLIENTE - EQUIPO/POZO - YACIMIENTO ==============================*/
         //Primero El PRINCIPAL.
-        $listaYacimiento = new DataListElement('equipoPozo_yacimiento',
+        $listaYacimiento = new DataListElement('yacimiento_destino',
             array(
                 array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
                 Yacimiento::find(array('yacimiento_habilitado=1','order'=>'yacimiento_destino')),
                 array('yacimiento_id', 'yacimiento_destino'),
-                'equipoPozo_yacimientoId'
+                'yacimiento_id'
             ));
         $listaYacimiento->setLabel('Yacimiento');
         $this->add($listaYacimiento);
 
         //DataList Dependientes: EquipoPozo - Segun el Yacimiento, mostrará los nombres que le correspondan.
 
-        $listaEquipoPozo = new DataListElement('cliente_equipoPozo',
+        $listaEquipoPozo = new DataListElement('equipoPozo_nombre',
             array(
                 array('placeholder' => 'SELECCIONE UN YACIMENTO', 'maxlength' => 50, 'class'=>'form-control'),
                 null,
                 array('equipoPozo_id', 'equipoPozo_nombre'),
-                'cliente_equipoPozoId'
+                'equipoPozo_id'
             ));
         $listaEquipoPozo->setLabel('Equipo/Pozo');
         $this->add($listaEquipoPozo);
@@ -94,24 +94,24 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //DataList Dependientes: Linea
 
 
-        $listaLinea = new DataListElement('centroCosto_linea',
+        $listaLinea = new DataListElement('linea_nombre',
             array(
                 array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
                 Linea::find(array('linea_habilitado=1','order'=>'linea_nombre')),
                 array('linea_id', 'linea_nombre'),
-                'centroCosto_lineaId'
+                'linea_id'
             ));
         $listaLinea->setLabel('Linea');
         $this->add($listaLinea);
 
         //DataList Dependientes: Centro Costo - Segun la linea, mostrará los codigos que le correspondan.
 
-        $listaCentroCosto = new DataListElement('cliente_centroCosto',
+        $listaCentroCosto = new DataListElement('centroCosto_codigo',
             array(
                 array('placeholder' => 'SELECCIONE UNA LINEA', 'maxlength' => 50, 'class'=>'form-control'),
                 null,
                 array('centroCosto_id', 'centroCosto_codigo'),
-                'cliente_centroCostoId'
+                'centroCosto_id'
             ));
         $listaCentroCosto->setLabel('Centro Costo');
         $this->add($listaCentroCosto);
@@ -121,9 +121,9 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $script = new DataListScript('equipoPozo_lineaScript',
             array(
                 'url'               =>'/sya/cliente/buscarEquipoPozo',
-                'id_principal'      =>'equipoPozo_yacimiento',
-                'id_hidden_ppal'    =>'equipoPozo_yacimientoId',
-                'id_dependiente'    =>'cliente_equipoPozo',
+                'id_principal'      =>'yacimiento_destino',
+                'id_hidden_ppal'    =>'yacimiento_id',
+                'id_dependiente'    =>'equipoPozo_nombre',
                 'columnas'          =>  array('equipoPozo_id','equipoPozo_nombre')
             )
         );
@@ -134,9 +134,9 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $script = new DataListScript('centroCosto_lineaScript',
             array(
                 'url'               =>'/sya/cliente/buscarCentroCosto',
-                'id_principal'      =>'centroCosto_linea',
-                'id_hidden_ppal'    =>'centroCosto_lineaId',
-                'id_dependiente'    =>'cliente_centroCosto',
+                'id_principal'      =>'linea_nombre',
+                'id_hidden_ppal'    =>'linea_id',
+                'id_dependiente'    =>'centroCosto_codigo',
                 'columnas'          =>  array('centroCosto_id','centroCosto_codigo')
                 )
         );
