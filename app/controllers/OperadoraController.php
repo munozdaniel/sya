@@ -267,5 +267,71 @@ class OperadoraController extends ControllerBase
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $operadora = Operadora::findFirstByOperadora_id($id);
+            if (!$operadora) {
+                $this->flash->error("La Operadora no ha sido encontrada");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "operadora",
+                    "action" => "index"
+                ));
+            }
+            $operadora->operadora_habilitado = 0;
+            if (!$operadora->update()) {
+
+                foreach ($operadora->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "operadora",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("La Operadora ha sido eliminada correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "operadora",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $operadora = Operadora::findFirstByOperadora_id($id);
+        $operadora->operadora_habilitado = 1;
+        if (!$operadora->update()) {
+
+            foreach ($operadora->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "operadora",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("La Operadora ha sido habilitada");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "operadora",
+            "action" => "search"
+        ));
+    }
 }

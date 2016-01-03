@@ -9,12 +9,12 @@
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("linea", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
+        <td align="left">{{ link_to("operadora", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
     </tr>
 </table>
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="linea_nombre">Nombre de la Operadora</label>
+    <label for="operadora_nombre">Nombre de la Operadora</label>
     <div class="form-group">
         {{ text_field("operadora_nombre", "size" : 30) }}
     </div>
