@@ -73,10 +73,12 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         $html .= " $(\"#$nombre\").blur(function (event) {\n";
         $html .= "var value = $('#".$nombre."').val();\n";
         $html .= "var clave = $('#".$listNombre." [value=\"' + value + '\"]').data('value');\n";
-        $html .= "if (typeof clave != 'undefined')\n";
+        $html .= "if (typeof clave != 'undefined'){\n";
         $html .= "document.getElementById('".$idHidden."').value = clave ;\n ";
+        $html .= " this.setCustomValidity('');}\n";
         $html .= " else {\n";
         $html .= " document.getElementById('".$idHidden."').value = ''; \n";
+        $html .= " this.setCustomValidity('Seleccione un valor válido. El valor ingresado no se encuentra cargado en el sistema.');\n";
         $html .= " }});\n";
         $html .= "});\n";
         $html .= "</script>\n";
