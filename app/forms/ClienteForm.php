@@ -45,7 +45,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $dl_operadora = new DataListElement('cliente_operadoraID',
             array(
                 array('placeholder' => 'NOMBRE', 'required'=>'true', 'class'=>'form-control', 'maxlength' => 50),
-                Operadora::find(),
+                Operadora::find(array('operadora_habilitado=1','order'=>'operadora_nombre')),
                 array('operadora_id', 'operadora_nombre'),
                 'operadora_nombre'
             ));
@@ -58,7 +58,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $dl_frs = new DataListElement('cliente_frsId',
             array(
                 array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control'),
-                Frs::find(),
+                Frs::find(array('frs_habilitado=1','order'=>'frs_codigo')),
                 array('frs_id', 'frs_codigo'),
                 'frs_codigo'
             ));
@@ -69,7 +69,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $listaYacimiento = new DataListElement('equipoPozo_yacimiento',
             array(
                 array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
-                Yacimiento::find(),
+                Yacimiento::find(array('yacimiento_habilitado=1','order'=>'yacimiento_destino')),
                 array('yacimiento_id', 'yacimiento_destino'),
                 'equipoPozo_yacimientoId'
             ));
@@ -97,7 +97,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $listaLinea = new DataListElement('centroCosto_linea',
             array(
                 array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
-                Linea::find(),
+                Linea::find(array('linea_habilitado=1','order'=>'linea_nombre')),
                 array('linea_id', 'linea_nombre'),
                 'centroCosto_lineaId'
             ));
