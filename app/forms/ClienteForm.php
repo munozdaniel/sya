@@ -120,7 +120,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //UnionElementScript: La lista dinamica del EquipoPozo
         $script = new DataListScript('equipoPozo_lineaScript',
             array(
-                'url'               =>'/sya/cliente/buscarEquipoPozo',
+                'url'               =>'/sya/equipopozo/buscarEquipoPozo',
                 'id_principal'      =>'yacimiento_destino',
                 'id_hidden_ppal'    =>'yacimiento_id',
                 'id_dependiente'    =>'equipoPozo_nombre',
@@ -133,7 +133,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //UnionElementScript
         $script = new DataListScript('centroCosto_lineaScript',
             array(
-                'url'               =>'/sya/cliente/buscarCentroCosto',
+                'url'               =>'/sya/centrocosto/buscarCentroCosto',
                 'id_principal'      =>'linea_nombre',
                 'id_hidden_ppal'    =>'linea_id',
                 'id_dependiente'    =>'centroCosto_codigo',

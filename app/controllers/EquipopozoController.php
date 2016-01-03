@@ -369,4 +369,28 @@ class EquipopozoController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function buscarEquipoPozoAction()
+    {
+        $this->view->disable();
+
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+                $lista = Equipopozo::findByEquipoPozo_yacimientoId($id);
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("equipoPozo_id" => $item->equipoPozo_id, "equipoPozo_nombre" => $item->equipoPozo_nombre);
+                }
+
+
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }
+                $this->response->send();
+            }
+        }
+
+    }
 }

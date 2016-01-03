@@ -23,6 +23,7 @@ class ClienteController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->view->clienteForm = new ClienteForm();
         $this->persistent->parameters = null;
     }
 
@@ -59,7 +60,7 @@ class ClienteController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $cliente,
-            "limit" => 100000,
+            "limit" => 10000,
             "page" => $numberPage
         ));
 
@@ -74,54 +75,7 @@ class ClienteController extends ControllerBase
         $this->view->clienteForm = new ClienteForm(null, array('edit' => true));
     }
 
-    public function buscarCentroCostoAction()
-    {
-        $this->view->disable();
 
-        if ($this->request->isPost()) {
-            if ($this->request->isAjax()) {
-                $id = $this->request->getPost("id", "int");
-                $lista = Centrocosto::findByCentroCosto_lineaId($id);
-                $resData = array();
-
-                foreach ($lista as $item) {
-                    $resData[] = array("centroCosto_id" => $item->centroCosto_id, "centroCosto_codigo" => $item->centroCosto_codigo);
-                }
-
-
-                if (count($lista) > 0) {
-                    $this->response->setJsonContent(array("lista" => $resData));
-                    $this->response->setStatusCode(200, "OK");
-                }
-                $this->response->send();
-            }
-        }
-
-    }
-    public function buscarEquipoPozoAction()
-    {
-        $this->view->disable();
-
-        if ($this->request->isPost()) {
-            if ($this->request->isAjax()) {
-                $id = $this->request->getPost("id", "int");
-                $lista = Equipopozo::findByEquipoPozo_yacimientoId($id);
-                $resData = array();
-
-                foreach ($lista as $item) {
-                    $resData[] = array("equipoPozo_id" => $item->equipoPozo_id, "equipoPozo_nombre" => $item->equipoPozo_nombre);
-                }
-
-
-                if (count($lista) > 0) {
-                    $this->response->setJsonContent(array("lista" => $resData));
-                    $this->response->setStatusCode(200, "OK");
-                }
-                $this->response->send();
-            }
-        }
-
-    }
 
     /**
      * Edits a cliente
@@ -157,7 +111,7 @@ class ClienteController extends ControllerBase
     }
 
     /**
-     * Creates a new cliente
+     * Crear un nuevo cliente
      */
     public function createAction()
     {
@@ -172,11 +126,11 @@ class ClienteController extends ControllerBase
         $cliente = new Cliente();
 
         $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
-        $cliente->setClienteOperadora($this->request->getPost("cliente_operadora"));
-        $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
-        $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
-        $cliente->setClienteEquipopozoid($this->request->getPost("cliente_equipoPozoId"));
-        $cliente->setClienteCentrocostoid($this->request->getPost("cliente_centroCostoId"));
+        $cliente->setClienteOperadoraId($this->request->getPost("operadora_id"));
+        $cliente->setClienteFrsId($this->request->getPost("frs_id"));
+        $cliente->setClienteHabilitado(1);
+        $cliente->setClienteEquipopozoid($this->request->getPost("equipoPozo_id"));
+        $cliente->setClienteCentrocostoid($this->request->getPost("centroCosto_id"));
 
 
         if (!$cliente->save()) {

@@ -367,4 +367,29 @@ class CentrocostoController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function buscarCentroCostoAction()
+    {
+        $this->view->disable();
+
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+                $lista = Centrocosto::findByCentroCosto_lineaId($id);
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("centroCosto_id" => $item->centroCosto_id, "centroCosto_codigo" => $item->centroCosto_codigo);
+                }
+
+
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }
+                $this->response->send();
+            }
+        }
+
+    }
+
 }
