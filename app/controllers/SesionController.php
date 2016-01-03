@@ -42,7 +42,7 @@ class SesionController extends ControllerBase
                         return $this->redireccionar('index/index');
                     }
                 } else {
-                    $this->flash->message('problema', "<p>No se encontro el Usuario, verifique contraseña/nick</p>");
+                    $this->flash->error("<p>No se encontro el Usuario, verifique contraseña/nick</p>");
                 }
             } catch (\Phalcon\Annotations\Exception $ex) {
                 $this->flash->error($ex->getMessage());
