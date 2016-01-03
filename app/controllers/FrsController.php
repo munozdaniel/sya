@@ -58,7 +58,7 @@ class FrsController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $frs,
-            "limit"=> 10,
+            "limit"=> 100000,
             "page" => $numberPage
         ));
 
@@ -73,6 +73,34 @@ class FrsController extends ControllerBase
 
     }
 
+    /**
+     * Agregar una nueva operadora
+     */
+    public function agregarAction()
+    {
+        $this->view->disable();
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $frs = new Frs();
+
+                $frs->setFrsCodigo($this->request->getPost("frs_codigo"));
+                $frs->setFrsHabilitado(1);
+                if (!$frs->save()) {
+                    $mensaje ="";
+                    foreach ($frs->getMessages() as $message) {
+                        $mensaje .= $message ." <br>";
+                    }
+                    $this->response->setStatusCode(500, "<div class='alert alert-danger' ><i class='fa fa-fw fa-warning'></i> <br>".$mensaje."</div>");
+                }
+                else{
+                    $this->response->setStatusCode(200, "<div class='alert alert-success' >"." OPERACIÓN EXITOSA <br> Si desea puede continuar agregando "."</div>");
+                }
+                $this->response->send();
+            }
+        }
+
+
+    }
     /**
      * Edits a fr
      *
@@ -230,5 +258,71 @@ class FrsController extends ControllerBase
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $frs = Frs::findFirstByFrs_id($id);
+            if (!$frs) {
+                $this->flash->error("La Frs no ha sido encontrada");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "frs",
+                    "action" => "index"
+                ));
+            }
+            $frs->frs_habilitado = 0;
+            if (!$frs->update()) {
+
+                foreach ($frs->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "frs",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El Codigo Frs ha sido eliminada correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "frs",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $frs = Frs::findFirstByFrs_id($id);
+        $frs->frs_habilitado = 1;
+        if (!$frs->update()) {
+
+            foreach ($frs->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "frs",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El Codigo Frs ha sido habilitada");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "frs",
+            "action" => "search"
+        ));
+    }
 }

@@ -10,7 +10,7 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("linea", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+            {{ link_to("frs", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
 </table>

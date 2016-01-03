@@ -1,5 +1,5 @@
 <!--=========== MODAL CREAR OPERADORA ================-->
-<div id="nuevoFrs" class="modal fade modal-info" tabindex="-1">
+<div id="nuevoFrs" class="modal fade modal-info" tabindex="3    ">
 
     <div class="modal-dialog">
         <div class="modal-content">
@@ -13,12 +13,12 @@
                     <div class="col-lg-12 col-md-12 ">
                         <!-- START SUBSCRIBE HEADING -->
                         <div class="heading">
-                            <span id="mensaje"></span><br>
+                            <span id="mensajeFRS"></span><br>
                             <label for="operadora_nombre" class="">Codigo FRS</label>
                         </div>
 
                         <div class="form-group">
-                            {{ text_field("frs_codigo", "size" : 30,'class':'text-black','autofocus':'') }}
+                            {{ text_field("frs_codigoNew", "size" : 30,'class':'text-black','autofocus':'') }}
                         </div>
                     </div>
                 </div>
@@ -37,13 +37,13 @@
 <script>
     $('#nuevoFrs').on('shown.bs.modal', function () {
         setTimeout(function (){
-            $('#frs_codigo').focus();
+            $('#frs_codigoNew').focus();
         }, 1000);
     });
     $(document).ready(function () {
 
         $("#agregarFRS").click(function (event) {
-            var value = document.getElementById('frs_codigo').value;
+            var value = document.getElementById('frs_codigoNew').value;
             var getResultsUrl = '/sya/frs/agregar';
             $.ajax({
                 data: {"frs_codigo": value},
@@ -52,11 +52,11 @@
                 success: function (response) {
 
                     $('#list_cliente_frsId').load(document.URL +  ' #list_cliente_frsId');
-                    document.getElementById("mensaje").innerHTML = "<div class='alert alert-info' ><i class='fa fa-fw fa-thumbs-up'></i> <br> OPERACIÓN EXITOSA <br>  Si desea puede continuar agregando nuevos items  </div>";  // Agrego nueva linea antes
+                    document.getElementById("mensajeFRS").innerHTML = "<div class='alert alert-info' ><i class='fa fa-fw fa-thumbs-up'></i> <br> OPERACIÓN EXITOSA <br>  Si desea puede continuar agregando nuevos items  </div>";  // Agrego nueva linea antes
                     console.log(response);
                 },
                 error: function (error) {
-                    document.getElementById("mensaje").innerHTML = error.statusText;  // Agrego nueva linea antes
+                    document.getElementById("mensajeFRS").innerHTML = error.statusText;  // Agrego nueva linea antes
                     console.log(error);
                 }
             });
