@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class OrdenController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Linea');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -19,6 +30,7 @@ class OrdenController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsSearch();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -36,7 +48,7 @@ class OrdenController extends ControllerBase
 
         $orden = Orden::find($parameters);
         if (count($orden) == 0) {
-            $this->flash->notice("The search did not find any orden");
+            $this->flash->notice("No se han encontrado resultados.");
 
             return $this->dispatcher->forward(array(
                 "controller" => "orden",
@@ -46,7 +58,7 @@ class OrdenController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $orden,
-            "limit"=> 10000,
+            "limit"=> 100000,
             "page" => $numberPage
         ));
 
@@ -73,7 +85,7 @@ class OrdenController extends ControllerBase
 
             $orden = Orden::findFirstByorden_id($orden_id);
             if (!$orden) {
-                $this->flash->error("orden was not found");
+                $this->flash->error("La orden no se encontró");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "orden",
@@ -150,7 +162,7 @@ class OrdenController extends ControllerBase
             ));
         }
 
-        $this->flash->success("orden was created successfully");
+        $this->flash->success("La orden se creó correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "orden",
@@ -177,7 +189,7 @@ class OrdenController extends ControllerBase
 
         $orden = Orden::findFirstByorden_id($orden_id);
         if (!$orden) {
-            $this->flash->error("orden does not exist " . $orden_id);
+            $this->flash->error("La orden no existe ID: " . $orden_id);
 
             return $this->dispatcher->forward(array(
                 "controller" => "orden",
@@ -217,7 +229,7 @@ class OrdenController extends ControllerBase
             ));
         }
 
-        $this->flash->success("orden was updated successfully");
+        $this->flash->success("La orden se actualizó correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "orden",
@@ -236,7 +248,7 @@ class OrdenController extends ControllerBase
 
         $orden = Orden::findFirstByorden_id($orden_id);
         if (!$orden) {
-            $this->flash->error("orden was not found");
+            $this->flash->error("La orden no se encontró");
 
             return $this->dispatcher->forward(array(
                 "controller" => "orden",
@@ -256,12 +268,78 @@ class OrdenController extends ControllerBase
             ));
         }
 
-        $this->flash->success("orden was deleted successfully");
+        $this->flash->success("La orden se eliminó correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "orden",
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $orden = Orden::findFirstByOrden_id($id);
+            if (!$orden) {
+                $this->flash->error("La Orden no ha sido encontrada");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "orden",
+                    "action" => "index"
+                ));
+            }
+            $orden->orden_habilitado = 0;
+            if (!$orden->update()) {
+
+                foreach ($orden->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "orden",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("La Orden ha sido eliminada correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "orden",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $orden = Orden::findFirstByOrden_id($id);
+        $orden->orden_habilitado = 1;
+        if (!$orden->update()) {
+
+            foreach ($orden->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "orden",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("La Orden ha sido habilitada");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "orden",
+            "action" => "search"
+        ));
+    }
 }
