@@ -39,10 +39,10 @@ class DataListElement extends \Phalcon\Forms\Element implements \Phalcon\Forms\E
         $listNombre = "list_".$nombre;
         $atributosInput = $this->getAttributes ()[0];
 
-        $html = "<input type='text' id='$nombre' name='$nombre' list='$listNombre' required='true'";
+        $html = "<input type='text' id='$nombre' name='$nombre' list='$listNombre' autocomplete='off' ";
         foreach($atributosInput as $atributo => $valor)
         {
-            $html .= " $atributo = ' $valor '";
+            $html .= " $atributo = '$valor'";
         }
         $html .= ">\n ";
 
