@@ -17,9 +17,9 @@ class Columnaextra extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var string
+     * @var integer
      */
-    protected $columnaExtra_descripcion;
+    protected $columnaExtra_habilitado;
 
     /**
      * Method to set the value of field columnaExtra_id
@@ -48,14 +48,14 @@ class Columnaextra extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field columnaExtra_descripcion
+     * Method to set the value of field columnaExtra_habilitado
      *
-     * @param string $columnaExtra_descripcion
+     * @param integer $columnaExtra_habilitado
      * @return $this
      */
-    public function setColumnaExtraDescripcion($columnaExtra_descripcion)
+    public function setColumnaExtraHabilitado($columnaExtra_habilitado)
     {
-        $this->columnaExtra_descripcion = $columnaExtra_descripcion;
+        $this->columnaExtra_habilitado = $columnaExtra_habilitado;
 
         return $this;
     }
@@ -81,13 +81,21 @@ class Columnaextra extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field columnaExtra_descripcion
+     * Returns the value of field columnaExtra_habilitado
      *
-     * @return string
+     * @return integer
      */
-    public function getColumnaExtraDescripcion()
+    public function getColumnaExtraHabilitado()
     {
-        return $this->columnaExtra_descripcion;
+        return $this->columnaExtra_habilitado;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('columnaExtra_id', 'Contenidoextra', 'contenidoExtra_columnaExtraId', array('alias' => 'Contenidoextra'));
     }
 
     /**

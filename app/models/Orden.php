@@ -13,7 +13,7 @@ class Orden extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $orden_planilla;
+    protected $orden_planillaId;
 
     /**
      *
@@ -25,49 +25,55 @@ class Orden extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $orden_transporte;
+    protected $orden_transporteId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_tipoEquipo;
+    protected $orden_tipoEquipoId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_tipoCarga;
+    protected $orden_tipoCargaId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_chofer;
+    protected $orden_choferId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_cliente;
+    protected $orden_clienteId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_viaje;
+    protected $orden_viajeId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_tarifa;
+    protected $orden_concatenadoId;
 
     /**
      *
      * @var integer
      */
-    protected $orden_columnaExtra;
+    protected $orden_tarifaId;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $orden_contenidoExtraId;
 
     /**
      *
@@ -125,14 +131,14 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field orden_planilla
+     * Method to set the value of field orden_planillaId
      *
-     * @param integer $orden_planilla
+     * @param integer $orden_planillaId
      * @return $this
      */
-    public function setOrdenPlanilla($orden_planilla)
+    public function setOrdenPlanillaId($orden_planillaId)
     {
-        $this->orden_planilla = $orden_planilla;
+        $this->orden_planillaId = $orden_planillaId;
 
         return $this;
     }
@@ -151,105 +157,118 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field orden_transporte
+     * Method to set the value of field orden_transporteId
      *
-     * @param integer $orden_transporte
+     * @param integer $orden_transporteId
      * @return $this
      */
-    public function setOrdenTransporte($orden_transporte)
+    public function setOrdenTransporteId($orden_transporteId)
     {
-        $this->orden_transporte = $orden_transporte;
+        $this->orden_transporteId = $orden_transporteId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_tipoEquipo
+     * Method to set the value of field orden_tipoEquipoId
      *
-     * @param integer $orden_tipoEquipo
+     * @param integer $orden_tipoEquipoId
      * @return $this
      */
-    public function setOrdenTipoEquipo($orden_tipoEquipo)
+    public function setOrdenTipoEquipoId($orden_tipoEquipoId)
     {
-        $this->orden_tipoEquipo = $orden_tipoEquipo;
+        $this->orden_tipoEquipoId = $orden_tipoEquipoId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_tipoCarga
+     * Method to set the value of field orden_tipoCargaId
      *
-     * @param integer $orden_tipoCarga
+     * @param integer $orden_tipoCargaId
      * @return $this
      */
-    public function setOrdenTipoCarga($orden_tipoCarga)
+    public function setOrdenTipoCargaId($orden_tipoCargaId)
     {
-        $this->orden_tipoCarga = $orden_tipoCarga;
+        $this->orden_tipoCargaId = $orden_tipoCargaId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_chofer
+     * Method to set the value of field orden_choferId
      *
-     * @param integer $orden_chofer
+     * @param integer $orden_choferId
      * @return $this
      */
-    public function setOrdenChofer($orden_chofer)
+    public function setOrdenChoferId($orden_choferId)
     {
-        $this->orden_chofer = $orden_chofer;
+        $this->orden_choferId = $orden_choferId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_cliente
+     * Method to set the value of field orden_clienteId
      *
-     * @param integer $orden_cliente
+     * @param integer $orden_clienteId
      * @return $this
      */
-    public function setOrdenCliente($orden_cliente)
+    public function setOrdenClienteId($orden_clienteId)
     {
-        $this->orden_cliente = $orden_cliente;
+        $this->orden_clienteId = $orden_clienteId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_viaje
+     * Method to set the value of field orden_viajeId
      *
-     * @param integer $orden_viaje
+     * @param integer $orden_viajeId
      * @return $this
      */
-    public function setOrdenViaje($orden_viaje)
+    public function setOrdenViajeId($orden_viajeId)
     {
-        $this->orden_viaje = $orden_viaje;
+        $this->orden_viajeId = $orden_viajeId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_tarifa
+     * Method to set the value of field orden_concatenadoId
      *
-     * @param integer $orden_tarifa
+     * @param integer $orden_concatenadoId
      * @return $this
      */
-    public function setOrdenTarifa($orden_tarifa)
+    public function setOrdenConcatenadoId($orden_concatenadoId)
     {
-        $this->orden_tarifa = $orden_tarifa;
+        $this->orden_concatenadoId = $orden_concatenadoId;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field orden_columnaExtra
+     * Method to set the value of field orden_tarifaId
      *
-     * @param integer $orden_columnaExtra
+     * @param integer $orden_tarifaId
      * @return $this
      */
-    public function setOrdenColumnaExtra($orden_columnaExtra)
+    public function setOrdenTarifaId($orden_tarifaId)
     {
-        $this->orden_columnaExtra = $orden_columnaExtra;
+        $this->orden_tarifaId = $orden_tarifaId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_contenidoExtraId
+     *
+     * @param integer $orden_contenidoExtraId
+     * @return $this
+     */
+    public function setOrdenContenidoExtraId($orden_contenidoExtraId)
+    {
+        $this->orden_contenidoExtraId = $orden_contenidoExtraId;
 
         return $this;
     }
@@ -356,13 +375,13 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field orden_planilla
+     * Returns the value of field orden_planillaId
      *
      * @return integer
      */
-    public function getOrdenPlanilla()
+    public function getOrdenPlanillaId()
     {
-        return $this->orden_planilla;
+        return $this->orden_planillaId;
     }
 
     /**
@@ -376,83 +395,93 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field orden_transporte
+     * Returns the value of field orden_transporteId
      *
      * @return integer
      */
-    public function getOrdenTransporte()
+    public function getOrdenTransporteId()
     {
-        return $this->orden_transporte;
+        return $this->orden_transporteId;
     }
 
     /**
-     * Returns the value of field orden_tipoEquipo
+     * Returns the value of field orden_tipoEquipoId
      *
      * @return integer
      */
-    public function getOrdenTipoEquipo()
+    public function getOrdenTipoEquipoId()
     {
-        return $this->orden_tipoEquipo;
+        return $this->orden_tipoEquipoId;
     }
 
     /**
-     * Returns the value of field orden_tipoCarga
+     * Returns the value of field orden_tipoCargaId
      *
      * @return integer
      */
-    public function getOrdenTipoCarga()
+    public function getOrdenTipoCargaId()
     {
-        return $this->orden_tipoCarga;
+        return $this->orden_tipoCargaId;
     }
 
     /**
-     * Returns the value of field orden_chofer
+     * Returns the value of field orden_choferId
      *
      * @return integer
      */
-    public function getOrdenChofer()
+    public function getOrdenChoferId()
     {
-        return $this->orden_chofer;
+        return $this->orden_choferId;
     }
 
     /**
-     * Returns the value of field orden_cliente
+     * Returns the value of field orden_clienteId
      *
      * @return integer
      */
-    public function getOrdenCliente()
+    public function getOrdenClienteId()
     {
-        return $this->orden_cliente;
+        return $this->orden_clienteId;
     }
 
     /**
-     * Returns the value of field orden_viaje
+     * Returns the value of field orden_viajeId
      *
      * @return integer
      */
-    public function getOrdenViaje()
+    public function getOrdenViajeId()
     {
-        return $this->orden_viaje;
+        return $this->orden_viajeId;
     }
 
     /**
-     * Returns the value of field orden_tarifa
+     * Returns the value of field orden_concatenadoId
      *
      * @return integer
      */
-    public function getOrdenTarifa()
+    public function getOrdenConcatenadoId()
     {
-        return $this->orden_tarifa;
+        return $this->orden_concatenadoId;
     }
 
     /**
-     * Returns the value of field orden_columnaExtra
+     * Returns the value of field orden_tarifaId
      *
      * @return integer
      */
-    public function getOrdenColumnaExtra()
+    public function getOrdenTarifaId()
     {
-        return $this->orden_columnaExtra;
+        return $this->orden_tarifaId;
+    }
+
+    /**
+     * Returns the value of field orden_contenidoExtraId
+     *
+     * @return integer
+     */
+    public function getOrdenContenidoExtraId()
+    {
+        return $this->orden_contenidoExtraId;
     }
 
     /**
@@ -526,6 +555,23 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->belongsTo('orden_planillaId', 'Planilla', 'planilla_id', array('alias' => 'Planilla'));
+        $this->belongsTo('orden_concatenadoId', 'Concatenado', 'concatenado_id', array('alias' => 'Concatenado'));
+        $this->belongsTo('orden_contenidoExtraId', 'Contenidoextra', 'contenidoExtra_id', array('alias' => 'Contenidoextra'));
+        $this->belongsTo('orden_transporteId', 'Transporte', 'transporte_id', array('alias' => 'Transporte'));
+        $this->belongsTo('orden_tipoEquipoId', 'Tipoequipo', 'tipoEquipo_id', array('alias' => 'Tipoequipo'));
+        $this->belongsTo('orden_tipoCargaId', 'Tipocarga', 'tipoCarga_id', array('alias' => 'Tipocarga'));
+        $this->belongsTo('orden_choferId', 'Chofer', 'chofer_id', array('alias' => 'Chofer'));
+        $this->belongsTo('orden_clienteId', 'Cliente', 'cliente_id', array('alias' => 'Cliente'));
+        $this->belongsTo('orden_viajeId', 'Viaje', 'viaje_id', array('alias' => 'Viaje'));
+        $this->belongsTo('orden_tarifaId', 'Tarifa', 'tarifa_id', array('alias' => 'Tarifa'));
+    }
+
+    /**
      * Returns table name mapped in the model.
      *
      * @return string
@@ -555,23 +601,6 @@ class Orden extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
-    }
-    /**
-     * Utilizado cuando se elimina una planilla de manera logica, se buscan todas las ordenes
-     * relacionadas con la planilla, y se las inhabilita.
-     * @param planilla_id
-     * @return boolean
-     */
-    public static function eliminarByPlanilla_id($planilla_id)
-    {
-        $ordenes = Orden::findByOrden_planilla($planilla_id);
-        foreach($ordenes as $unaOrden)
-        {
-            $unaOrden->orden_habilitado = 0;
-            if(!$unaOrden->update())
-                return false;
-        }
-        return true;
     }
 
 }
