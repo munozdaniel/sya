@@ -341,7 +341,7 @@ class Orden extends \Phalcon\Mvc\Model
     /**
      * Method to set the value of field orden_creadoPor
      *
-     * @param integer $orden_creadoPor
+     * @param string $orden_creadoPor
      * @return $this
      */
     public function setOrdenCreadoPor($orden_creadoPor)
