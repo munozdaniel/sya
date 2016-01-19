@@ -12,6 +12,8 @@
         {#Plugin PhalconJquery
         {{jquery}}
         #}
+        {# jQuery 2.1.4 #}
+        {{ javascript_include('plugins/jQuery/jQuery-2.1.4.min.js') }}
         {# Bootstrap 3.3.5 #}
         {{ stylesheet_link('bootstrap/css/bootstrap.min.css') }}
         {#  Font Awesome
@@ -48,8 +50,7 @@
     <body class="hold-transition skin-blue layout-boxed  ">
         {{ content() }}
         {#Js Globales#}
-        {# jQuery 2.1.4 #}
-        {{ javascript_include('plugins/jQuery/jQuery-2.1.4.min.js') }}
+
         {# Bootstrap 3.3.5 #}
         {{ javascript_include('bootstrap/js/bootstrap.min.js') }}
         {# AdminLTE App #}
