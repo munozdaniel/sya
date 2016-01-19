@@ -24,14 +24,14 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             {#elemento.getUsuario() #}
-                            <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            {{ image('files/perfil/default.jpg','class':'user-image','alt':'foto de perfil') }}
                             <span class="hidden-xs">Alexander Pierce</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 {#elemento.getUsuarioDetalle() #}
-                                <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                {{ image('files/perfil/default.jpg','class':'img-circle','alt':'foto de perfil') }}
                                 <p>
                                     Nombre de usuario
                                     <small>rol</small>
@@ -80,7 +80,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Crear Planilla') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Agregar Orden') }}</li>
+                        <li>{{ link_to('orden/new','<i class="fa fa-circle-o"></i>  Agregar Orden') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM ARBOL =======#}
