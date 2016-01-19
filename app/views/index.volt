@@ -9,14 +9,16 @@
         {{ getTitle() }}
         <link rel="shortcut icon" type="image/png" href="{{ url('favicon.ico') }}">
         {#Archivos Globales#}
-        {#Plugin PhalconJquery#}
+        {#Plugin PhalconJquery
         {{jquery}}
+        #}
         {# Bootstrap 3.3.5 #}
         {{ stylesheet_link('bootstrap/css/bootstrap.min.css') }}
-        {#  Font Awesome #}
-        {{ stylesheet_link("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css", false) }}
+        {#  Font Awesome
+        {{ stylesheet_link("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css", false) }}#}
+        {{ stylesheet_link("fonts/css/font-awesome.min.css" ) }}
         {#  Ionicons #}
-        {{ stylesheet_link("https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css", false) }}
+        {{ stylesheet_link("css/ionicons.min.css") }}
         {# Template de Estilo#}
         {{ stylesheet_link('dist/css/AdminLTE.min.css') }}
         {# Skins Colors#}
