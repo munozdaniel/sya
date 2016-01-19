@@ -26,7 +26,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             {#elemento.getUsuario() #}
                             {{ image('files/perfil/default.jpg','class':'user-image','alt':'foto de perfil') }}
-                            <span class="hidden-xs">Alexander Pierce</span>
+                            <span class="hidden-xs">Administrador Sya</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
@@ -40,9 +40,9 @@
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
-                                <div class="pull-left">
-                                    {{ link_to('usuarios/verPerfil','Perfil','class':'btn btn-default btn-flat') }}
-                                </div>
+                                <!-- div class="pull-left">
+                                    {# link_to('usuarios/verPerfil','Perfil','class':'btn btn-default btn-flat') #}
+                                </div-->
                                 <div class="pull-right">
                                     {{ link_to('sesion/cerrar','Salir','class':'btn btn-default btn-flat') }}
                                 </div>
