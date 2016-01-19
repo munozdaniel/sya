@@ -18,6 +18,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
+
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account: style can be found in dropdown.less -->
@@ -120,20 +121,20 @@
                         <span>Gestionar</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
-                        <ul class="treeview-menu">
-                            <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
-                            <li>{{ link_to('frs','<i class="fa fa-circle-o"></i>  FRS') }}</li>
-                            <li>{{ link_to('operadora','<i class="fa fa-circle-o"></i>  Operadora') }}</li>
-                            <li>{{ link_to('centrocosto','<i class="fa fa-circle-o"></i>  Centro Costo') }}</li>
-                            <li>{{ link_to('linea','<i class="fa fa-circle-o"></i>  Linea') }}</li>
-                            <li>{{ link_to('equipopozo','<i class="fa fa-circle-o"></i>  Equipo/Pozo') }}</li>
-                            <li>{{ link_to('yacimiento','<i class="fa fa-circle-o"></i>  Yacimiento') }}</li>
-                            <li>{{ link_to('chofer','<i class="fa fa-circle-o"></i>  Chofer') }}</li>
-                            <li>{{ link_to('transporte','<i class="fa fa-circle-o"></i>  Transporte') }}</li>
-                            <li>{{ link_to('tipoequipo','<i class="fa fa-circle-o"></i>  Tipo Equipo') }}</li>
-                            <li>{{ link_to('tipocarga','<i class="fa fa-circle-o"></i>  Tipo Carga') }}</li>
-                            <li>{{ link_to('viaje','<i class="fa fa-circle-o"></i>  Viaje') }}</li>
-                        </ul>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
+                        <li>{{ link_to('frs','<i class="fa fa-circle-o"></i>  FRS') }}</li>
+                        <li>{{ link_to('operadora','<i class="fa fa-circle-o"></i>  Operadora') }}</li>
+                        <li>{{ link_to('centrocosto','<i class="fa fa-circle-o"></i>  Centro Costo') }}</li>
+                        <li>{{ link_to('linea','<i class="fa fa-circle-o"></i>  Linea') }}</li>
+                        <li>{{ link_to('equipopozo','<i class="fa fa-circle-o"></i>  Equipo/Pozo') }}</li>
+                        <li>{{ link_to('yacimiento','<i class="fa fa-circle-o"></i>  Yacimiento') }}</li>
+                        <li>{{ link_to('chofer','<i class="fa fa-circle-o"></i>  Chofer') }}</li>
+                        <li>{{ link_to('transporte','<i class="fa fa-circle-o"></i>  Transporte') }}</li>
+                        <li>{{ link_to('tipoequipo','<i class="fa fa-circle-o"></i>  Tipo Equipo') }}</li>
+                        <li>{{ link_to('tipocarga','<i class="fa fa-circle-o"></i>  Tipo Carga') }}</li>
+                        <li>{{ link_to('viaje','<i class="fa fa-circle-o"></i>  Viaje') }}</li>
+                    </ul>
                 </li>
 
 
@@ -146,8 +147,9 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-       {{ content() }}
-    </div><!-- /.content-wrapper -->
+        {{ content() }}
+    </div>
+    <!-- /.content-wrapper -->
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
@@ -160,56 +162,104 @@
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+            <li class="active">
+                <a href="#calculadora-online" data-toggle="tab">
+                    <i class="fa fa-calculator"></i>
+                </a>
+            </li>
+            <li><a href="#gestion-usuarios" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
 
             <!-- Stats tab content -->
-            <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
+            <div id="calculadora-online" class="tab-pane active">
+                <div class="wrap">
+                    <div class="cal">
+                        <ul class="ctrls">
+                            <li class="close"><a></a></li>
+                            <li class="min"><a></a></li>
+                            <li class="max"><a></a></li>
+                        </ul>
+                        <span class="title">REDEANDO</span>
+                        <div class="screen"></div>
+                        <input type="hidden" class="outcome" value="0" />
+                        <ul class="buttons">
+                            <li><a class="clear">C</a></li>
+                            <li><a class="val" href="-">&plusmn;</a></li>
+                            <li><a class="val" href="/">&divide;</a></li>
+                            <li><a class="val" href="*">&times;</a></li>
+                            <li><a class="val" href="7">7</a></li>
+                            <li><a class="val" href="8">8</a></li>
+                            <li><a class="val" href="9">9</a></li>
+                            <li><a class="val" href="-">-</a></li>
+                            <li><a class="val" href="4">4</a></li>
+                            <li><a class="val" href="5">5</a></li>
+                            <li><a class="val" href="6">6</a></li>
+                            <li><a class="val" href="+">+</a></li>
+                            <li><a class="val" href="1">1</a></li>
+                            <li><a class="val" href="2">2</a></li>
+                            <li><a class="val" href="3">3</a></li>
+                            <li><a id='igual' class="equal tall">=</a></li>
+                            <li><a id='cero' class="val wide shift" href="0">0</a></li>
+                            <li><a id='decimal' class="val shift" href=".">.</a></li>
+                        </ul>
+                    </div></div>
+            </div>
             <!-- Settings tab content -->
-            <div class="tab-pane" id="control-sidebar-settings-tab">
+            <div class="tab-pane" id="gestion-usuarios">
                 <form method="post">
                     <h3 class="control-sidebar-heading">Configuración de Usuario</h3>
+
                     <div class="form-group">
                         <label class="control-sidebar-subheading">
                             {{ link_to('','Buscar usuario <i class="fa fa-toggle-right pull-right"></i>') }}
                         </label>
+
                         <p>
                             Busca los usuarios por diferentes criterios
                         </p>
-                    </div><!-- /.form-group -->
+                    </div>
+                    <!-- /.form-group -->
 
                     <div class="form-group">
                         <label class="control-sidebar-subheading">
                             {{ link_to('','Agregar usuario <i class="fa fa-toggle-right pull-right"></i>') }}
                         </label>
+
                         <p>
                             Ingresa un nuevo usuario al sistema.
                         </p>
-                    </div><!-- /.form-group -->
+                    </div>
+                    <!-- /.form-group -->
 
                     <div class="form-group">
                         <label class="control-sidebar-subheading">
                             {{ link_to('','Agregar permisos <i class="fa fa-toggle-right pull-right"></i>') }}
                         </label>
+
                         <p>
                             Vincula las paginas con los roles.
                         </p>
-                    </div><!-- /.form-group -->
+                    </div>
+                    <!-- /.form-group -->
                     <div class="form-group">
                         <label class="control-sidebar-subheading">
                             {{ link_to('','Asignar rol <i class="fa fa-toggle-right pull-right"></i>') }}
                         </label>
+
                         <p>
                             Vincula al usuario con un rol especifico.
                         </p>
-                    </div><!-- /.form-group -->
+                    </div>
+                    <!-- /.form-group -->
 
                 </form>
-            </div><!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-pane -->
         </div>
-    </aside><!-- /.control-sidebar -->
+    </aside>
+    <!-- /.control-sidebar -->
     <!-- Add the sidebar's background. This div must be placed
          immediately after the control sidebar -->
     <div class="control-sidebar-bg"></div>

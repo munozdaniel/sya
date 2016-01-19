@@ -19,6 +19,7 @@
         {{ stylesheet_link("fonts/css/font-awesome.min.css" ) }}
         {#  Ionicons #}
         {{ stylesheet_link("css/ionicons.min.css") }}
+        {{ stylesheet_link("css/calculadora.css") }}
         {# Template de Estilo#}
         {{ stylesheet_link('dist/css/AdminLTE.min.css') }}
         {# Skins Colors#}
@@ -55,6 +56,8 @@
         {{ javascript_include('dist/js/app.min.js') }}
         {# FastClick     #}
         {{ javascript_include('plugins/fastclick/fastclick.min.js') }}
+        {# Calculadora #}
+        {{ javascript_include('js/calculadora.js') }}
         {# Slimscroll #}
         {{ javascript_include('plugins/slimScroll/jquery.slimscroll.min.js') }}
         {#Js Particulares#}
@@ -67,4 +70,5 @@
         {#Fin: Js Particulares#}
 
     </body>
+
 </html>
