@@ -20,14 +20,15 @@ class IndexController extends ControllerBase
     public function indexAction()
     {
         $this->tag->setTitle('Iniciar Sesión');
-        $this->assets->collection('footer')->addJs('plugins/iCheck/icheck.min.js');
-        $this->assets->collection('footerInline')->addInlineJs(" $(function () {
+        //$this->assets->collection('footer')->addJs('plugins/iCheck/icheck.min.js');
+        /*$this->assets->collection('footerInline')->addInlineJs(" $(function () {
         $('input').iCheck({
           checkboxClass: 'icheckbox_square-blue',
           radioClass: 'iradio_square-blue',
           increaseArea: '20%' // optional
         });
       });");
+        */
     }
 
 
@@ -38,7 +39,7 @@ class IndexController extends ControllerBase
     {
         $this->view->setTemplateAfter('principal');
         $this->tag->setTitle('Tablero Principal');
-
+        $this->view->form = new ClienteForm();
 
     }
 
@@ -110,6 +111,12 @@ class IndexController extends ControllerBase
             #if no files were sent, throw a message warning user
             $this->flash->warning('Debes seleccionar los archivos que vas a subir al servidor. Intenta de nuevo.');
         }
+        return $this->redireccionar('index/dashboard');
+    }
+
+    public function mostrarAction()
+    {
+            $this->flash->success('DATdO: '.$this->request->getPost('browsers'));
         return $this->redireccionar('index/dashboard');
     }
 }

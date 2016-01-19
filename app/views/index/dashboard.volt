@@ -9,5 +9,4 @@
 <!-- ===================== Main content =====================-->
 <section class="content">
     {{ content() }}
-
-</section><!-- /.content -->
+</section>
