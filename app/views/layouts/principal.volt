@@ -41,7 +41,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    {{ link_to('usuario/perfil','Perfil','class':'btn btn-default btn-flat') }}
+                                    {{ link_to('usuarios/verPerfil','Perfil','class':'btn btn-default btn-flat') }}
                                 </div>
                                 <div class="pull-right">
                                     {{ link_to('sesion/cerrar','Salir','class':'btn btn-default btn-flat') }}

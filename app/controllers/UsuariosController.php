@@ -5,7 +5,11 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class UsuariosController extends ControllerBase
 {
+    public function initialize()
+    {
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -237,4 +241,10 @@ class UsuariosController extends ControllerBase
         ));
     }
 
+    public function verPerfilAction()
+    {
+        $this->tag->setTitle('Ver mi Perfil');
+        $this->view->setTemplateAfter('principal');
+
+    }
 }
