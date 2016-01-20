@@ -2,10 +2,10 @@
     <div class="login-box">
 
         <div class="login-logo">
-            <a href="../../index2.html"><b>s&a</b> all Service</a>
+            <a  ><b>s&a</b> all Service</a>
         </div><!-- /.login-logo -->
 
-        <div class="login-box-body">
+        <div class="login-box-body" style="border: solid #CACACA;">
             <p class="login-box-msg">Identificarse para iniciar sesión</p>
 
             {{ form('sesion/validar','method':'post') }}
@@ -19,14 +19,14 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
-                    <div class="col-xs-8">
+                    <!-- <div class="col-xs-8">
                         <div class="checkbox icheck">
                             <label>
                                 <input type="checkbox"> Remember Me
                             </label>
                         </div>
                     </div><!-- /.col -->
-                    <div class="col-xs-4">
+                    <div class="col-xs-4 pull-right">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Iniciar</button>
                     </div><!-- /.col -->
                 </div>
