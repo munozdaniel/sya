@@ -334,4 +334,30 @@ class OperadoraController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function buscarOperadorasAction()
+    {
+        $this->view->disable();
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+
+                $lista = Operadora::find(array(
+                    "operadora_clienteId = :id: AND operadora_habilitado=1",'bind'=>array('id'=>$id)
+                ));
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("operadora_id" => $item->getOperadoraId(), "operadora_nombre" => $item->getOperadoraNombre());
+                }
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }else{
+                    $this->response->setJsonContent(array("lista" => null));
+
+                }
+                $this->response->send();
+            }
+        }
+    }
 }
