@@ -19,6 +19,12 @@ class Frs extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $frs_operadoraId;
+
+    /**
+     *
+     * @var integer
+     */
     protected $frs_habilitado;
 
     /**
@@ -43,6 +49,19 @@ class Frs extends \Phalcon\Mvc\Model
     public function setFrsCodigo($frs_codigo)
     {
         $this->frs_codigo = $frs_codigo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field frs_operadoraId
+     *
+     * @param integer $frs_operadoraId
+     * @return $this
+     */
+    public function setFrsOperadoraId($frs_operadoraId)
+    {
+        $this->frs_operadoraId = $frs_operadoraId;
 
         return $this;
     }
@@ -81,6 +100,16 @@ class Frs extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field frs_operadoraId
+     *
+     * @return integer
+     */
+    public function getFrsOperadoraId()
+    {
+        return $this->frs_operadoraId;
+    }
+
+    /**
      * Returns the value of field frs_habilitado
      *
      * @return integer
@@ -95,7 +124,7 @@ class Frs extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->hasMany('frs_id', 'Cliente', 'cliente_frsId', array('alias' => 'Cliente'));
+        $this->belongsTo('frs_operadoraId', 'Operadora', 'operadora_id', array('alias' => 'Operadora'));
     }
 
     /**

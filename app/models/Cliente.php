@@ -19,31 +19,7 @@ class Cliente extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $cliente_operadoraId;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $cliente_frsId;
-
-    /**
-     *
-     * @var integer
-     */
     protected $cliente_habilitado;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $cliente_equipoPozoId;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $cliente_centroCostoId;
 
     /**
      * Method to set the value of field cliente_id
@@ -72,32 +48,6 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field cliente_operadoraId
-     *
-     * @param integer $cliente_operadoraId
-     * @return $this
-     */
-    public function setClienteOperadoraId($cliente_operadoraId)
-    {
-        $this->cliente_operadoraId = $cliente_operadoraId;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field cliente_frsId
-     *
-     * @param integer $cliente_frsId
-     * @return $this
-     */
-    public function setClienteFrsId($cliente_frsId)
-    {
-        $this->cliente_frsId = $cliente_frsId;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field cliente_habilitado
      *
      * @param integer $cliente_habilitado
@@ -106,32 +56,6 @@ class Cliente extends \Phalcon\Mvc\Model
     public function setClienteHabilitado($cliente_habilitado)
     {
         $this->cliente_habilitado = $cliente_habilitado;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field cliente_equipoPozoId
-     *
-     * @param integer $cliente_equipoPozoId
-     * @return $this
-     */
-    public function setClienteEquipoPozoId($cliente_equipoPozoId)
-    {
-        $this->cliente_equipoPozoId = $cliente_equipoPozoId;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field cliente_centroCostoId
-     *
-     * @param integer $cliente_centroCostoId
-     * @return $this
-     */
-    public function setClienteCentroCostoId($cliente_centroCostoId)
-    {
-        $this->cliente_centroCostoId = $cliente_centroCostoId;
 
         return $this;
     }
@@ -157,26 +81,6 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field cliente_operadoraId
-     *
-     * @return integer
-     */
-    public function getClienteOperadoraId()
-    {
-        return $this->cliente_operadoraId;
-    }
-
-    /**
-     * Returns the value of field cliente_frsId
-     *
-     * @return integer
-     */
-    public function getClienteFrsId()
-    {
-        return $this->cliente_frsId;
-    }
-
-    /**
      * Returns the value of field cliente_habilitado
      *
      * @return integer
@@ -187,35 +91,13 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field cliente_equipoPozoId
-     *
-     * @return integer
-     */
-    public function getClienteEquipoPozoId()
-    {
-        return $this->cliente_equipoPozoId;
-    }
-
-    /**
-     * Returns the value of field cliente_centroCostoId
-     *
-     * @return integer
-     */
-    public function getClienteCentroCostoId()
-    {
-        return $this->cliente_centroCostoId;
-    }
-
-    /**
      * Initialize method for model.
      */
     public function initialize()
     {
+        $this->hasMany('cliente_id', 'Linea', 'linea_clienteId', array('alias' => 'Linea'));
+        $this->hasMany('cliente_id', 'Operadora', 'operadora_clienteId', array('alias' => 'Operadora'));
         $this->hasMany('cliente_id', 'Orden', 'orden_clienteId', array('alias' => 'Orden'));
-        $this->belongsTo('cliente_equipoPozoId', 'Equipopozo', 'equipoPozo_id', array('alias' => 'Equipopozo'));
-        $this->belongsTo('cliente_centroCostoId', 'Centrocosto', 'centroCosto_id', array('alias' => 'Centrocosto'));
-        $this->belongsTo('cliente_operadoraId', 'Operadora', 'operadora_id', array('alias' => 'Operadora'));
-        $this->belongsTo('cliente_frsId', 'Frs', 'frs_id', array('alias' => 'Frs'));
     }
 
     /**
