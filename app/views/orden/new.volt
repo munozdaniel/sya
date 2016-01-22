@@ -59,6 +59,9 @@
                         <i class="fa fa-truck"></i>
                         Transporte
                     </h3>
+                    <a class="btn btn-github panel-title pull-right">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
                 </div>
                 <div class="row">
                     <div class="col-md-3 form-group">
@@ -91,6 +94,9 @@
                         <i class="fa fa-male"></i>
                         Cliente
                     </h3>
+                    <a class="btn btn-github panel-title pull-right">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
                 </div>
                 <div class="row">
                     <div class="col-md-3 col-md-offset-1 form-group">
@@ -101,17 +107,19 @@
                     <div class="col-md-3 form-group">
                         {{ clienteForm.label('operadora_nombre') }}
                         {{ clienteForm.render('operadora_nombre') }}
+                        {{ clienteForm.render('cliente_operadoraScript') }}
                     </div>
                     <div class="col-md-3 form-group">
                         {{ clienteForm.label('frs_codigo') }}
                         {{ clienteForm.render('frs_codigo') }}
+                        {{ clienteForm.render('operadora_frsScript') }}
 
                     </div>
 
                     <div class="col-md-4 col-md-offset-1 form-group">
                         {{ clienteForm.label('yacimiento_destino') }}
                         {{ clienteForm.render('yacimiento_destino') }}
-
+                        {{ clienteForm.render('operadora_yacimientoScript') }}
                     </div>
                     <div class="col-md-4 col-md-offset-1 form-group">
                         {{ clienteForm.label('equipoPozo_nombre') }}
@@ -149,6 +157,9 @@
                         <i class="fa fa-exchange"></i>
                         Viaje
                     </h3>
+                    <a class="btn btn-github panel-title pull-right">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
                 </div>
                 <div class="row">
                     <div class="col-md-3 form-group">

@@ -301,5 +301,30 @@ class YacimientoController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function buscarYacimientosAction()
+    {
+        $this->view->disable();
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
 
+                $lista = Yacimiento::find(array(
+                    "yacimiento_operadoraId = :id: AND yacimiento_habilitado=1",'bind'=>array('id'=>$id)
+                ));
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("yacimiento_id" => $item->getYacimientoId(), "yacimiento_destino" => $item->getYacimientoDestino());
+                }
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }else{
+                    $this->response->setJsonContent(array("lista" => null));
+
+                }
+                $this->response->send();
+            }
+        }
+    }
 }
