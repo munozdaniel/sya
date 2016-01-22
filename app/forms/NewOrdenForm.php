@@ -143,23 +143,23 @@ class NewOrdenForm extends \Phalcon\Forms\Form
             ))
         ));
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsServicio',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control'));
+        $elemento = new Numeric('tarifa_hsServicio',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
         $elemento->setLabel("Horas de Servicio");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsHidro',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control'));
+        $elemento = new Numeric('tarifa_hsHidro',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
         $elemento->setLabel("Horas de Hidro");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsMalacate',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control'));
+        $elemento = new Numeric('tarifa_hsMalacate',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
         $elemento->setLabel("Horas de Malacate");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsStand',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control'));
+        $elemento = new Numeric('tarifa_hsStand',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
         $elemento->setLabel("Horas Stand");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_km',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control'));
+        $elemento = new Numeric('tarifa_km',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
         $elemento->setLabel("Kilometros");
         $this->add($elemento);
