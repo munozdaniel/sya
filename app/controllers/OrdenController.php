@@ -70,7 +70,8 @@ class OrdenController extends ControllerBase
      */
     public function newAction()
     {
-
+        $this->view->newOrdenForm  = new NewOrdenForm();
+        $this->view->clienteForm  = new ClienteForm();
     }
 
     /**
@@ -122,7 +123,6 @@ class OrdenController extends ControllerBase
      */
     public function createAction()
     {
-
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
                 "controller" => "orden",
@@ -132,28 +132,57 @@ class OrdenController extends ControllerBase
 
         $orden = new Orden();
 
-        $orden->setOrdenPlanilla($this->request->getPost("orden_planilla"));
+        $orden->setOrdenPlanillaId($this->request->getPost("orden_planillaId"));
         $orden->setOrdenPeriodo($this->request->getPost("orden_periodo"));
-        $orden->setOrdenTransporte($this->request->getPost("orden_transporte"));
-        $orden->setOrdenTipoequipo($this->request->getPost("orden_tipoEquipo"));
-        $orden->setOrdenTipocarga($this->request->getPost("orden_tipoCarga"));
-        $orden->setOrdenChofer($this->request->getPost("orden_chofer"));
-        $orden->setOrdenCliente($this->request->getPost("orden_cliente"));
-        $orden->setOrdenViaje($this->request->getPost("orden_viaje"));
-        $orden->setOrdenTarifa($this->request->getPost("orden_tarifa"));
-        $orden->setOrdenColumnaextra($this->request->getPost("orden_columnaExtra"));
-        $orden->setOrdenObservacion($this->request->getPost("orden_observacion"));
         $orden->setOrdenFecha($this->request->getPost("orden_fecha"));
-        $orden->setOrdenFechacreacion($this->request->getPost("orden_fechaCreacion"));
+
+        $orden->setOrdenTransporteId($this->request->getPost("orden_transporteId"));
+        $orden->setOrdenTipoEquipoId($this->request->getPost("orden_tipoEquipoId"));
+        $orden->setOrdenTipoCargaId($this->request->getPost("orden_tipoCargaId"));
+        $orden->setOrdenChoferId($this->request->getPost("orden_choferId"));
+        /*Busco los nombre de los clientes, */
+
+        $orden->setOrdenClienteId($this->request->getPost("cliente_id"));
+        $orden->setOrdenFrsId($this->request->getPost("frs_id"));
+        $orden->setOrdenCentroCostoId($this->request->getPost("centroCosto_id"));
+        $orden->setOrdenEquipoPozoId($this->request->getPost("equipoPozo_id"));
+
+
+        $orden->setOrdenViajeId($this->request->getPost("orden_viajeId"));
+        $orden->setOrdenConcatenadoId($this->request->getPost("orden_concatenadoId"));
+
+        $tarifa = new Tarifa();
+        $tarifa->setTarifaHoraInicial($this->request->getPost("tarifa_horaInicial"));
+        $tarifa->setTarifaHoraFinal($this->request->getPost("tarifa_horaFinal"));
+        $tarifa->setTarifaHsServicio($this->request->getPost("tarifa_hsServicio"));
+        $tarifa->setTarifaHsHidro($this->request->getPost("tarifa_hsHidro"));
+        $tarifa->setTarifaHsMalacate($this->request->getPost("tarifa_hsMalacate"));
+        $tarifa->setTarifaHsStand($this->request->getPost("tarifa_hsStand"));
+        $tarifa->setTarifaKm($this->request->getPost("tarifa_km"));
+        if(!$tarifa->save())
+        {
+            foreach ($tarifa->getMessages() as $mensaje) {
+                $this->flash->error($mensaje);
+            }
+            return $this->dispatcher->forward(array(
+                "controller" => "orden",
+                "action" => "index"
+            ));
+        }
+        $orden->setOrdenTarifaId($tarifa->getTarifaId());
+
+        $orden->setOrdenObservacion($this->request->getPost("orden_observacion"));
         $orden->setOrdenConformidad($this->request->getPost("orden_conformidad"));
         $orden->setOrdenNoconformidad($this->request->getPost("orden_noConformidad"));
-        $orden->setOrdenCreadopor($this->request->getPost("orden_creadoPor"));
-        $orden->setOrdenHabilitado($this->request->getPost("orden_habilitado"));
+
+        $orden->setOrdenFechacreacion(date('Y-m-d'));
+        $orden->setOrdenCreadoPor($this->session->get('auth')['usuario_nick']);
+        $orden->setOrdenHabilitado(1);
         
 
         if (!$orden->save()) {
             foreach ($orden->getMessages() as $message) {
-                $this->flash->error($message);
+                $this->flash->error('HUBO UN PROBLEMA AL GENERAR LA ORDEN. <br> <ins>Detalles:</ins><br>'.$message);
             }
 
             return $this->dispatcher->forward(array(
