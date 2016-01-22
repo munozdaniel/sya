@@ -28,53 +28,87 @@ class ClienteForm  extends \Phalcon\Forms\Form
             $this->add(new Hidden("cliente_id"));
         }
         /*======================= CLIENTE_NOMBRE ==============================*/
-        $nombre = new Text("cliente_nombre",array(
-            'maxlength'   => 60, 'class'=>'form-control',
-            'placeholder'=>'NOMBRE DEL CLIENTE'
-        ));
-        $nombre->setLabel("Ingrese un Nombre");
-        $nombre->setFilters(array('striptags', 'string'));
-        $nombre->addValidators(array(
-            new \Phalcon\Validation\Validator\PresenceOf(array(
-                'message' => 'El Nombre es Requerido'
-            ))
-        ));
-        $this->add($nombre);
-        /*======================= CLIENTE_OPERADORA ==============================*/
         //Primero El PRINCIPAL.
-        $dl_operadora = new DataListElement('operadora_nombre',
+        $nombre = new DataListElement('cliente_nombre',
             array(
-                array('placeholder' => 'NOMBRE', 'class'=>'form-control', 'maxlength' => 50),
-                Operadora::find(array('operadora_habilitado=1','order'=>'operadora_nombre')),
+                array('placeholder' => 'SELECCIONE EL CLIENTE','required'=>'true', 'class'=>'form-control', 'maxlength' => 60),
+                Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
+                array('cliente_id', 'cliente_nombre'),
+                'cliente_id'
+            ));
+        $nombre->setLabel('Nombre');
+        $this->add($nombre);
+
+        /*======================= CLIENTE_OPERADORA ==============================*/
+        //Todas Las Operadoras Dependientes:
+        $listaOperadoras = new DataListElement('operadora_nombre',
+            array(
+                array('placeholder' => 'SELECCIONE LA OPERADORA', 'maxlength' => 50, 'class'=>'form-control'),
+                null,
                 array('operadora_id', 'operadora_nombre'),
                 'operadora_id'
             ));
-        $dl_operadora->setLabel('Operadora');
-        $this->add($dl_operadora);
-        //Script checkbox
+        $listaOperadoras->setLabel('Operadora');
+        $this->add($listaOperadoras);
+        //Script Para unir el Cliente y sus Operadoras.
+        $script = new DataListScript('cliente_operadoraScript',
+            array(
+                'url'               =>'/sya/operadora/buscarOperadoras',
+                'id_principal'      =>'cliente_nombre',
+                'id_hidden_ppal'    =>'cliente_id',
+                'id_dependiente'    =>'operadora_nombre',
+                'columnas'          =>  array('operadora_id','operadora_nombre')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
         /*======================= CLIENTE_FRS ==============================*/
 
         //Primero El PRINCIPAL.
         $dl_frs = new DataListElement('frs_codigo',
             array(
                 array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control'),
-                Frs::find(array('frs_habilitado=1','order'=>'frs_codigo')),
+                NULL,
                 array('frs_id', 'frs_codigo'),
                 'frs_id'
             ));
         $dl_frs->setLabel('FRS');
         $this->add($dl_frs);
+        //Script Para unir a la Operadora y sus FRS.
+        $script = new DataListScript('operadora_frsScript',
+            array(
+                'url'               =>'/sya/frs/buscarFrs',
+                'id_principal'      =>'operadora_nombre',
+                'id_hidden_ppal'    =>'operadora_id',
+                'id_dependiente'    =>'frs_codigo',
+                'columnas'          =>  array('frs_id','frs_codigo')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
         /*======================= CLIENTE - EQUIPO/POZO - YACIMIENTO ==============================*/
         //Primero El PRINCIPAL.
         $listaYacimiento = new DataListElement('yacimiento_destino',
             array(
                 array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
-                Yacimiento::find(array('yacimiento_habilitado=1','order'=>'yacimiento_destino')),
+                null,
                 array('yacimiento_id', 'yacimiento_destino'),
                 'yacimiento_id'
             ));
         $listaYacimiento->setLabel('Yacimiento');
         $this->add($listaYacimiento);
+        //Script Para unir a la Operadora y sus Yacimientos.
+        $script = new DataListScript('operadora_yacimientoScript',
+            array(
+                'url'               =>'/sya/yacimiento/buscarYacimientos',
+                'id_principal'      =>'operadora_nombre',
+                'id_hidden_ppal'    =>'operadora_id',
+                'id_dependiente'    =>'yacimiento_destino',
+                'columnas'          =>  array('yacimiento_id','yacimiento_destino')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
 
         //DataList Dependientes: EquipoPozo - Segun el Yacimiento, mostrará los nombres que le correspondan.
 
@@ -87,7 +121,18 @@ class ClienteForm  extends \Phalcon\Forms\Form
             ));
         $listaEquipoPozo->setLabel('Equipo/Pozo');
         $this->add($listaEquipoPozo);
-
+        //Script Para unir el YAcimiento y sus EquipoPozo.
+        $script = new DataListScript('yacimiento_EPScript',
+            array(
+                'url'               =>'/sya/equipopozo/buscarEquipoPozo',
+                'id_principal'      =>'yacimiento_destino',
+                'id_hidden_ppal'    =>'yacimiento_id',
+                'id_dependiente'    =>'equipoPozo_nombre',
+                'columnas'          =>  array('equipoPozo_id','equipoPozo_nombre')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
 
 
         /*======================== CLIENTE - CENTRO COSTO - LINEA =========================*/

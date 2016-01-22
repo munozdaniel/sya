@@ -124,7 +124,7 @@
                     <div class="col-md-4 col-md-offset-1 form-group">
                         {{ clienteForm.label('equipoPozo_nombre') }}
                         {{ clienteForm.render('equipoPozo_nombre') }}
-
+                        {{ clienteForm.render('yacimiento_EPScript') }}
                     </div>
 
                     <div class="col-md-4 col-md-offset-1 form-group">
@@ -137,9 +137,7 @@
                         {{ clienteForm.render('centroCosto_codigo') }}
 
                     </div>
-                    <div class="col-md-4 form-group">
-                        {{ clienteForm.render('equipoPozo_lineaScript') }}
-                    </div>
+
                     <div class="col-md-4 form-group">
                         {{ clienteForm.render('centroCosto_lineaScript') }}
                     </div>

@@ -376,17 +376,19 @@ class EquipopozoController extends ControllerBase
         if ($this->request->isPost()) {
             if ($this->request->isAjax()) {
                 $id = $this->request->getPost("id", "int");
-                $lista = Equipopozo::findByEquipoPozo_yacimientoId($id);
+                $lista = Equipopozo::find(array(
+                    "equipoPozo_yacimientoId = :id: AND equipoPozo_habilitado=1",'bind'=>array('id'=>$id)
+                ));
                 $resData = array();
 
                 foreach ($lista as $item) {
-                    $resData[] = array("equipoPozo_id" => $item->equipoPozo_id, "equipoPozo_nombre" => $item->equipoPozo_nombre);
+                    $resData[] = array("equipoPozo_id" => $item->getEquipoPozoId(), "equipoPozo_nombre" => $item->getEquipoPozoNombre());
                 }
-
-
                 if (count($lista) > 0) {
                     $this->response->setJsonContent(array("lista" => $resData));
                     $this->response->setStatusCode(200, "OK");
+                }else{
+                    $this->response->setJsonContent(array("lista" => null));
                 }
                 $this->response->send();
             }
