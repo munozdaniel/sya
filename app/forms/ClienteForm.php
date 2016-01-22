@@ -159,8 +159,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $this->add($script);
 
 
-        //DataList Dependientes: Centro Costo - Segun la linea, mostrará los codigos que le correspondan.
-
+        /*=================================================*/
         $listaCentroCosto = new DataListElement('centroCosto_codigo',
             array(
                 array('placeholder' => 'SELECCIONE UNA LINEA', 'maxlength' => 50, 'class'=>'form-control'),
@@ -182,8 +181,6 @@ class ClienteForm  extends \Phalcon\Forms\Form
         );
         $script->setLabel(" ");
         $this->add($script);
-        /*===============================SCRIPT PARA LOS DATALIST DEPENDIENTES=====================*/
-
 
     }
 

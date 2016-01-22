@@ -374,17 +374,19 @@ class CentrocostoController extends ControllerBase
         if ($this->request->isPost()) {
             if ($this->request->isAjax()) {
                 $id = $this->request->getPost("id", "int");
-                $lista = Centrocosto::findByCentroCosto_lineaId($id);
+                $lista = Centrocosto::find(array(
+                    "	centroCosto_lineaId = :id: AND centroCosto_habilitado=1",'bind'=>array('id'=>$id)
+                ));
                 $resData = array();
-
                 foreach ($lista as $item) {
-                    $resData[] = array("centroCosto_id" => $item->centroCosto_id, "centroCosto_codigo" => $item->centroCosto_codigo);
+                    $resData[] = array("centroCosto_id" => $item->getCentroCostoId(), "centroCosto_codigo" => $item->getCentroCostoCodigo());
                 }
-
 
                 if (count($lista) > 0) {
                     $this->response->setJsonContent(array("lista" => $resData));
                     $this->response->setStatusCode(200, "OK");
+                }else{
+                    $this->response->setJsonContent(array("lista" => null));
                 }
                 $this->response->send();
             }
