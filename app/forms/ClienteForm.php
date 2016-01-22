@@ -110,8 +110,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         $script->setLabel(" ");
         $this->add($script);
 
-        //DataList Dependientes: EquipoPozo - Segun el Yacimiento, mostrará los nombres que le correspondan.
-
+        /*=================================================*/
         $listaEquipoPozo = new DataListElement('equipoPozo_nombre',
             array(
                 array('placeholder' => 'SELECCIONE UN YACIMENTO', 'maxlength' => 50, 'class'=>'form-control'),
@@ -137,17 +136,28 @@ class ClienteForm  extends \Phalcon\Forms\Form
 
         /*======================== CLIENTE - CENTRO COSTO - LINEA =========================*/
         //DataList Dependientes: Linea
-
-
         $listaLinea = new DataListElement('linea_nombre',
             array(
                 array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
-                Linea::find(array('linea_habilitado=1','order'=>'linea_nombre')),
+                NULL,
                 array('linea_id', 'linea_nombre'),
                 'linea_id'
             ));
         $listaLinea->setLabel('Linea');
         $this->add($listaLinea);
+        //UnionElementScript
+        $script = new DataListScript('cliente_lineaScript',
+            array(
+                'url'               =>'/sya/linea/buscarLineas',
+                'id_principal'      =>'cliente_nombre',
+                'id_hidden_ppal'    =>'cliente_id',
+                'id_dependiente'    =>'linea_nombre',
+                'columnas'          =>  array('linea_id','linea_nombre')
+            )
+        );
+        $script->setLabel(" ");
+        $this->add($script);
+
 
         //DataList Dependientes: Centro Costo - Segun la linea, mostrará los codigos que le correspondan.
 
@@ -160,21 +170,6 @@ class ClienteForm  extends \Phalcon\Forms\Form
             ));
         $listaCentroCosto->setLabel('Centro Costo');
         $this->add($listaCentroCosto);
-
-        /*===============================SCRIPT PARA LOS DATALIST DEPENDIENTES=====================*/
-        //UnionElementScript: La lista dinamica del EquipoPozo
-        $script = new DataListScript('equipoPozo_lineaScript',
-            array(
-                'url'               =>'/sya/equipopozo/buscarEquipoPozo',
-                'id_principal'      =>'yacimiento_destino',
-                'id_hidden_ppal'    =>'yacimiento_id',
-                'id_dependiente'    =>'equipoPozo_nombre',
-                'columnas'          =>  array('equipoPozo_id','equipoPozo_nombre')
-            )
-        );
-        $script->setLabel(" ");
-        $this->add($script);
-
         //UnionElementScript
         $script = new DataListScript('centroCosto_lineaScript',
             array(
@@ -183,10 +178,12 @@ class ClienteForm  extends \Phalcon\Forms\Form
                 'id_hidden_ppal'    =>'linea_id',
                 'id_dependiente'    =>'centroCosto_codigo',
                 'columnas'          =>  array('centroCosto_id','centroCosto_codigo')
-                )
+            )
         );
         $script->setLabel(" ");
         $this->add($script);
+        /*===============================SCRIPT PARA LOS DATALIST DEPENDIENTES=====================*/
+
 
     }
 

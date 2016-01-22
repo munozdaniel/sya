@@ -297,4 +297,30 @@ class LineaController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function buscarLineasAction()
+    {
+        $this->view->disable();
+
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+                $lista = Linea::find(array(
+                    "linea_clienteId = :id: AND linea_habilitado=1",'bind'=>array('id'=>$id)
+                ));
+                $resData = array();
+                foreach ($lista as $item) {
+                    $resData[] = array("linea_id" => $item->getLineaId(), "linea_nombre" => $item->getLineaNombre());
+                }
+
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }else{
+                    $this->response->setJsonContent(array("lista" => null));
+                }
+                $this->response->send();
+            }
+        }
+
+    }
 }

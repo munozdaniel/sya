@@ -10,7 +10,7 @@
                         {{ link_to("orden", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
                     </td>
                     <td align="right">
-                        {{ submit_button('GENERAR ORDEN','id':'submit','class':'btn btn-large btn-primary btn-flat') }}
+                        {{ submit_button('GENERAR ORDEN','id':'submit','form':'crearOrden-form','class':'btn btn-large btn-primary btn-flat') }}
                     </td>
                 </tr>
             </table>
@@ -18,7 +18,7 @@
         <!-- /.Titulo -->
         <!-- Formulario -->
         {{ content() }}
-        {{ form("orden/create", "method":"post") }}
+        {{ form("orden/create",'id':'crearOrden-form' ,"method":"post") }}
 
 
         <!-- Cuerpo -->
@@ -130,7 +130,7 @@
                     <div class="col-md-4 col-md-offset-1 form-group">
                         {{ clienteForm.label('linea_nombre') }}
                         {{ clienteForm.render('linea_nombre') }}
-
+                        {{ clienteForm.render('cliente_lineaScript') }}
                     </div>
                     <div class="col-md-4 col-md-offset-1 form-group">
                         {{ clienteForm.label('centroCosto_codigo') }}
