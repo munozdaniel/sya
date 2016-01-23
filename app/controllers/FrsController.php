@@ -325,4 +325,29 @@ class FrsController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function buscarFrsAction()
+    {
+        $this->view->disable();
+        if ($this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                $id = $this->request->getPost("id", "int");
+
+                $lista = Frs::find(array(
+                    "frs_operadoraId = :id: AND frs_habilitado=1",'bind'=>array('id'=>$id)
+                ));
+                $resData = array();
+
+                foreach ($lista as $item) {
+                    $resData[] = array("frs_id" => $item->getFrsId(), "frs_codigo" => $item->getFrsCodigo());
+                }
+                if (count($lista) > 0) {
+                    $this->response->setJsonContent(array("lista" => $resData));
+                    $this->response->setStatusCode(200, "OK");
+                }else{
+                    $this->response->setJsonContent(array("lista" => null));
+                }
+                $this->response->send();
+            }
+        }
+    }
 }
