@@ -115,6 +115,7 @@ class ArchivoController extends ControllerBase
                 "action" => "index"
             ));
         }
+        try{
         /*SUBIENDO LOS ARCHIVOS*/
         #Verifica si existen archivos para subir
         date_default_timezone_set('America/Argentina/Rio_Gallegos');
@@ -183,9 +184,16 @@ class ArchivoController extends ControllerBase
 
         } else {
             #if no files were sent, throw a message warning user
-            $this->flash->warning('Debes seleccionar los archivos que vas a subir al servidor. Intenta de nuevo.');
+            //FIXME: Tamaño de archivos
+            $this->flash->error('Operación Fallida, verifique que el tamaño de los archivos no superen los 47185920 bytes Ver EQUIVALENCIAS!!)');
+            $this->redireccionar('archivo/new');
         }
         /*FIN:SUBIENDO LOS ARCHIVOS*/
+        }
+        catch(Exception $e)
+        {
+            $this->flash->error('El Archivo excede el tamaño <br> Datos Tecnicos: <br>'.$e->getMessage());
+        }
     }
 
     /**
