@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -17,6 +17,7 @@ class OrdenController extends ControllerBase
         parent::initialize();
 
     }
+
     /**
      * Index action
      */
@@ -55,10 +56,13 @@ class OrdenController extends ControllerBase
                 "action" => "index"
             ));
         }
+        $tabla = array();
+        foreach ($orden as $unaOrden) {
 
+        }
         $paginator = new Paginator(array(
             "data" => $orden,
-            "limit"=> 100000,
+            "limit" => 100000,
             "page" => $numberPage
         ));
 
@@ -70,8 +74,8 @@ class OrdenController extends ControllerBase
      */
     public function newAction()
     {
-        $this->view->newOrdenForm  = new NewOrdenForm();
-        $this->view->clienteForm  = new ClienteForm();
+        $this->view->newOrdenForm = new NewOrdenForm();
+        $this->view->clienteForm = new ClienteForm();
     }
 
     /**
@@ -114,7 +118,7 @@ class OrdenController extends ControllerBase
             $this->tag->setDefault("orden_noConformidad", $orden->getOrdenNoconformidad());
             $this->tag->setDefault("orden_creadoPor", $orden->getOrdenCreadopor());
             $this->tag->setDefault("orden_habilitado", $orden->getOrdenHabilitado());
-            
+
         }
     }
 
@@ -131,7 +135,21 @@ class OrdenController extends ControllerBase
         }
 
         $orden = new Orden();
-
+        //Buscar la ultima orden habilitada de la planilla
+        $ultimaOrden = Orden::findFirst(array(
+            "orden_ultima = 1 AND orden_habilitado=1 AND orden_planillaId = :orden_planillaId:",
+            'bind'=>array('orden_planillaId'=>$this->request->getPost("orden_planillaId"))
+        ));
+        if (!$ultimaOrden) {
+            $orden->setOrdenNro(1);
+            $orden->setOrdenUltima(1);
+        }
+        else {
+            $orden->setOrdenNro($ultimaOrden->getOrdenNro() + 1);
+            $orden->setOrdenUltima(1);
+            $ultimaOrden->setOrdenUltima(0);
+            $ultimaOrden->update();
+        }
         $orden->setOrdenPlanillaId($this->request->getPost("orden_planillaId"));
         $orden->setOrdenPeriodo($this->request->getPost("orden_periodo"));
         $orden->setOrdenFecha($this->request->getPost("orden_fecha"));
@@ -159,8 +177,7 @@ class OrdenController extends ControllerBase
         $tarifa->setTarifaHsMalacate($this->request->getPost("tarifa_hsMalacate"));
         $tarifa->setTarifaHsStand($this->request->getPost("tarifa_hsStand"));
         $tarifa->setTarifaKm($this->request->getPost("tarifa_km"));
-        if(!$tarifa->save())
-        {
+        if (!$tarifa->save()) {
             foreach ($tarifa->getMessages() as $mensaje) {
                 $this->flash->error($mensaje);
             }
@@ -178,18 +195,18 @@ class OrdenController extends ControllerBase
         $orden->setOrdenFechacreacion(date('Y-m-d'));
         $orden->setOrdenCreadoPor($this->session->get('auth')['usuario_nick']);
         $orden->setOrdenHabilitado(1);
-        
 
-        if (!$orden->save()) {
-            foreach ($orden->getMessages() as $message) {
-                $this->flash->error('HUBO UN PROBLEMA AL GENERAR LA ORDEN. <br> <ins>Detalles:</ins><br>'.$message);
+            if (!$orden->save()) {
+            //FIXME: ROLLBACK!! para que ultimaOrden vuelva a estar como antes.
+                foreach ($orden->getMessages() as $message) {
+                    $this->flash->error('HUBO UN PROBLEMA AL GENERAR LA ORDEN. <br> <ins>Detalles:</ins><br>' . $message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "orden",
+                    "action" => "new"
+                ));
             }
-
-            return $this->dispatcher->forward(array(
-                "controller" => "orden",
-                "action" => "new"
-            ));
-        }
 
         $this->flash->success("La orden se creó correctamente");
 
@@ -243,7 +260,7 @@ class OrdenController extends ControllerBase
         $orden->setOrdenNoconformidad($this->request->getPost("orden_noConformidad"));
         $orden->setOrdenCreadopor($this->request->getPost("orden_creadoPor"));
         $orden->setOrdenHabilitado($this->request->getPost("orden_habilitado"));
-        
+
 
         if (!$orden->save()) {
 
@@ -304,6 +321,7 @@ class OrdenController extends ControllerBase
             "action" => "index"
         ));
     }
+
     /**
      * Eliminar manera logica.
      *

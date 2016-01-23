@@ -13,6 +13,12 @@ class Orden extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $orden_nro;
+
+    /**
+     *
+     * @var integer
+     */
     protected $orden_planillaId;
 
     /**
@@ -136,6 +142,12 @@ class Orden extends \Phalcon\Mvc\Model
     protected $orden_habilitado;
 
     /**
+     *
+     * @var integer
+     */
+    protected $orden_ultima;
+
+    /**
      * Method to set the value of field orden_id
      *
      * @param integer $orden_id
@@ -144,6 +156,19 @@ class Orden extends \Phalcon\Mvc\Model
     public function setOrdenId($orden_id)
     {
         $this->orden_id = $orden_id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_nro
+     *
+     * @param integer $orden_nro
+     * @return $this
+     */
+    public function setOrdenNro($orden_nro)
+    {
+        $this->orden_nro = $orden_nro;
 
         return $this;
     }
@@ -422,6 +447,19 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field orden_ultima
+     *
+     * @param integer $orden_ultima
+     * @return $this
+     */
+    public function setOrdenUltima($orden_ultima)
+    {
+        $this->orden_ultima = $orden_ultima;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field orden_id
      *
      * @return integer
@@ -429,6 +467,16 @@ class Orden extends \Phalcon\Mvc\Model
     public function getOrdenId()
     {
         return $this->orden_id;
+    }
+
+    /**
+     * Returns the value of field orden_nro
+     *
+     * @return integer
+     */
+    public function getOrdenNro()
+    {
+        return $this->orden_nro;
     }
 
     /**
@@ -639,6 +687,16 @@ class Orden extends \Phalcon\Mvc\Model
     public function getOrdenHabilitado()
     {
         return $this->orden_habilitado;
+    }
+
+    /**
+     * Returns the value of field orden_ultima
+     *
+     * @return integer
+     */
+    public function getOrdenUltima()
+    {
+        return $this->orden_ultima;
     }
 
     /**
