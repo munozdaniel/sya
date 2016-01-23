@@ -1,14 +1,14 @@
 <?php
 
 use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
+use Phalcon\Paginator\Adapter\NativeArray as Paginator;
 
 class OrdenController extends ControllerBase
 {
     public function initialize()
     {
         $this->view->setTemplateAfter('principal');
-        $this->tag->setTitle('Linea');
+        $this->tag->setTitle('Ordenes');
         $miSesion = $this->session->get('auth');
         if ($miSesion['rol_nombre'] == 'ADMIN')
             $this->view->admin = 1;
@@ -58,10 +58,87 @@ class OrdenController extends ControllerBase
         }
         $tabla = array();
         foreach ($orden as $unaOrden) {
+            $fila = array();
+            $planilla = Planilla::findFirstByPlanilla_id($unaOrden->getOrdenPlanillaId());
 
+            /*================ Planilla ================*/
+            $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
+
+            /*================ Orden ================*/
+            $fila['orden_nro']=$unaOrden->getOrdenNro();
+            $fila['orden_fecha']=$unaOrden->getOrdenFecha();
+            $fila['orden_periodo']=$unaOrden->getOrdenPeriodo();
+
+            /*================ Transporte ================*/
+            $transporte = Transporte::findFirstByTransporte_id($unaOrden->getOrdenTransporteId());
+            $fila['transporte_dominio']=$transporte->getTransporteDominio();
+            $fila['transporte_nroInterno']=$transporte->getTransporteNroInterno();
+
+            /*================ TipoEquipo ================*/
+            $tipoEquipo = Tipoequipo::findFirstByTipoEquipo_id($unaOrden->getOrdenTipoEquipoId());
+            $fila['tipoEquipo_nombre']=$tipoEquipo->getTipoEquipoNombre();
+
+            /*================ TipoCarga ================*/
+            $tipoCarga = Tipocarga::findFirstByTipoCarga_id($unaOrden->getOrdenTipoCargaId());
+            $fila['tipoCarga_nombre']=$tipoCarga->getTipoCargaNombre();
+
+            /*================ Chofer ================*/
+            $chofer = Chofer::findFirstByChofer_id($unaOrden->getOrdenChoferId());
+            $fila['chofer_dni']=$chofer->getChoferDni();
+            $fila['chofer_nombreCompleto']=$chofer->getChoferNombreCompleto();
+            $fila['chofer_esFletero']=($chofer->getChoferEsFletero()==1?'SI':'NO');
+
+            /*================ Cliente ================*/
+            $cliente = Cliente::findFirstByCliente_id($unaOrden->getOrdenClienteId());
+            $fila['cliente_nombre']=$cliente->getClienteNombre();
+
+            /*================ Frs ================*/
+            $frs = Frs::findFirstByFrs_id($unaOrden->getOrdenFrsId());
+            $fila['frs_codigo'] = $frs->getFrsCodigo();
+
+            /*================ Operadora ================*/
+            $operadora = Operadora::findFirstByOperadora_id($frs->getFrsOperadoraId());
+            $fila['operadora_nombre'] = $operadora->getOperadoraNombre();
+
+            /*================ EquipoPozo ================*/
+            $equipoPozo = Equipopozo::findFirstByEquipoPozo_id($unaOrden->getOrdenEquipoPozoId());
+            $fila['equipoPozo_nombre']= $equipoPozo->getEquipoPozoNombre();
+
+            /*================ Yacimiento ================*/
+            $yacimiento = Yacimiento::findFirstByYacimiento_id($equipoPozo->getEquipoPozoYacimientoId());
+            $fila['yacimiento_destino'] = $yacimiento->getYacimientoDestino();
+
+
+            /*================ CentroCosto ================*/
+            $centroCosto = Centrocosto::findFirstByCentroCosto_id($unaOrden->getOrdenCentroCostoId());
+            $fila['centroCosto_codigo'] = $centroCosto->getCentroCostoCodigo();
+
+            /*================ Linea ================*/
+            $linea = Linea::findFirstByLinea_id($centroCosto->getCentroCostoLineaId());
+            $fila['linea_nombre']= $linea->getLineaNombre();
+
+            /*================ Viaje ================*/
+            $viaje = Viaje::findFirstByViajeId($unaOrden->getOrdenViajeId());
+            $fila['viaje_origen']= $viaje->getViajeOrigen();
+            $fila['viaje_concatenado']= $viaje->getViajeConcatenado();
+
+            /*================ Tarifa ================*/
+            $tarifa = Tarifa::findFirst();
+            $fila['tarifa_hsServicio']= $tarifa->getTarifaHsServicio();
+            $fila['tarifa_hsKm']= $tarifa->getTarifaKm();
+            $fila['tarifa_hsHidro']= $tarifa->getTarifaHsHidro();
+            $fila['tarifa_hsMalacate']= $tarifa->getTarifaHsMalacate();
+            $fila['tarifa_hsStand']= $tarifa->getTarifaHsStand();
+
+            /*================ Orden ================*/
+            $fila['orden_observaciones']=$unaOrden->getOrdenObservacion();
+            $fila['orden_conformidad']=($unaOrden->getOrdenConformidad()==NULL?"SIN ESPECIFICAR":$unaOrden->getOrdenConformidad());
+            $fila['orden_noConformidad']=($unaOrden->getOrdenNoConformidad()==NULL?"SIN ESPECIFICAR":$unaOrden->getOrdenNoConformidad());
+
+            $tabla[] = $fila;
         }
         $paginator = new Paginator(array(
-            "data" => $orden,
+            "data" => $tabla,
             "limit" => 100000,
             "page" => $numberPage
         ));

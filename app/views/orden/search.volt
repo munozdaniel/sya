@@ -32,7 +32,6 @@
             <th>CLIENTE</th>
             <th>OPERADORA</th>
             <th>#FRS</th>
-            <th>REMITO</th>
             <th>LINEA-PSL</th>
             <th>CENTRO COSTO</th>
             <th>ORIGEN</th>
@@ -47,46 +46,39 @@
             <th>OBSERVACIONES</th>
             <th>CONFORMIDAD RE</th>
             <th>MOT NO CONFORM RE</th>
-            <th>Editar</th>
-            <th>Eliminar</th>{#30#}
-            <th style="width: 10px;">EST</th>
          </tr>
     </thead>
     <tbody>
     {% if page.items is defined %}
     {% for orden in page.items %}
         <tr>
-            <td>{{ orden.getOrdenId() }}</td>
-            <td>{{ orden.getOrdenPlanillaid() }}</td>
-            <td>{{ orden.getOrdenPeriodo() }}</td>
-            <td>{{ orden.getOrdenTransporteid() }}</td>
-            <td>{{ orden.getOrdenTipoequipoid() }}</td>
-            <td>{{ orden.getOrdenTipocargaid() }}</td>
-            <td>{{ orden.getOrdenChoferid() }}</td>
-            <td>{{ orden.getOrdenViajeid() }}</td>
-            <td>{{ orden.getOrdenConcatenadoid() }}</td>
-            <td>{{ orden.getOrdenTarifaid() }}</td>{#10#}
-            <td>{{ orden.getOrdenContenidoextraid() }}</td>
-            <td>{{ orden.getOrdenClienteid() }}</td>
-            <td>{{ orden.getOrdenFrsid() }}</td>
-            <td>{{ orden.getOrdenCentrocostoid() }}</td>
-            <td>{{ orden.getOrdenEquipopozoid() }}</td>
-            <td>{{ orden.getOrdenObservacion() }}</td>
-            <td>{{ orden.getOrdenFecha() }}</td>
-            <td>{{ orden.getOrdenFechacreacion() }}</td>
-            <td>{{ orden.getOrdenConformidad() }}</td>
-            <td>{{ orden.getOrdenNoconformidad() }}</td>{#10#}
-            <td>{{ orden.getOrdenCreadopor() }}</td>
-            <td>{{ orden.getOrdenHabilitado() }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/edit/"~orden.getOrdenId(), "Edit") }}</td>
-            <td>{{ link_to("orden/delete/"~orden.getOrdenId(), "Delete") }}</td>{#10#}
-            <td>{{ link_to("orden/delete/"~orden.getOrdenId(), "Delete") }}</td>
+            <td>{{ orden['orden_nro'] }}</td>
+            <td>{{ orden['orden_fecha'] }}</td>
+            <td>{{ orden['orden_periodo'] }}</td>
+            <td>{{ orden['transporte_dominio'] }}</td>
+            <td>{{ orden['transporte_nroInterno'] }}</td>
+            <td>{{ orden['tipoEquipo_nombre'] }}</td>
+            <td>{{ orden['tipoCarga_nombre'] }}</td>
+            <td>{{ orden['chofer_dni'] }}</td>
+            <td>{{ orden['chofer_nombreCompleto'] }}</td>
+            <td>{{ orden['chofer_esFletero'] }}</td>{#10#}
+            <td>{{ orden['cliente_nombre'] }}</td>
+            <td>{{ orden['operadora_nombre'] }}</td>
+            <td>{{ orden['frs_codigo'] }}</td>
+            <td>{{ orden['linea_nombre'] }}</td>
+            <td>{{ orden['centroCosto_codigo'] }}</td>
+            <td>{{ orden['viaje_origen'] }}</td>
+            <td>{{ orden['yacimiento_destino'] }}</td>
+            <td>{{ orden['equipoPozo_nombre'] }}</td>
+            <td>{{ orden['viaje_concatenado'] }}</td>
+            <td>{{ orden['tarifa_hsServicio'] }}</td>{#10#}
+            <td>{{ orden['tarifa_hsKm'] }}</td>
+            <td>{{ orden['tarifa_hsHidro'] }}</td>
+            <td>{{ orden['tarifa_hsMalacate'] }}</td>
+            <td>{{ orden['tarifa_hsStand'] }}</td>
+            <td>{{ orden['orden_observaciones'] }}</td>
+            <td>{{ orden['orden_conformidad'] }}</td>
+            <td>{{ orden['orden_noConformidad'] }}</td>
         </tr>
     {% endfor %}
     {% endif %}
