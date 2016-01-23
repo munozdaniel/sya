@@ -49,12 +49,6 @@ class Orden extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $orden_clienteId;
-
-    /**
-     *
-     * @var integer
-     */
     protected $orden_viajeId;
 
     /**
@@ -74,6 +68,30 @@ class Orden extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $orden_contenidoExtraId;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $orden_clienteId;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $orden_frsId;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $orden_centroCostoId;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $orden_equipoPozoId;
 
     /**
      *
@@ -107,7 +125,7 @@ class Orden extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
+     * @var string
      */
     protected $orden_creadoPor;
 
@@ -209,19 +227,6 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field orden_clienteId
-     *
-     * @param integer $orden_clienteId
-     * @return $this
-     */
-    public function setOrdenClienteId($orden_clienteId)
-    {
-        $this->orden_clienteId = $orden_clienteId;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field orden_viajeId
      *
      * @param integer $orden_viajeId
@@ -269,6 +274,58 @@ class Orden extends \Phalcon\Mvc\Model
     public function setOrdenContenidoExtraId($orden_contenidoExtraId)
     {
         $this->orden_contenidoExtraId = $orden_contenidoExtraId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_clienteId
+     *
+     * @param integer $orden_clienteId
+     * @return $this
+     */
+    public function setOrdenClienteId($orden_clienteId)
+    {
+        $this->orden_clienteId = $orden_clienteId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_frsId
+     *
+     * @param integer $orden_frsId
+     * @return $this
+     */
+    public function setOrdenFrsId($orden_frsId)
+    {
+        $this->orden_frsId = $orden_frsId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_centroCostoId
+     *
+     * @param integer $orden_centroCostoId
+     * @return $this
+     */
+    public function setOrdenCentroCostoId($orden_centroCostoId)
+    {
+        $this->orden_centroCostoId = $orden_centroCostoId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_equipoPozoId
+     *
+     * @param integer $orden_equipoPozoId
+     * @return $this
+     */
+    public function setOrdenEquipoPozoId($orden_equipoPozoId)
+    {
+        $this->orden_equipoPozoId = $orden_equipoPozoId;
 
         return $this;
     }
@@ -435,16 +492,6 @@ class Orden extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field orden_clienteId
-     *
-     * @return integer
-     */
-    public function getOrdenClienteId()
-    {
-        return $this->orden_clienteId;
-    }
-
-    /**
      * Returns the value of field orden_viajeId
      *
      * @return integer
@@ -482,6 +529,46 @@ class Orden extends \Phalcon\Mvc\Model
     public function getOrdenContenidoExtraId()
     {
         return $this->orden_contenidoExtraId;
+    }
+
+    /**
+     * Returns the value of field orden_clienteId
+     *
+     * @return integer
+     */
+    public function getOrdenClienteId()
+    {
+        return $this->orden_clienteId;
+    }
+
+    /**
+     * Returns the value of field orden_frsId
+     *
+     * @return integer
+     */
+    public function getOrdenFrsId()
+    {
+        return $this->orden_frsId;
+    }
+
+    /**
+     * Returns the value of field orden_centroCostoId
+     *
+     * @return integer
+     */
+    public function getOrdenCentroCostoId()
+    {
+        return $this->orden_centroCostoId;
+    }
+
+    /**
+     * Returns the value of field orden_equipoPozoId
+     *
+     * @return integer
+     */
+    public function getOrdenEquipoPozoId()
+    {
+        return $this->orden_equipoPozoId;
     }
 
     /**
@@ -537,7 +624,7 @@ class Orden extends \Phalcon\Mvc\Model
     /**
      * Returns the value of field orden_creadoPor
      *
-     * @return integer
+     * @return string
      */
     public function getOrdenCreadoPor()
     {
@@ -562,6 +649,9 @@ class Orden extends \Phalcon\Mvc\Model
         $this->belongsTo('orden_planillaId', 'Planilla', 'planilla_id', array('alias' => 'Planilla'));
         $this->belongsTo('orden_concatenadoId', 'Concatenado', 'concatenado_id', array('alias' => 'Concatenado'));
         $this->belongsTo('orden_contenidoExtraId', 'Contenidoextra', 'contenidoExtra_id', array('alias' => 'Contenidoextra'));
+        $this->belongsTo('orden_frsId', 'Frs', 'frs_id', array('alias' => 'Frs'));
+        $this->belongsTo('orden_centroCostoId', 'Centrocosto', 'centroCosto_id', array('alias' => 'Centrocosto'));
+        $this->belongsTo('orden_equipoPozoId', 'Equipopozo', 'equipoPozo_id', array('alias' => 'Equipopozo'));
         $this->belongsTo('orden_transporteId', 'Transporte', 'transporte_id', array('alias' => 'Transporte'));
         $this->belongsTo('orden_tipoEquipoId', 'Tipoequipo', 'tipoEquipo_id', array('alias' => 'Tipoequipo'));
         $this->belongsTo('orden_tipoCargaId', 'Tipocarga', 'tipoCarga_id', array('alias' => 'Tipocarga'));

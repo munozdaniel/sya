@@ -19,6 +19,12 @@ class Linea extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $linea_clienteId;
+
+    /**
+     *
+     * @var integer
+     */
     protected $linea_habilitado;
 
     /**
@@ -43,6 +49,19 @@ class Linea extends \Phalcon\Mvc\Model
     public function setLineaNombre($linea_nombre)
     {
         $this->linea_nombre = $linea_nombre;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field linea_clienteId
+     *
+     * @param integer $linea_clienteId
+     * @return $this
+     */
+    public function setLineaClienteId($linea_clienteId)
+    {
+        $this->linea_clienteId = $linea_clienteId;
 
         return $this;
     }
@@ -81,6 +100,16 @@ class Linea extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field linea_clienteId
+     *
+     * @return integer
+     */
+    public function getLineaClienteId()
+    {
+        return $this->linea_clienteId;
+    }
+
+    /**
      * Returns the value of field linea_habilitado
      *
      * @return integer
@@ -88,6 +117,15 @@ class Linea extends \Phalcon\Mvc\Model
     public function getLineaHabilitado()
     {
         return $this->linea_habilitado;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('linea_id', 'Centrocosto', 'centroCosto_lineaId', array('alias' => 'Centrocosto'));
+        $this->belongsTo('linea_clienteId', 'Cliente', 'cliente_id', array('alias' => 'Cliente'));
     }
 
     /**
