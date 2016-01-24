@@ -1,15 +1,65 @@
+<!-- Titulo -->
+<div class="box-header with-border">
+    <h3 class="box-title">Buscar Orden</h3>
+</div><!-- /.Titulo -->
 
+<!-- Inicio Formulario -->
 {{ content() }}
-
-<div align="right">
-    {{ link_to("orden/new", "Create orden") }}
-</div>
-
 {{ form("orden/search", "method":"post", "autocomplete" : "off") }}
 
-<div align="center">
-    <h1>Search orden</h1>
+<!-- Cuerpo -->
+<div class="box-body">
+    <div class="col-md-4">
+        <label for="orden_nro">N° de Orden</label>
+
+        <div class="form-group">
+            {{ text_field("orden_nro", "type" : "numeric",'class':'form-control','placeholder':'Ingrese el N° de Orden') }}
+        </div>
+    </div>
+    {#===============================================#}
+    <div class="col-md-4">
+        <label for="orden_fecha">Fecha</label>
+
+        <div class="form-group">
+            {{ date_field('orden_fecha','class':'form-control') }}
+        </div>
+    </div>
+    {#===============================================#}
+    <div class="col-md-4">
+        <label for="orden_remito">Remito Sya</label>
+
+        <div class="form-group">
+            {{ text_field('orden_remito','class':'form-control', 'placeholder':'Ingrese el remito') }}
+        </div>
+    </div>
+    {#===============================================#}
+    <div class="col-md-4">
+        <label for="orden_dominio">Dominio</label>
+
+        <div class="form-group">
+            {{ text_field('orden_dominio','class':'form-control', 'placeholder':'Ingrese el dominio') }}
+        </div>
+    </div>
+    {#===============================================#}
+    <div class="col-md-4">
+        <label for="orden_dominio">Tipo de Equipo</label>
+
+        <div class="form-group">
+            {{ text_field('orden_dominio','class':'form-control', 'placeholder':'Ingrese el dominio') }}
+        </div>
+    </div>
+    {#===============================================#}
+    {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
+    {% if admin!=1 %}
+        {{ hidden_field("orden_habilitado", "value" : "1" ) }}
+    {% endif %}
+</div><!-- /.Cuerpo -->
+
+<!-- Footer -->
+<div class="box-footer">
+    {{ submit_button("Buscar",'id':'submit','class':'btn btn-large btn-primary btn-flat') }}
 </div>
+
 
 <table>
     <tr>
