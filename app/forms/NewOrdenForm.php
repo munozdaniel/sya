@@ -23,6 +23,14 @@ class NewOrdenForm extends \Phalcon\Forms\Form
      */
     public function initialize($entity = null, $options = array())
     {
+        $required['clave']="";
+        $required['valor']="";
+
+        if(isset($options['required']))
+        {
+            $required['clave']="required";
+            $required['valor']="true";
+        }
         /*======================= ID ==============================*/
         if (!isset($options['edit'])) {
             $element = new Text("orden_id");
@@ -33,7 +41,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== PLANILLA =====================================*/
         $planilla = new DataListElement('planilla_nombreCliente',
             array(
-                array('placeholder' => 'Seleccione una Planilla', 'class'=>'form-control', 'maxlength' => 11,'autofocus'=>'true','required'=>''),
+                array('placeholder' => 'Seleccione una Planilla', 'class'=>'form-control', 'maxlength' => 11,'autofocus'=>'true',$required['clave']=>$required['valor']),
                 Planilla::find(array('planilla_habilitado=1','order'=>'planilla_nombreCliente')),
                 array('planilla_id', 'planilla_nombreCliente'),
                 'orden_planillaId'
@@ -43,7 +51,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== REMITO SYA =====================================*/
         $periodo = new Numeric("orden_remito",array(
             'class'=>'form-control',
-            'placeholder'=>'Ingrese un valor númerico','required'=>''
+            'placeholder'=>'Ingrese un valor númerico',$required['clave']=>$required['valor']
         ));
         $periodo->setLabel("Remito Sya");
         $periodo->setFilters(array('int'));
@@ -56,7 +64,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== TRANSPORTE =====================================*/
         $transporte = new DataListElement('transporte_dominio',
             array(
-                array('placeholder' => 'Seleccione el Dominio', 'class'=>'form-control', 'maxlength' => 11,'required'=>''),
+                array('placeholder' => 'Seleccione el Dominio', 'class'=>'form-control', 'maxlength' => 11,$required['clave']=>$required['valor']),
                 Transporte::find(array('transporte_habilitado=1','order'=>'transporte_dominio')),
                 array('transporte_id', 'transporte_dominio'),
                 'orden_transporteId'
@@ -66,7 +74,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== TIPO DE EQUIPO =====================================*/
         $elemento = new DataListElement('tipoEquipo_nombre',
             array(
-                array('placeholder' => 'Seleccione el Equipo', 'class'=>'form-control', 'maxlength' => 50,'required'=>''),
+                array('placeholder' => 'Seleccione el Equipo', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 Tipoequipo::find(array('tipoEquipo_habilitado=1','order'=>'tipoEquipo_nombre')),
                 array('tipoEquipo_id', 'tipoEquipo_nombre'),
                 'orden_tipoEquipoId'
@@ -76,7 +84,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== TIPO DE CARGA =====================================*/
         $elemento = new DataListElement('tipoCarga_nombre',
             array(
-                array('placeholder' => 'Seleccione el Tipo de Carga', 'class'=>'form-control', 'maxlength' => 50,'required'=>''),
+                array('placeholder' => 'Seleccione el Tipo de Carga', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 Tipocarga::find(array('tipoCarga_habilitado=1','order'=>'tipoCarga_nombre')),
                 array('tipoCarga_id', 'tipoCarga_nombre'),
                 'orden_tipoCargaId'
@@ -86,7 +94,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== CHOFER =====================================*/
         $elemento = new DataListElement('chofer_nombreCompleto',
             array(
-                array('placeholder' => 'Seleccione el Chofer', 'class'=>'form-control', 'maxlength' => 50,'required'=>''),
+                array('placeholder' => 'Seleccione el Chofer', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 Chofer::find(array('chofer_habilitado=1','order'=>'chofer_nombreCompleto')),
                 array('chofer_id', 'chofer_nombreCompleto'),
                 'orden_choferId'
@@ -97,7 +105,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         $viaje=Viaje::find(array('viaje_habilitado=1','order'=>array('viaje_origen','viaje_concatenado')));
         $elemento = new DataListElement('viaje_origen',
             array(
-                array('placeholder' => 'Seleccione el Origen', 'class'=>'form-control', 'maxlength' => 50,'required'=>''),
+                array('placeholder' => 'Seleccione el Origen', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 $viaje,
                 array('viaje_id', 'viaje_origen'),
                 'orden_viajeId'
@@ -107,7 +115,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== CONCATENADO =====================================*/
         $elemento = new DataListElement('concatenado_nombre',
             array(
-                array('placeholder' => 'Seleccione el Concatenado', 'class'=>'form-control', 'maxlength' => 60,'required'=>''),
+                array('placeholder' => 'Seleccione el Concatenado', 'class'=>'form-control', 'maxlength' => 60,$required['clave']=>$required['valor']),
                 Concatenado::find(array('concatenado_habilitado=1','order'=>'concatenado_nombre')),
                 array('concatenado_id', 'concatenado_nombre'),
                 'orden_concatenadoId'
@@ -115,7 +123,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         $elemento->setLabel('Concatenado');
         $this->add($elemento);
         /*=========================== FECHA =====================================*/
-        $fecha = new Date("orden_fecha",array( 'class'=>'form-control','required'=>''));
+        $fecha = new Date("orden_fecha",array( 'class'=>'form-control',$required['clave']=>$required['valor']));
         $fecha->setLabel("Fecha");
         $fecha->setFilters(array('date'));
         $fecha->addValidators(array(
@@ -125,7 +133,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         ));
         $this->add($fecha);
         /*=========================== TARIFA =====================================*/
-        $elemento = new TypeElement("tarifa_horaInicial",array('type'=>'time', 'class'=>'form-control','required'=>''
+        $elemento = new TypeElement("tarifa_horaInicial",array('type'=>'time', 'class'=>'form-control',$required['clave']=>$required['valor']
     ));
         $elemento->setLabel("Hora Inicial");
         $elemento->addValidators(array(
@@ -134,7 +142,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
             ))
         ));
         $this->add($elemento);
-        $elemento = new TypeElement("tarifa_horaFinal",array('type'=>'time', 'class'=>'form-control','required'=>''
+        $elemento = new TypeElement("tarifa_horaFinal",array('type'=>'time', 'class'=>'form-control',$required['clave']=>$required['valor']
         ));
         $elemento->setLabel("Hora Final");
         $elemento->addValidators(array(
@@ -169,7 +177,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*
         $elemento = new DataListElement('columnaExtra_nombre',
             array(
-                array('placeholder' => 'Titulo de la Columna', 'class'=>'form-control', 'maxlength' => 50,'required'=>''),
+                array('placeholder' => 'Titulo de la Columna', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 Columnaextra::find(array('columnaExtra_habilitado=1','order'=>'columnaExtra_nombre')),
                 array('columnaExtra_id', 'columnaExtra_nombre'),
                 'columnaExtra_id'
@@ -179,7 +187,7 @@ class NewOrdenForm extends \Phalcon\Forms\Form
         /*=========================== CONTENIDO EXTRA =====================================*/
         //El id de este elemento se agrega a contenidoExtra
         /*$elemento = new Text('contenidoExtra_descripcion',
-                array('placeholder' => 'Titulo de la Columna', 'class'=>'form-control', 'maxlength' => 50,'required'=>''));
+                array('placeholder' => 'Titulo de la Columna', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']));
         $elemento->setLabel('Concatenado');
         $this->add($elemento);
         /*=========================== OBSERVACION =====================================*/

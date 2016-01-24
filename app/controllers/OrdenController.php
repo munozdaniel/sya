@@ -24,6 +24,8 @@ class OrdenController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        //$this->view->newOrdenForm = new NewOrdenForm();
+        //$this->view->clienteForm = new ClienteForm();
     }
 
     /**
@@ -31,6 +33,7 @@ class OrdenController extends ControllerBase
      */
     public function searchAction()
     {
+        $this->flash->warning($this->request->getPost("orden_fecha"));
         parent::importarJsSearch();
 
         $numberPage = 1;
@@ -66,8 +69,9 @@ class OrdenController extends ControllerBase
 
             /*================ Orden ================*/
             $fila['orden_nro']=$unaOrden->getOrdenNro();
-            $fila['orden_fecha']=$unaOrden->getOrdenFecha();
+            $fila['orden_fecha']= date('d/m/Y', date(strtotime(date($unaOrden->getOrdenFecha()))));
             $fila['orden_periodo']=$unaOrden->getOrdenPeriodo();
+            $fila['orden_remito']=$unaOrden->getOrdenRemito();
 
             /*================ Transporte ================*/
             $transporte = Transporte::findFirstByTransporte_id($unaOrden->getOrdenTransporteId());
@@ -151,8 +155,8 @@ class OrdenController extends ControllerBase
      */
     public function newAction()
     {
-        $this->view->newOrdenForm = new NewOrdenForm();
-        $this->view->clienteForm = new ClienteForm();
+        $this->view->newOrdenForm = new NewOrdenForm(null,array('required'=>''));
+        $this->view->clienteForm = new ClienteForm(null,array('required'=>''));
     }
 
     /**
@@ -228,7 +232,9 @@ class OrdenController extends ControllerBase
             $ultimaOrden->update();
         }
         $orden->setOrdenPlanillaId($this->request->getPost("orden_planillaId"));
-        $orden->setOrdenPeriodo($this->request->getPost("orden_periodo"));
+        //FIXME: obtener el mes dese orden_fecha
+        $orden->setOrdenPeriodo(date('d/m/Y', date(strtotime(date($this->request->getPost("orden_fecha"))))));
+        $orden->setOrdenRemito($this->request->getPost("orden_remito"));
         $orden->setOrdenFecha($this->request->getPost("orden_fecha"));
 
         $orden->setOrdenTransporteId($this->request->getPost("orden_transporteId"));

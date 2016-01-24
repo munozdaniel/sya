@@ -20,6 +20,14 @@ class ClienteForm  extends \Phalcon\Forms\Form
      */
     public function initialize($entity = null, $options = array())
     {
+        $required['clave']="";
+        $required['valor']="";
+
+        if(isset($options['required']))
+        {
+            $required['clave']="required";
+            $required['valor']="true";
+        }
         /*======================= ID ==============================*/
         if (!isset($options['edit'])) {
             $element = new Text("cliente_id");
@@ -31,7 +39,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //Primero El PRINCIPAL.
         $nombre = new DataListElement('cliente_nombre',
             array(
-                array('placeholder' => 'SELECCIONE EL CLIENTE','required'=>'true', 'class'=>'form-control', 'maxlength' => 60),
+                array('placeholder' => 'SELECCIONE EL CLIENTE',$required['clave']=>$required['valor'], 'class'=>'form-control', 'maxlength' => 60),
                 Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
                 array('cliente_id', 'cliente_nombre'),
                 'cliente_id'
@@ -43,7 +51,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //Todas Las Operadoras Dependientes:
         $listaOperadoras = new DataListElement('operadora_nombre',
             array(
-                array('placeholder' => 'SELECCIONE LA OPERADORA', 'maxlength' => 50, 'class'=>'form-control','required'=>'true'),
+                array('placeholder' => 'SELECCIONE LA OPERADORA', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('operadora_id', 'operadora_nombre'),
                 'operadora_id'
@@ -67,7 +75,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //Primero El PRINCIPAL.
         $dl_frs = new DataListElement('frs_codigo',
             array(
-                array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control','required'=>'true'),
+                array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 NULL,
                 array('frs_id', 'frs_codigo'),
                 'frs_id'
@@ -90,7 +98,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         //Primero El PRINCIPAL.
         $listaYacimiento = new DataListElement('yacimiento_destino',
             array(
-                array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control','required'=>'true'),
+                array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('yacimiento_id', 'yacimiento_destino'),
                 'yacimiento_id'
@@ -113,7 +121,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         /*=================================================*/
         $listaEquipoPozo = new DataListElement('equipoPozo_nombre',
             array(
-                array('placeholder' => 'SELECCIONE UN YACIMENTO', 'maxlength' => 50, 'class'=>'form-control','required'=>'true'),
+                array('placeholder' => 'SELECCIONE UN YACIMENTO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('equipoPozo_id', 'equipoPozo_nombre'),
                 'equipoPozo_id'
@@ -162,7 +170,7 @@ class ClienteForm  extends \Phalcon\Forms\Form
         /*=================================================*/
         $listaCentroCosto = new DataListElement('centroCosto_codigo',
             array(
-                array('placeholder' => 'SELECCIONE UNA LINEA', 'maxlength' => 50, 'class'=>'form-control','required'=>'true'),
+                array('placeholder' => 'SELECCIONE UNA LINEA', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('centroCosto_id', 'centroCosto_codigo'),
                 'centroCosto_id'
