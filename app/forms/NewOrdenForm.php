@@ -40,16 +40,16 @@ class NewOrdenForm extends \Phalcon\Forms\Form
             ));
         $planilla->setLabel('Planilla');
         $this->add($planilla);
-        /*=========================== PERIODO =====================================*/
-        $periodo = new Numeric("orden_periodo",array(
-            'maxlength'   => 2, 'class'=>'form-control','max'=>12,'min'=>1,
+        /*=========================== REMITO SYA =====================================*/
+        $periodo = new Numeric("orden_remito",array(
+            'class'=>'form-control',
             'placeholder'=>'Ingrese un valor númerico','required'=>''
         ));
-        $periodo->setLabel("Periodo");
+        $periodo->setLabel("Remito Sya");
         $periodo->setFilters(array('int'));
         $periodo->addValidators(array(
             new \Phalcon\Validation\Validator\PresenceOf(array(
-                'message' => 'El Periodo es Requerido'
+                'message' => 'El Remito es Requerido'
             ))
         ));
         $this->add($periodo);
