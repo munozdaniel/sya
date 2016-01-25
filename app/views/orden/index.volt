@@ -9,43 +9,217 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <div class="col-md-4">
-        <label for="orden_nro">N° de Orden</label>
 
-        <div class="form-group">
-            {{ text_field("orden_nro", "type" : "numeric",'class':'form-control','placeholder':'Ingrese el N° de Orden') }}
+    {# =================================== PLANILLA ================================== #}
+    <div class="box box-primary">
+        <div class=" box-body">
+            <div class="box-header">
+                <h3 class="panel-title pull-left">
+                    <i class="fa fa-table"></i>
+                    Planilla
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    {{ newOrdenForm.label('planilla_nombreCliente') }}
+                    {{ newOrdenForm.render('planilla_nombreCliente',['autofocus':'']) }}
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="orden_nro">N° de Orden</label>
+                        {{ text_field("orden_nro", "type" : "numeric",'class':'form-control','placeholder':'Ingrese el N° de Orden') }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ newOrdenForm.label('orden_fecha') }}
+                    {{ newOrdenForm.render('orden_fecha') }}
+                </div>
+                <div class="col-md-4 form-group">
+                    {{ newOrdenForm.label('orden_remito') }}
+                    {{ newOrdenForm.render('orden_remito') }}
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
         </div>
     </div>
-    {#===============================================#}
-    <div class="col-md-4">
-        <label for="orden_fecha">Fecha</label>
-
-        <div class="form-group">
-            {{ date_field('orden_fecha','class':'form-control') }}
+    {# =================================== TRANSPORTE ================================== #}
+    <div class="box box-primary">
+        <div class=" box-body">
+            <div class="box-header">
+                <h3 class="panel-title pull-left">
+                    <i class="fa fa-truck"></i>
+                    Transporte
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('transporte_dominio') }}
+                    {{ newOrdenForm.render('transporte_dominio') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tipoEquipo_nombre') }}
+                    {{ newOrdenForm.render('tipoEquipo_nombre') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tipoCarga_nombre') }}
+                    {{ newOrdenForm.render('tipoCarga_nombre') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('chofer_nombreCompleto') }}
+                    {{ newOrdenForm.render('chofer_nombreCompleto') }}
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
         </div>
     </div>
-    {#===============================================#}
-    <div class="col-md-4">
-        <label for="orden_remito">Remito Sya</label>
+    {# =================================== CLIENTE ================================== #}
+    <div class="box box-primary">
+        <div class=" box-body">
+            <div class="box-header">
+                <h3 class="panel-title pull-left">
+                    <i class="fa fa-male"></i>
+                    Cliente
+                </h3>
 
-        <div class="form-group">
-            {{ text_field('orden_remito','class':'form-control', 'placeholder':'Ingrese el remito') }}
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-offset-1 form-group">
+                    {{ clienteForm.label('cliente_nombre') }}
+                    {{ clienteForm.render('cliente_nombre') }}
+
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ clienteForm.label('operadora_nombre') }}
+                    {{ clienteForm.render('operadora_nombre') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ clienteForm.label('frs_codigo') }}
+                    {{ clienteForm.render('frs_codigo') }}
+
+                </div>
+
+                <div class="col-md-4 col-md-offset-1 form-group">
+                    {{ clienteForm.label('yacimiento_destino') }}
+                    {{ clienteForm.render('yacimiento_destino') }}
+                </div>
+                <div class="col-md-4 col-md-offset-1 form-group">
+                    {{ clienteForm.label('equipoPozo_nombre') }}
+                    {{ clienteForm.render('equipoPozo_nombre') }}
+                </div>
+
+                <div class="col-md-4 col-md-offset-1 form-group">
+                    {{ clienteForm.label('linea_nombre') }}
+                    {{ clienteForm.render('linea_nombre') }}
+                </div>
+                <div class="col-md-4 col-md-offset-1 form-group">
+                    {{ clienteForm.label('centroCosto_codigo') }}
+                    {{ clienteForm.render('centroCosto_codigo') }}
+
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                <hr>
+            </div>
         </div>
     </div>
-    {#===============================================#}
-    <div class="col-md-4">
-        <label for="orden_dominio">Dominio</label>
+    {# =================================== VIAJE ===================================== #}
+    <div class="box box-primary">
+        <div class=" box-body">
+            <div class="box-header">
+                <h3 class="panel-title pull-left">
+                    <i class="fa fa-exchange"></i>
+                    Viaje
+                </h3>
 
-        <div class="form-group">
-            {{ text_field('orden_dominio','class':'form-control', 'placeholder':'Ingrese el dominio') }}
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('viaje_origen') }}
+                    {{ newOrdenForm.render('viaje_origen') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('concatenado_nombre') }}
+                    {{ newOrdenForm.render('concatenado_nombre') }}
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
         </div>
     </div>
-    {#===============================================#}
-    <div class="col-md-4">
-        <label for="orden_dominio">Tipo de Equipo</label>
-
-        <div class="form-group">
-            {{ text_field('orden_dominio','class':'form-control', 'placeholder':'Ingrese el dominio') }}
+    {# =================================== TARIFA ================================== #}
+    <div class="box box-primary">
+        <div class=" box-body">
+            <div class="box-header">
+                <h3 class="panel-title pull-left">
+                    <i class="fa fa-clock-o"></i>
+                    Tarifa
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_horaInicial') }}
+                    {{ newOrdenForm.render('tarifa_horaInicial') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_horaFinal') }}
+                    {{ newOrdenForm.render('tarifa_horaFinal') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_hsServicio') }}
+                    {{ newOrdenForm.render('tarifa_hsServicio') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_hsHidro') }}
+                    {{ newOrdenForm.render('tarifa_hsHidro') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_hsMalacate') }}
+                    {{ newOrdenForm.render('tarifa_hsMalacate') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_hsStand') }}
+                    {{ newOrdenForm.render('tarifa_hsStand') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('tarifa_km') }}
+                    {{ newOrdenForm.render('tarifa_km') }}
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# =================================== DATOS VARIOS ================================== #}
+    <div class="box box-primary">
+        <div class=" box-body">
+            <div class="box-header">
+                <h3 class="panel-title pull-left">
+                    <i class="fa fa-stack-exchange"></i>
+                    Notas
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    {{ newOrdenForm.label('orden_observacion') }}
+                    {{ newOrdenForm.render('orden_observacion') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('orden_conformidad') }}
+                    {{ newOrdenForm.render('orden_conformidad') }}
+                </div>
+                <div class="col-md-3 form-group">
+                    {{ newOrdenForm.label('orden_noConformidad') }}
+                    {{ newOrdenForm.render('orden_noConformidad') }}
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
         </div>
     </div>
     {#===============================================#}
@@ -60,157 +234,3 @@
     {{ submit_button("Buscar",'id':'submit','class':'btn btn-large btn-primary btn-flat') }}
 </div>
 
-
-<table>
-    <tr>
-        <td align="right">
-            <label for="orden_id">Orden</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_id", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_planilla">Orden Of Planilla</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_planilla", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_periodo">Orden Of Periodo</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_periodo", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_transporte">Orden Of Transporte</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_transporte", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_tipoEquipo">Orden Of TipoEquipo</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_tipoEquipo", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_tipoCarga">Orden Of TipoCarga</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_tipoCarga", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_chofer">Orden Of Chofer</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_chofer", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_cliente">Orden Of Cliente</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_cliente", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_viaje">Orden Of Viaje</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_viaje", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_tarifa">Orden Of Tarifa</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_tarifa", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_columnaExtra">Orden Of ColumnaExtra</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_columnaExtra", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_observacion">Orden Of Observacion</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_observacion", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_fecha">Orden Of Fecha</label>
-        </td>
-        <td align="left">
-                {{ text_field("orden_fecha", "type" : "date") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_fechaCreacion">Orden Of FechaCreacion</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_fechaCreacion", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_conformidad">Orden Of Conformidad</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_conformidad", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_noConformidad">Orden Of NoConformidad</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_noConformidad", "size" : 30) }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_creadoPor">Orden Of CreadoPor</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_creadoPor", "type" : "numeric") }}
-        </td>
-    </tr>
-    <tr>
-        <td align="right">
-            <label for="orden_habilitado">Orden Of Habilitado</label>
-        </td>
-        <td align="left">
-            {{ text_field("orden_habilitado", "type" : "numeric") }}
-        </td>
-    </tr>
-
-    <tr>
-        <td></td>
-        <td>{{ submit_button("Search") }}</td>
-    </tr>
-</table>
-
-</form>
