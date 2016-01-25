@@ -85,7 +85,7 @@ class ColumnaextraController extends ControllerBase
 
             $this->tag->setDefault("columnaExtra_id", $columnaextra->getColumnaextraId());
             $this->tag->setDefault("columnaExtra_nombre", $columnaextra->getColumnaextraNombre());
-            $this->tag->setDefault("columnaExtra_descripcion", $columnaextra->getColumnaextraDescripcion());
+            $this->tag->setDefault("columnaExtra_habilitado", $columnaextra->getColumnaextraHabilitado());
             
         }
     }
@@ -106,7 +106,7 @@ class ColumnaextraController extends ControllerBase
         $columnaextra = new Columnaextra();
 
         $columnaextra->setColumnaextraNombre($this->request->getPost("columnaExtra_nombre"));
-        $columnaextra->setColumnaextraDescripcion($this->request->getPost("columnaExtra_descripcion"));
+        $columnaextra->setColumnaextraHabilitado($this->request->getPost("columnaExtra_habilitado"));
         
 
         if (!$columnaextra->save()) {
@@ -156,7 +156,7 @@ class ColumnaextraController extends ControllerBase
         }
 
         $columnaextra->setColumnaextraNombre($this->request->getPost("columnaExtra_nombre"));
-        $columnaextra->setColumnaextraDescripcion($this->request->getPost("columnaExtra_descripcion"));
+        $columnaextra->setColumnaextraHabilitado($this->request->getPost("columnaExtra_habilitado"));
         
 
         if (!$columnaextra->save()) {

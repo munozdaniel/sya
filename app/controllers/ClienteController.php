@@ -23,7 +23,7 @@ class ClienteController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->view->clienteForm = new ClienteForm();
+        $this->view->clienteForm = new ClienteNewForm();
         $this->persistent->parameters = null;
     }
 
@@ -72,7 +72,7 @@ class ClienteController extends ControllerBase
      */
     public function newAction()
     {
-        $this->view->clienteForm = new ClienteForm(null, array('edit' => true));
+        $this->view->clienteForm = new ClienteNewForm(null, array('edit' => true));
     }
 
 
