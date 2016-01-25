@@ -91,18 +91,18 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Ver Ordenes') }}</li>
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i>  Exportar Excel') }}</li>
+                        <li>{{ link_to('planilla/buscarOrdenes','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
+                        <li>{{ link_to('planilla/exportarExcel','<i class="fa fa-circle-o"></i>  Exportar Excel') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM ARBOL =======#}
 
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-search"></i> <span>Filtro</span> <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-search"></i> <span>Buscar</span> <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('','<i class="fa fa-circle-o"></i> Filtro Personalizado') }}</li>
+                        <li>{{ link_to('orden','<i class="fa fa-circle-o"></i> Busqueda Personalizada') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM SENCILLO =======#}
