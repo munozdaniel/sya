@@ -24,8 +24,8 @@ class OrdenController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
-        //$this->view->newOrdenForm = new NewOrdenForm();
-        //$this->view->clienteForm = new ClienteForm();
+        $this->view->newOrdenForm = new NewOrdenForm();
+        $this->view->clienteForm = new ClienteForm();
     }
 
     /**
@@ -33,12 +33,56 @@ class OrdenController extends ControllerBase
      */
     public function searchAction()
     {
-        $this->flash->warning($this->request->getPost("orden_fecha"));
         parent::importarJsSearch();
 
         $numberPage = 1;
+        $buscarOrden = array();
+        $buscarOrden['orden_planillaId']= $this->request->get('orden_planillaId');
+        $buscarOrden['orden_fecha']= $this->request->get('orden_fecha');
+        $buscarOrden['orden_remito']= $this->request->get('orden_remito');
+        $buscarOrden['orden_transporteId']= $this->request->get('orden_transporteId');
+        $buscarOrden['orden_tipoEquipoId']= $this->request->get('orden_tipoEquipoId');
+        $buscarOrden['orden_tipoCargaId']= $this->request->get('orden_tipoCargaId');
+        $buscarOrden['orden_choferId']= $this->request->get('orden_choferId');
+        $buscarOrden['orden_clienteId']= $this->request->get('cliente_id');
+        $buscarOrden['orden_frsId']= $this->request->get('frs_id');
+        $buscarOrden['orden_equipoPozoId']= $this->request->get('equipoPozo_id');
+        $buscarOrden['orden_centroCostoId']= $this->request->get('centroCosto_id');
+        $buscarOrden['orden_viajeId']= $this->request->get('orden_viajeId');
+        $buscarOrden['orden_concatenadoId']= $this->request->get('orden_concatenadoId');
+        //Recupero la operadora_id y busco al cliente, y con el cliente puedo buscar las ordenes
+        if($this->request->has('operadora_id') && $this->request->getPost("operadora_id")!='')
+        {
+            $operadora = Operadora::findFirst(array(
+                "operadora_habilitado=1 AND operadora_id = :operadora_id:",
+                'bind'=>array('operadora_id'=>$this->request->getPost("operadora_id"))
+            ));
+            $buscarOrden['orden_clienteId']= $operadora->getOperadoraClienteId();
+        }
+        if($this->request->has('linea_id') && $this->request->getPost("linea_id")!='')
+        {
+            $linea = Linea::findFirst(array(
+                "linea_habilitado=1 AND linea_id = :linea_id:",
+                'bind'=>array('linea_id'=>$this->request->getPost("linea_id"))
+            ));
+            $buscarOrden['orden_clienteId']= $linea->getLineaClienteid();
+        }
+        if($this->request->has('yacimiento_id') && $this->request->getPost("yacimiento_id")!='')
+        {
+            $yacimiento = Yacimiento::findFirst(array(
+                "yacimiento_habilitado=1 AND yacimiento_id = :yacimiento_id:",
+                'bind'=>array('yacimiento_id'=>$this->request->getPost("yacimiento_id"))
+            ));
+            $operadora = Operadora::findFirst(array(
+                "operadora_habilitado=1 AND operadora_id = :operadora_id:",
+                'bind'=>array('operadora_id'=>$yacimiento->getYacimientoOperadoraId())
+            ));
+            if($operadora)
+                $buscarOrden['orden_clienteId']= $operadora->getOperadoraClienteId();
+        }
+
         if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Orden", $_POST);
+            $query = Criteria::fromInput($this->di, "Orden", $buscarOrden);
             $this->persistent->parameters = $query->getParams();
         } else {
             $numberPage = $this->request->getQuery("page", "int");
@@ -68,7 +112,7 @@ class OrdenController extends ControllerBase
             $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
 
             /*================ Orden ================*/
-            $fila['orden_nro']=$unaOrden->getOrdenNro();
+            $fila['orden_nro']=$unaOrden->getOrdenClienteId();
             $fila['orden_fecha']= date('d/m/Y', date(strtotime(date($unaOrden->getOrdenFecha()))));
             $fila['orden_periodo']=$unaOrden->getOrdenPeriodo();
             $fila['orden_remito']=$unaOrden->getOrdenRemito();
@@ -156,7 +200,7 @@ class OrdenController extends ControllerBase
     public function newAction()
     {
         $this->view->newOrdenForm = new NewOrdenForm(null,array('required'=>''));
-        $this->view->clienteForm = new ClienteForm(null,array('required'=>''));
+        $this->view->clienteForm = new ClienteNewForm(null,array('required'=>''));
     }
 
     /**
