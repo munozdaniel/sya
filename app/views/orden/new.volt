@@ -42,8 +42,8 @@
                         {{ newOrdenForm.render('orden_fecha') }}
                     </div>
                     <div class="col-md-3 form-group">
-                        {{ newOrdenForm.label('orden_periodo') }}
-                        {{ newOrdenForm.render('orden_periodo') }}
+                        {{ newOrdenForm.label('orden_remito') }}
+                        {{ newOrdenForm.render('orden_remito') }}
                     </div>
                     <div class="col-md-12">
                         <hr>
