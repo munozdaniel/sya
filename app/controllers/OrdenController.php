@@ -27,15 +27,7 @@ class OrdenController extends ControllerBase
         $this->view->newOrdenForm = new NewOrdenForm();
         $this->view->clienteForm = new ClienteForm();
     }
-
-    /**
-     * Searches for orden
-     */
-    public function searchAction()
-    {
-        parent::importarJsSearch();
-
-        $numberPage = 1;
+    private function generarCriterioBusqueda($datos){
         $buscarOrden = array();
         $buscarOrden['orden_planillaId']= $this->request->get('orden_planillaId');
         $buscarOrden['orden_fecha']= $this->request->get('orden_fecha');
@@ -80,8 +72,19 @@ class OrdenController extends ControllerBase
             if($operadora)
                 $buscarOrden['orden_clienteId']= $operadora->getOperadoraClienteId();
         }
+        return $buscarOrden;
+    }
+    /**
+     * Searches for orden
+     */
+    public function searchAction()
+    {
+        parent::importarJsSearch();
+        $numberPage = 1;
+
 
         if ($this->request->isPost()) {
+            $buscarOrden = $this->generarCriterioBusqueda($_POST);
             $query = Criteria::fromInput($this->di, "Orden", $buscarOrden);
             $this->persistent->parameters = $query->getParams();
         } else {
@@ -112,7 +115,7 @@ class OrdenController extends ControllerBase
             $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
 
             /*================ Orden ================*/
-            $fila['orden_nro']=$unaOrden->getOrdenClienteId();
+            $fila['orden_nro']=$unaOrden->getOrdenNro();
             $fila['orden_fecha']= date('d/m/Y', date(strtotime(date($unaOrden->getOrdenFecha()))));
             $fila['orden_periodo']=$unaOrden->getOrdenPeriodo();
             $fila['orden_remito']=$unaOrden->getOrdenRemito();
