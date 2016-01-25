@@ -25,6 +25,12 @@ class Orden extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $orden_remito;
+
+    /**
+     *
+     * @var integer
+     */
     protected $orden_periodo;
 
     /**
@@ -182,6 +188,19 @@ class Orden extends \Phalcon\Mvc\Model
     public function setOrdenPlanillaId($orden_planillaId)
     {
         $this->orden_planillaId = $orden_planillaId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field orden_remito
+     *
+     * @param integer $orden_remito
+     * @return $this
+     */
+    public function setOrdenRemito($orden_remito)
+    {
+        $this->orden_remito = $orden_remito;
 
         return $this;
     }
@@ -487,6 +506,16 @@ class Orden extends \Phalcon\Mvc\Model
     public function getOrdenPlanillaId()
     {
         return $this->orden_planillaId;
+    }
+
+    /**
+     * Returns the value of field orden_remito
+     *
+     * @return integer
+     */
+    public function getOrdenRemito()
+    {
+        return $this->orden_remito;
     }
 
     /**

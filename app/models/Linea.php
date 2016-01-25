@@ -166,7 +166,7 @@ class Linea extends \Phalcon\Mvc\Model
             new \Phalcon\Mvc\Model\Validator\Uniqueness(
                 array(
                     "field"   => "linea_nombre",
-                    "message" => "El nombre de la Linea-PSL ya existe"
+                    "message" => "La Linea ya existe"
                 )
             )
         );

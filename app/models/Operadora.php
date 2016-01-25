@@ -19,6 +19,12 @@ class Operadora extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $operadora_clienteId;
+
+    /**
+     *
+     * @var integer
+     */
     protected $operadora_habilitado;
 
     /**
@@ -43,6 +49,19 @@ class Operadora extends \Phalcon\Mvc\Model
     public function setOperadoraNombre($operadora_nombre)
     {
         $this->operadora_nombre = $operadora_nombre;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field operadora_clienteId
+     *
+     * @param integer $operadora_clienteId
+     * @return $this
+     */
+    public function setOperadoraClienteId($operadora_clienteId)
+    {
+        $this->operadora_clienteId = $operadora_clienteId;
 
         return $this;
     }
@@ -81,6 +100,16 @@ class Operadora extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field operadora_clienteId
+     *
+     * @return integer
+     */
+    public function getOperadoraClienteId()
+    {
+        return $this->operadora_clienteId;
+    }
+
+    /**
      * Returns the value of field operadora_habilitado
      *
      * @return integer
@@ -95,7 +124,9 @@ class Operadora extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->hasMany('operadora_id', 'Cliente', 'cliente_operadoraId', array('alias' => 'Cliente'));
+        $this->hasMany('operadora_id', 'Frs', 'frs_operadoraId', array('alias' => 'Frs'));
+        $this->hasMany('operadora_id', 'Yacimiento', 'yacimiento_operadoraId', array('alias' => 'Yacimiento'));
+        $this->belongsTo('operadora_clienteId', 'Cliente', 'cliente_id', array('alias' => 'Cliente'));
     }
 
     /**
