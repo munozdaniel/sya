@@ -14,13 +14,21 @@
 </div>
 <!-- /.box-header -->
 {{ content() }}
+<script>
+    $(document).ready(function () {
+        $('#tabla_id').DataTable( {
+            "scrollX": true
+        } );
+    });
+</script>
 <div class="box-body">
     <table id="id_planilla" class="table table-bordered table-striped">
         <thead>
         <tr>
-            <th>N° de Planilla</th>
+            <th>#</th>
             <th>Nombre del Cliente</th>
             <th>Fecha de Creación</th>
+            <th>Ver Ordenes</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -33,6 +41,7 @@
                     <td>{{ planilla.getPlanillaId() }}</td>
                     <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                     <td>{{ planilla.getPlanillaFecha() }}</td>
+                    <td>{{ link_to("ordenes/verOrdenes/"~planilla.getPlanillaId(), "Ver Ordenes") }}</td>
 
                     {% if admin == 1 %}
                         <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar") }}</td>

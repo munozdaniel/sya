@@ -1,6 +1,6 @@
 <!-- Titulo -->
 <div class="box-header">
-    <h3 class="box-title">Listado de Tipos de Carga</h3>
+    <h3 class="box-title">Listado de Choferes</h3>
 
     <table width="100%">
         <tr>
@@ -15,6 +15,13 @@
 </div>
 <!-- ./ Titulo -->
 {{ content() }}
+<script>
+    $(document).ready(function () {
+        $('#tabla_id').DataTable( {
+            "scrollX": true
+        } );
+    });
+</script>
 <div class="box-body">
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>

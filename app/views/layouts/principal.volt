@@ -91,7 +91,7 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('planilla/buscarOrdenes','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
+                        <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
                         <li>{{ link_to('planilla/exportarExcel','<i class="fa fa-circle-o"></i>  Exportar Excel') }}</li>
                     </ul>
                 </li>
@@ -104,10 +104,6 @@
                     <ul class="treeview-menu">
                         <li>{{ link_to('orden','<i class="fa fa-circle-o"></i> Busqueda Personalizada') }}</li>
                     </ul>
-                </li>
-                {#====== ITEM SENCILLO =======#}
-                <li>
-                    {{ link_to('index/dashboard','<i class="fa fa-pie-chart"></i> <span>Estadisticas</span> ') }}
                 </li>
                 {#====== ITEM SENCILLO =======#}
                 <li>
