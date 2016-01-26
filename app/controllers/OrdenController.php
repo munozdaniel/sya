@@ -74,39 +74,7 @@ class OrdenController extends ControllerBase
         }
         return $buscarOrden;
     }
-    /**
-     * Searches for orden
-     */
-    public function searchAction()
-    {
-        parent::importarJsSearch();
-        $numberPage = 1;
-
-
-        if ($this->request->isPost()) {
-            $buscarOrden = $this->generarCriterioBusqueda($_POST);
-            $query = Criteria::fromInput($this->di, "Orden", $buscarOrden);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "orden_id";
-
-        $orden = Orden::find($parameters);
-        if (count($orden) == 0) {
-            $this->flash->notice("No se han encontrado resultados.");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "orden",
-                "action" => "index"
-            ));
-        }
-        $tabla = array();
+    private function generarTablaPlanilla($orden){
         foreach ($orden as $unaOrden) {
             $fila = array();
             $planilla = Planilla::findFirstByPlanilla_id($unaOrden->getOrdenPlanillaId());
@@ -188,6 +156,42 @@ class OrdenController extends ControllerBase
 
             $tabla[] = $fila;
         }
+        return $tabla;
+    }
+    /**
+     * Searches for orden
+     */
+    public function searchAction()
+    {
+        parent::importarJsSearch();
+        $numberPage = 1;
+
+
+        if ($this->request->isPost()) {
+            $buscarOrden = $this->generarCriterioBusqueda($_POST);
+            $query = Criteria::fromInput($this->di, "Orden", $buscarOrden);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "orden_id";
+
+        $orden = Orden::find($parameters);
+        if (count($orden) == 0) {
+            $this->flash->notice("No se han encontrado resultados.");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "orden",
+                "action" => "index"
+            ));
+        }
+        $tabla = $this->generarTablaPlanilla($orden);
+
         $paginator = new Paginator(array(
             "data" => $tabla,
             "limit" => 100000,
