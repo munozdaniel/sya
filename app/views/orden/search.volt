@@ -1,14 +1,5 @@
 <!-- Titulo -->
 <div class="box-header">
-    {% if planilla is defined %}
-        <h3 class="box-title" align="left">
-            <strong>PLANILLA N°: </strong> {{ planilla.getPlanillaId() }} <br>
-            <strong>NOMBRE: </strong> {{ planilla.getPlanillaNombrecliente() }} <br>
-            <strong>FECHA CREACIÓN: </strong>{{ date('d/m/Y',(planilla.getPlanillaFecha()) | strtotime)}}
-        </h3>
-    {% else %}
-        <h3 class="box-title"><ins>Listado de Ordenes</ins></h3>
-    {% endif %}
 
     <table width="100%">
         <tr>
@@ -18,10 +9,38 @@
             </td>
             <td align="right">
                 {{ link_to("orden/new", "<i class='fa fa-pencil-square'></i> Agregar Orden ",'class':'btn btn-flat btn-large btn-danger') }}
-                {{ link_to("planilla/exportarPlanilla/"~planilla.getPlanillaId(), "<i class='fa fa-file-excel-o'></i> Exportar Excel ",'class':'btn btn-flat btn-large btn-success') }}
+                {{ link_to("orden/exportarPlanilla/"~planilla.getPlanillaId(), "<i class='fa fa-file-excel-o'></i> Exportar Excel ",'class':'btn btn-flat btn-large btn-success') }}
             </td>
         </tr>
     </table>
+    {% if planilla is defined %}
+        <h2 class="box-title" >
+            <strong><ins>LISTADO DE ORDENES</ins></strong>
+<br>
+        </h2>
+        <div>
+            <br>
+            <table align="left" width="50%">
+                <thead>
+                    <tr style="border-bottom: 1px solid;">
+                        <th>#</th>
+                        <th>Planilla</th>
+                        <th>Fecha de Creación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ planilla.getPlanillaId() }} </td>
+                    <td>{{ planilla.getPlanillaNombrecliente() }}</td>
+                    <td>{{ date('d/m/Y',(planilla.getPlanillaFecha()) | strtotime)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <h3 class="box-title">            <strong><ins>LISTADO DE ORDENES</ins></strong>        </h3>
+    {% endif %}
+
 </div>
 {{ content() }}
 <script>
