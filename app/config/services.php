@@ -47,6 +47,7 @@ $di->setShared('view', function () use ($config) {
             ));
             /*Agregado para los formularios: Verifica si un elemento es intancia de alguna clase ingresada por parametro*/
             $compiler = $volt->getCompiler();
+            $compiler->addFilter('strtotime', 'strtotime');
             $compiler->addFunction('is_a', 'is_a');
             /*Fin*/
             return $volt;
