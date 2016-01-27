@@ -1,14 +1,24 @@
 <!-- Titulo -->
 <div class="box-header">
-    <h3 class="box-title">Listado de Lineas</h3>
+    {% if planilla is defined %}
+        <h3 class="box-title" align="left">
+            <strong>PLANILLA N°: </strong> {{ planilla.getPlanillaId() }} <br>
+            <strong>NOMBRE: </strong> {{ planilla.getPlanillaNombrecliente() }} <br>
+            <strong>FECHA CREACIÓN: </strong>{{ date('d/m/Y',(planilla.getPlanillaFecha()) | strtotime)}}
+        </h3>
+    {% else %}
+        <h3 class="box-title"><ins>Listado de Ordenes</ins></h3>
+    {% endif %}
 
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("orden/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("orden/index", "<i class='fa fa-sticky-note-o'></i>  Buscar Orden",'class':'btn btn-flat btn-large bg-navy') }}
+                {{ link_to("planilla/index", "<i class='fa fa-folder'></i> Buscar Planilla",'class':'btn btn-flat btn-large bg-olive') }}
             </td>
             <td align="right">
-                {{ link_to("orden/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("orden/new", "<i class='fa fa-pencil-square'></i> Agregar Orden ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("planilla/exportarPlanilla/"~planilla.getPlanillaId(), "<i class='fa fa-file-excel-o'></i> Exportar Excel ",'class':'btn btn-flat btn-large btn-success') }}
             </td>
         </tr>
     </table>
@@ -21,6 +31,7 @@
             } );
     });
 </script>
+<div class="box box-primary">
 <div class="box-body">
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
@@ -93,4 +104,5 @@
     </tbody>
 
 </table>
+</div>
 </div>
