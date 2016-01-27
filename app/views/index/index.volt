@@ -1,8 +1,8 @@
-<section  class="">
+<section>
     <div class="login-box">
 
         <div class="login-logo">
-            <a  ><b>s&a</b> all Service</a>
+            {{ image('image/logo.png','alt':'logo sya') }}
         </div><!-- /.login-logo -->
 
         <div class="login-box-body" style="border: solid #CACACA;">
