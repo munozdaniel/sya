@@ -47,7 +47,7 @@
         {% endif %}
         {#Fin: Js Particulares#}
     </head>
-    <body class="hold-transition skin-blue  ">{#layout-boxed #}
+    <body class="hold-transition skin-blue login-page">{#layout-boxed #}
         {{ content() }}
         {#Js Globales#}
 
