@@ -27,6 +27,12 @@ class OrdenController extends ControllerBase
         $this->view->newOrdenForm = new NewOrdenForm();
         $this->view->clienteForm = new ClienteForm();
     }
+
+    /**
+     * Encargado de recuperar los datos por post para generar un arreglo que pueda ser usado por Criteria.
+     * @param $datos
+     * @return array
+     */
     private function generarCriterioBusqueda($datos){
         $buscarOrden = array();
         $buscarOrden['orden_planillaId']= $this->request->get('orden_planillaId');
@@ -74,7 +80,13 @@ class OrdenController extends ControllerBase
         }
         return $buscarOrden;
     }
-    private function generarTablaPlanilla($orden){
+
+    /**
+     * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
+     * @param $orden
+     * @return array
+     */
+    private function generarTablaDeOrdenes($orden){
         foreach ($orden as $unaOrden) {
             $fila = array();
             $planilla = Planilla::findFirstByPlanilla_id($unaOrden->getOrdenPlanillaId());
@@ -190,7 +202,7 @@ class OrdenController extends ControllerBase
                 "action" => "index"
             ));
         }
-        $tabla = $this->generarTablaPlanilla($orden);
+        $tabla = $this->generarTablaDeOrdenes($orden);
 
         $paginator = new Paginator(array(
             "data" => $tabla,
@@ -537,7 +549,7 @@ class OrdenController extends ControllerBase
                 "action" => "search"
             ));
         }
-        $tabla = $this->generarTablaPlanilla($orden);
+        $tabla = $this->generarTablaDeOrdenes($orden);
 
         $paginator = new Paginator(array(
             "data" => $tabla,
@@ -549,5 +561,50 @@ class OrdenController extends ControllerBase
         $planilla = Planilla::findFirstByPlanilla_id($planillaId);
         $this->view->planilla = $planilla;
         $this->view->pick('orden/search');
+    }
+    public function exportarPlanillaAction($planillaId)
+    {
+        /** Incluir la libreria PHPExcel */
+        $orden = Orden::find((array(
+            "orden_planillaId = :planillaId: AND orden_habilitado=1",'bind'=>array('planillaId'=>$planillaId)
+        )));
+        $tabla = $this->generarTablaDeOrdenes($orden);
+        // Crea un nuevo objeto PHPExcel
+        $objPHPExcel = new PHPExcel();
+
+        // Establecer propiedades
+        $objPHPExcel->getProperties()
+            ->setCreator($this->session->get('auth')['usuario_nick'])
+            ->setLastModifiedBy($this->session->get('auth')['usuario_nick'])
+            ->setTitle($tabla[0]['planilla_nombreCliente'])
+            ->setSubject("Exportar Planilla")
+            ->setDescription("Listado de Ordenes")
+            ->setKeywords("Excel Office 2007 openxml php")
+            ->setCategory("Registro");
+
+        foreach($tabla as $clave => $valor){
+
+        }
+        // Agregar Informacion
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Valor 1')
+            ->setCellValue('B1', 'Valor 2')
+            ->setCellValue('C1', 'Total')
+            ->setCellValue('A2', '10')
+            ->setCellValue('C2', '=sum(A2:B2)');
+
+        // Renombrar Hoja
+        $objPHPExcel->getActiveSheet()->setTitle($tabla[0]['planilla_nombreCliente']);
+
+        // Establecer la hoja activa, para que cuando se abra el documento se muestre primero.
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        // Se modifican los encabezados del HTTP para indicar que se envia un archivo de Excel.
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$tabla[0]['planilla_nombreCliente'].'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        exit;
     }
 }
