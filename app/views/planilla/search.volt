@@ -4,10 +4,11 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("planilla/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("planilla/index", "<i class='fa fa-folder'></i> Buscar Planilla",'class':'btn btn-flat btn-large bg-olive') }}
             </td>
             <td align="right">
-                {{ link_to("planilla/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+
+                {{ link_to("planilla/new", "<i class='fa fa-pencil-square'></i> Nueva Planilla ",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -21,8 +22,9 @@
         } );
     });
 </script>
+<div class="box">
 <div class="box-body">
-    <table id="id_planilla" class="table table-bordered table-striped">
+    <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>#</th>
@@ -41,15 +43,15 @@
                     <td>{{ planilla.getPlanillaId() }}</td>
                     <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                     <td>{{ planilla.getPlanillaFecha() }}</td>
-                    <td>{{ link_to("ordenes/verOrdenes/"~planilla.getPlanillaId(), "Ver Ordenes") }}</td>
+                    <td>{{ link_to("orden/verOrdenes/"~planilla.getPlanillaId(), "Ver Ordenes",'class':'btn-flat btn btn-block btn-github') }}</td>
 
                     {% if admin == 1 %}
-                        <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar") }}</td>
+                        <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar",'class':'btn btn-flat btn-block  bg-light-blue-gradient') }}</td>
                         <td>
                         {% if planilla.getPlanillaHabilitado() == 1 %}
-                            <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  planilla.getPlanillaId() }}">Eliminar</a>
+                            <a href="#confirmarEliminar" role="button" class="enviar-dato btn  bg-red-gradient btn-block btn-flat" data-toggle="modal" data-id="{{  planilla.getPlanillaId() }}">Eliminar</a>
                         {% else %}
-                            {{ link_to("planilla/habilitar/"~planilla.getPlanillaId(), "Habilitar") }}
+                            {{ link_to("planilla/habilitar/"~planilla.getPlanillaId(), "Habilitar",'class':'btn btn-flat btn-block bg-green-gradient') }}
                         {%endif%}
                         </td>
                     {% else %}
@@ -81,20 +83,11 @@
             </td>
         </tr>
         </tbody>#}
-        <tfoot>
-        <tr>
-            <th>N° de Planilla</th>
-            <th>Nombre del Cliente</th>
-            <th>Fecha de Creación</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
-        </tr>
-        </tfoot>
+
     </table>
 </div>
 <!-- /.box-body -->
-
+</div>
 
 <!--=========== ConfirmarEliminar ================-->
 <div id="confirmarEliminar" class="modal fade modal-danger">
