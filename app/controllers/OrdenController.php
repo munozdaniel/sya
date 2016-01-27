@@ -523,4 +523,31 @@ class OrdenController extends ControllerBase
             "action" => "search"
         ));
     }
+    public function verOrdenesAction($planillaId)
+    {
+        parent::importarJsSearch();
+        $numberPage = 1;
+
+        $orden = Orden::findByOrden_planillaId($planillaId);
+        if (count($orden) == 0) {
+            $this->flash->notice("La planilla seleccionada no contiene ordenes cargadas.");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "planilla",
+                "action" => "search"
+            ));
+        }
+        $tabla = $this->generarTablaPlanilla($orden);
+
+        $paginator = new Paginator(array(
+            "data" => $tabla,
+            "limit" => 100000,
+            "page" => $numberPage
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+        $planilla = Planilla::findFirstByPlanilla_id($planillaId);
+        $this->view->planilla = $planilla;
+        $this->view->pick('orden/search');
+    }
 }
