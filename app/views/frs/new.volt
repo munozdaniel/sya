@@ -17,12 +17,21 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="frs_codigo">Codigo FRS</label>
+    <div class="col-md-6">
+        <label for="frs_codigo">Codigo FRS</label>
 
-    <div class="form-group">
-        {{ text_field("frs_codigo", "size" : 30) }}
+        <div class="form-group">
+            {{ text_field("frs_codigo", "size" : 50,'class':'form-control','placeholder':'INGRESE EL CODIGO') }}
+        </div>
     </div>
     {#==================================================#}
+    <div class="col-md-6">
+        <label for="frs_codigo">Codigo FRS</label>
+
+        <div class="form-group">
+            {{ operadoras }}
+        </div>
+    </div>
 </div><!-- /. Cuerpo -->
 <!-- Footer -->
 <div class="box-footer">

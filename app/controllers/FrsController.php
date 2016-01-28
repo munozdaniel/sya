@@ -70,7 +70,14 @@ class FrsController extends ControllerBase
      */
     public function newAction()
     {
-
+        $listaOperadoras = new DataListElement('operadora_nombre',
+            array(
+                array('placeholder' => 'SELECCIONE LA OPERADORA', 'maxlength' => 50, 'class'=>'form-control','required'=>''),
+                Operadora::find(array('operadora_habilitado=1','order'=>'operadora_nombre')),
+                array('operadora_id', 'operadora_nombre'),
+                'operadora_id'
+            ));
+        $this->view->operadoras = $listaOperadoras;
     }
 
     /**
@@ -146,8 +153,8 @@ class FrsController extends ControllerBase
         $fr = new Frs();
 
         $fr->setFrsCodigo($this->request->getPost("frs_codigo"));
+        $fr->setFrsOperadoraId($this->request->getPost("operadora_id"));
         $fr->setFrsHabilitado(1);
-        
 
         if (!$fr->save()) {
             foreach ($fr->getMessages() as $message) {
