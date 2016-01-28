@@ -93,6 +93,7 @@ class OrdenController extends ControllerBase
 
             /*================ Planilla ================*/
             $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
+            $fila['orden_planillaId']=$unaOrden->getOrdenPlanillaid();
 
             /*================ Orden ================*/
             $fila['orden_nro']=$unaOrden->getOrdenNro();
@@ -209,7 +210,9 @@ class OrdenController extends ControllerBase
             "limit" => 100000,
             "page" => $numberPage
         ));
-
+        $planilla = Planilla::findFirstByPlanilla_id($tabla[0]['orden_planillaId']);
+        if($planilla)
+            $this->view->planilla = $planilla;
         $this->view->page = $paginator->getPaginate();
     }
 
@@ -559,7 +562,8 @@ class OrdenController extends ControllerBase
 
         $this->view->page = $paginator->getPaginate();
         $planilla = Planilla::findFirstByPlanilla_id($planillaId);
-        $this->view->planilla = $planilla;
+        if($planilla)
+            $this->view->planilla = $planilla;
         $this->view->pick('orden/search');
     }
     public function exportarPlanillaAction($planillaId)
