@@ -70,6 +70,14 @@ class OperadoraController extends ControllerBase
      */
     public function newAction()
     {
+        $nombre= new DataListElement('cliente_nombre',
+            array(
+                array('placeholder' => 'SELECCIONE EL CLIENTE','required'=>'', 'class'=>'form-control', 'maxlength' => 60),
+                Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
+                array('cliente_id', 'cliente_nombre'),
+                'cliente_id'
+            ));
+        $this->view->cliente_nombre = $nombre;
 
     }
 
@@ -118,6 +126,7 @@ class OperadoraController extends ControllerBase
         $operadora = new Operadora();
 
         $operadora->setOperadoraNombre($this->request->getPost("operadora_nombre"));
+        $operadora->setOperadoraClienteId($this->request->getPost("cliente_id"));
         $operadora->setOperadoraHabilitado(1);
         
 

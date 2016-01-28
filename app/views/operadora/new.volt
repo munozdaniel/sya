@@ -8,20 +8,28 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("operadora", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+            {{ link_to("operadora", "VOLVER",'class':'btn btn-flat btn-large bg-olive') }}
         </td>
     </tr>
 </table>
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="operadora_nombre">Operadora</label>
+    <div class="col-md-6">
+        <label for="operadora_nombre">Operadora</label>
 
-    <div class="form-group">
-        {{ text_field("operadora_nombre", "size" : 30) }}
+        <div class="form-group">
+            {{ text_field("operadora_nombre", "size" : 50,'placeholder':'INGRESE LA OPERADORA','class':'form-control') }}
+        </div>
     </div>
     {#==================================================#}
+    <div class="col-md-6">
+        <label for="operadora_nombre">Operadora</label>
 
+        <div class="form-group">
+            {{ cliente_nombre }}
+        </div>
+    </div>
 </div><!-- /. Cuerpo -->
 
 <!-- Footer -->
