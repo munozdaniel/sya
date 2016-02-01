@@ -5,46 +5,75 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("transporte/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("transporte/index", "<i class='fa  fa-mail-reply-all'></i> &nbsp; VOLVER",'class':'btn btn-flat btn-large bg-olive') }}
             </td>
             <td align="right">
-                {{ link_to("transporte/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("transporte/new", "<i class='fa fa-plus-square'></i> &nbsp; AGREGAR TRANSPORTE",'class':'btn btn-large btn-danger btn-flat') }}
             </td>
         </tr>
     </table>
 </div>
 <!-- ./ Titulo -->
 {{ content() }}
+
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <div id="toolbar">
+        <label>
+            <select class="form-control">
+                <option value="">Exportar Pagina</option>
+                <option value="all">Exportar Todo</option>
+                <option value="selected">Exportar Seleccionados</option>
+            </select>
+        </label>
+        <button id="botonTop" class="btn btn-flat bg-olive">Subir</button>
+        <button id="botonBottom" class="btn btn-flat bg-olive">Bajar</button>
+    </div>
+    <table id="tabla"
+           data-show-pagination-switch="true"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-show-refresh="true"
+           data-toggle="table"
+           data-show-columns="true"
+           data-search="true"
+           data-show-toggle="false"{# Cambia de vista cada celda#}
+           data-pagination="true"
+           data-reorderable-columns="true"
+           data-show-export="true"
+           data-click-to-select="true"
+           data-toolbar="#toolbar"
+           class="table table-bordered table-striped">
         <thead>
         <tr>
-        <tr>
-            <th>N° Transporte</th>
-            <th>Dominio</th>
-            <th>N° de Interno</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
+            <th data-field="state" data-checkbox="true"></th>
+            <th data-field="Nro" data-sortable="true">N° Transporte</th>
+            <th data-field="dominio" data-sortable="true">Dominio</th>
+            <th data-field="interno" data-sortable="true">N° de Interno</th>
+            <th data-sortable="true">Editar</th>
+            <th  data-sortable="true">Eliminar</th>
+            <th  data-sortable="true" style="width: 10px;">EST</th>
         </tr>
 
         </thead>
         <tbody>
         {% if page.items is defined %}
             {% for transporte in page.items %}
-                <tr>
+                <tr data-index="{{ transporte.getTransporteId()}}">
+                    <td>X</td>
                     <td>{{ transporte.getTransporteId() }}</td>
                     <td>{{ transporte.getTransporteDominio() }}</td>
                     <td>{{ transporte.getTransporteNrointerno() }}</td>
+
                     {% if admin == 1 %}
-                    <td>{{ link_to("transporte/edit/"~transporte.getTransporteId(), "Editar") }}</td>
-                    <td>
+                        <td>{{ link_to("transporte/edit/"~transporte.getTransporteId(), "Editar") }}</td>
                         {% if transporte.getTransporteHabilitado() == 1 %}
-                        <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  transporte.getTransporteId() }}">Eliminar</a>
+                            <td>
+                                <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal"
+                                   data-id="{{  transporte.getTransporteId() }}">Eliminar</a>
+                            </td>
                         {% else %}
-                            {{ link_to("transporte/habilitar/"~transporte.getTransporteId(), "Habilitar") }}
+                            <td>{{ link_to("transporte/habilitar/"~transporte.getTransporteId(), "Habilitar") }}</td>
                         {%endif%}
-                    </td>
                     {% else %}
                         <td> sin acceso</td>
                         <td> sin acceso</td>
@@ -58,8 +87,6 @@
             {% endfor %}
         {% endif %}
         </tbody>
-
-
     </table>
 </div>
 <!-- /.box-body -->

@@ -5,7 +5,7 @@
 
 
 <div align="right">
-    {{ link_to("transporte/new", "Crear Yacimiento",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("transporte/new", "<i class='fa fa-plus-square'></i> &nbsp; Agregar Transporte",'class':'btn btn-large btn-danger btn-flat') }}
 </div>
 <!-- Inicio Formulario -->
 {{ content() }}
