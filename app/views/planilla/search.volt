@@ -8,86 +8,91 @@
             </td>
             <td align="right">
 
-                {{ link_to("planilla/new", "<i class='fa fa-pencil-square'></i> Nueva Planilla ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("planilla/new", "<i class='fa fa-plus-square'></i> Nueva Planilla ",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
 </div>
 <!-- /.box-header -->
 {{ content() }}
-<script>
-    $(document).ready(function () {
-        $('#tabla_id').DataTable( {
-            "scrollX": true
-        } );
-    });
-</script>
-<div class="box">
+
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <div id="toolbar">
+        <label>
+            <select class="form-control">
+                <option value="">Exportar Pagina</option>
+                <option value="all">Exportar Todo</option>
+                <option value="selected">Exportar Seleccionados</option>
+            </select>
+        </label>
+        <button id="botonTop" class="btn btn-flat bg-olive">Subir</button>
+        <button id="botonBottom" class="btn btn-flat bg-olive">Bajar</button>
+    </div>
+    <table id="tabla"
+           data-show-pagination-switch="true"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-show-refresh="true"
+           data-toggle="table"
+           data-show-columns="true"
+           data-search="true"
+           data-show-toggle="false"{# Cambia de vista cada celda#}
+           data-pagination="true"
+           data-reorderable-columns="true"
+           data-show-export="true"
+           data-click-to-select="true"
+           data-toolbar="#toolbar"
+           data-row-style="rowStyle"
+           class="table table-bordered table-striped">
         <thead>
         <tr>
-            <th>#</th>
-            <th>Nombre del Cliente</th>
-            <th>Fecha de Creación</th>
-            <th>Ver Ordenes</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
+
+            <th data-field="state" data-checkbox="true"></th>
+            <th data-field="Nro" data-sortable="true">#</th>
+            <th data-field="dominio" data-sortable="true">Nombre de Planilla</th>
+            <th data-field="interno" data-sortable="true">Fecha de Creación</th>
+            <th  data-sortable="true" align="center">Ordenes</th>
+            <th  data-sortable="true" data-halign="center" data-align="center">Administrar</th>
         </tr>
+
         </thead>
         <tbody>
         {% if page.items is defined %}
             {% for planilla in page.items %}
                 <tr>
+                    <td>X</td>
                     <td>{{ planilla.getPlanillaId() }}</td>
                     <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                     <td>{{ planilla.getPlanillaFecha() }}</td>
                     <td>{{ link_to("orden/verOrdenes/"~planilla.getPlanillaId(), "Ver Ordenes",'class':'btn-flat btn btn-block btn-github') }}</td>
 
                     {% if admin == 1 %}
-                        <td>{{ link_to("planilla/edit/"~planilla.getPlanillaId(), "Editar",'class':'btn btn-flat btn-block  bg-light-blue-gradient') }}</td>
-                        <td>
                         {% if planilla.getPlanillaHabilitado() == 1 %}
-                            <a href="#confirmarEliminar" role="button" class="enviar-dato btn  bg-red-gradient btn-block btn-flat" data-toggle="modal" data-id="{{  planilla.getPlanillaId() }}">Eliminar</a>
+                            <td class="">
+                                {{ link_to("planilla/edit/"~planilla.getPlanillaId(), "<i class='fa fa-pencil'></i>",'class':'btn btn-flat  bg-light-blue-gradient','title':'EDITAR') }}
+                                <a href="#confirmarEliminar" role="button" class="enviar-dato btn bg-red-gradient btn-flat" title="ELIMINAR" data-toggle="modal" data-id="{{  planilla.getPlanillaId() }}"><i class='fa fa-trash'></i></a>
+                            </td>
                         {% else %}
-                            {{ link_to("planilla/habilitar/"~planilla.getPlanillaId(), "Habilitar",'class':'btn btn-flat btn-block bg-green-gradient') }}
+                            <td class="alert-danger">
+                                {{ link_to("planilla/habilitar/"~planilla.getPlanillaId(), "<ins>HABILITAR</ins>",'class':' font-white','title':'HABILITAR') }}
+                            </td>
                         {%endif%}
+
+                    {% else %}
+                        <td>
+                            <a class="btn btn-flat bg-gray" title="SIN ACCESO" ><i class='fa fa-exclamation-circle'></i></a>
                         </td>
-                    {% else %}
-                        <td> sin acceso</td>
-                        <td> sin acceso</td>
+
                     {% endif %}
-                    {% if planilla.getPlanillaHabilitado() == 1 %}
-                        <td class="bg-green-active"><i class="fa fa-check-circle-o"></i></td>
-                    {% else %}
-                        <td class="bg-red-active"><i class="fa fa-remove"></i></td>
-                    {% endif %}
+
+
                 </tr>
             {% endfor %}
         {% endif %}
         </tbody>
-        {#
-        <tbody>
-        <tr>
-            <td colspan="2" align="right">
-                <table align="center">
-                    <tr>
-                        <td>{{ link_to("planilla/search", "First") }}</td>
-                        <td>{{ link_to("planilla/search?page="~page.before, "Previous") }}</td>
-                        <td>{{ link_to("planilla/search?page="~page.next, "Next") }}</td>
-                        <td>{{ link_to("planilla/search?page="~page.last, "Last") }}</td>
-                        <td>{{ page.current~"/"~page.total_pages }}</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        </tbody>#}
-
     </table>
 </div>
-<!-- /.box-body -->
-</div>
+
 
 <!--=========== ConfirmarEliminar ================-->
 <div id="confirmarEliminar" class="modal fade modal-danger">

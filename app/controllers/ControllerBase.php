@@ -23,7 +23,9 @@ class ControllerBase extends Controller
             )
         );
     }
-    protected function importarJsSearch(){
+
+    protected function importarJsSearch()
+    {
         $this->assets->collection('headerCss')
             ->addCss('plugins/datatables/dataTables.bootstrap.css');
         $this->assets->collection('footer')
@@ -41,7 +43,9 @@ class ControllerBase extends Controller
             });
         ');
     }
-    protected function importarJsTable(){
+
+    protected function importarJsTable()
+    {
 
         $this->assets->collection('headerCss')
             ->addCss('plugins/datatables/dataTables.bootstrap.css');
@@ -54,6 +58,12 @@ class ControllerBase extends Controller
             ->addJs('js/export/bootstrap-table-export.js')
             ->addJs('js/export/tableExport.js');
         $this->assets->collection('footerInline')
+            ->addInlineJs('
+            $(document).on("click", ".enviar-dato", function () {
+                var id = $(this).data("id");
+                $("#cuerpo #id").val( id );
+            });
+        ')
             ->addInlineJs("/*Exportar*/
     var table = $('#tabla');
     $(function () {

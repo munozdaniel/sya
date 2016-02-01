@@ -33,7 +33,7 @@ class PlanillaController extends ControllerBase
      */
     public function searchAction()
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -126,7 +126,7 @@ class PlanillaController extends ControllerBase
 
         $planilla = new Planilla();
 
-        $planilla->setPlanillaNombrecliente($this->request->getPost("planilla_nombreCliente"));
+        $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente")));
         $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
 
 
@@ -141,7 +141,7 @@ class PlanillaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("La PLANILLA ha sido creada correctamente");
+        $this->flash->success("La Planilla ha sido creada correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "planilla",
@@ -176,7 +176,7 @@ class PlanillaController extends ControllerBase
             ));
         }
 
-        $planilla->setPlanillaNombrecliente($this->request->getPost("planilla_nombreCliente"));
+        $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente")));
 
 
         if (!$planilla->save()) {

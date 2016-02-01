@@ -73,6 +73,19 @@
                 <li>
                     {{ link_to('index/dashboard','<i class="fa fa-laptop"></i> <span>Inicio</span> ') }}
                 </li>
+
+                {#====== ITEM ARBOL =======#}
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-table"></i> <span>Planillas</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('planilla/search','<i class="fa fa-circle-o"></i>  Ver todas las Planillas') }}</li>
+                        <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Nueva Planilla') }}</li>
+                        <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
+                    </ul>
+                </li>
                 {#====== ITEM ARBOL =======#}
                 <li class="treeview">
                     <a href="#">
@@ -82,17 +95,6 @@
                     <ul class="treeview-menu">
                         <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Crear Planilla') }}</li>
                         <li>{{ link_to('orden/new','<i class="fa fa-circle-o"></i>  Agregar Orden') }}</li>
-                    </ul>
-                </li>
-                {#====== ITEM ARBOL =======#}
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-table"></i> <span>Planillas</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
-                        <li>{{ link_to('planilla/exportarExcel','<i class="fa fa-circle-o"></i>  Exportar Excel') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM ARBOL =======#}
