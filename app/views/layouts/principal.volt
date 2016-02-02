@@ -7,7 +7,7 @@
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>S</b>&A</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>s&a</b> ALL SERVICE</span>
+            <span class="logo-lg"><b>S<small>&</small>A</b> <small>ALL SERVICE</small></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -89,24 +89,16 @@
                 {#====== ITEM ARBOL =======#}
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-edit"></i> <span>Formularios</span>
+                        <i class="fa fa-edit"></i> <span>Remitos</span>
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Crear Planilla') }}</li>
-                        <li>{{ link_to('orden/new','<i class="fa fa-circle-o"></i>  Agregar Orden') }}</li>
+                        <li>{{ link_to('orden/search','<i class="fa fa-circle-o"></i>  Ver todos los Remitos') }}</li>
+                        <li>{{ link_to('orden/new','<i class="fa fa-circle-o"></i>  Nuevo Remito') }}</li>
+                        <li>{{ link_to('orden','<i class="fa fa-circle-o"></i>  Buscar Remitos') }}</li>
                     </ul>
                 </li>
-                {#====== ITEM ARBOL =======#}
 
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-search"></i> <span>Buscar</span> <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li>{{ link_to('orden','<i class="fa fa-circle-o"></i> Busqueda Personalizada') }}</li>
-                    </ul>
-                </li>
                 {#====== ITEM SENCILLO =======#}
                 <li>
                     {{ link_to('archivo','<i class="fa fa-upload"></i> <span>Almacenar en el Servidor</span> ') }}
@@ -151,7 +143,7 @@
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> 1.0.0
+            <b>Version</b> 1.0.1
         </div>
         <strong><a href="http://syaallservice.com">S&A All Service</a>.</strong>
     </footer>

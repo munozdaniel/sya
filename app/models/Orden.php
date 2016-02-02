@@ -154,6 +154,11 @@ class Orden extends \Phalcon\Mvc\Model
     protected $orden_ultima;
 
     /**
+     *
+     * @var string
+     */
+    protected $orden_pathRemito;
+    /**
      * Method to set the value of field orden_id
      *
      * @param integer $orden_id
@@ -477,6 +482,18 @@ class Orden extends \Phalcon\Mvc\Model
 
         return $this;
     }
+    /**
+     * Method to set the value of field orden_pathRemito
+     *
+     * @param integer $orden_pathRemito
+     * @return $this
+     */
+    public function setOrdenPathRemito($orden_pathRemito)
+    {
+        $this->orden_pathRemito = $orden_pathRemito;
+
+        return $this;
+    }
 
     /**
      * Returns the value of field orden_id
@@ -726,6 +743,15 @@ class Orden extends \Phalcon\Mvc\Model
     public function getOrdenUltima()
     {
         return $this->orden_ultima;
+    }
+    /**
+     * Returns the value of field orden_ultima
+     *
+     * @return integer
+     */
+    public function getOrdenPathRemito()
+    {
+        return $this->orden_pathRemito;
     }
 
     /**
