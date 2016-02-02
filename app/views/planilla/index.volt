@@ -1,14 +1,16 @@
-<!-- Titulo -->
-<div class="box-header with-border">
-    <h3 class="box-title">Buscar planilla</h3>
-</div><!-- /.Titulo -->
-<!-- Formulario-->
+<div class="box box-primary">
+    <!-- Titulo -->
+    <div class="box-header with-border">
+        <h3 class="box-title">Buscar planilla</h3>
+    </div>
+    <!-- /.Titulo -->
+    <!-- Formulario-->
 
-<div align="right">
-    {{ link_to("planilla/new", "Crear Planilla",'class':'btn btn-large btn-danger btn-flat') }}
-</div>
-{{ content() }}
-{{ form("planilla/search", "method":"post", "autocomplete" : "") }}
+    <div align="right">
+        {{ link_to("planilla/new", "Crear Planilla",'class':'btn btn-large btn-danger btn-flat') }}
+    </div>
+    {{ content() }}
+    {{ form("planilla/search", "method":"post", "autocomplete" : "") }}
     <div class="box-body">
         <label for="planilla_id">N° Planilla</label>
 
@@ -29,11 +31,12 @@
         {% if admin!=1 %}
             {{ hidden_field("planilla_habilitado", "value" : "1" ) }}
         {% endif %}
-    </div><!-- /.box-body -->
+    </div>
+    <!-- /.box-body -->
 
     <div class="box-footer">
         {{ submit_button("Buscar",'class':'btn btn-large btn-primary btn-flat') }}
     </div>
-</form>
+    </form>
 
-
+</div>
