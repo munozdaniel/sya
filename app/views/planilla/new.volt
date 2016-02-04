@@ -18,16 +18,16 @@
     <div class="box-body">
         <div class="col-xs-12 col-md-6">
             {{ form("planilla/crear","id":"form_planilla", "method":"post") }}
-
+            {{ hidden_field('planilla_id','value':'') }}
             <fieldset id="planilla" class="panel-border">
                 <legend>Generar Planilla</legend>
 
                 <div id="grupo_planilla" class="form-group">
                     <label for="planilla_nombreCliente">Nombre de la Planilla</label>
-                    {{ text_field("planilla_nombreCliente", "size" : 60,'class':'form-control', 'placeholder':'INGRESAR NOMBRE','required':'') }}
+                    {{ text_field("planilla_nombreCliente", "size" : 60,'class':'form-control', 'placeholder':'INGRESAR NOMBRE','':'') }}
                 </div>
                 <button id="btn_guardar_planilla" type="submit" class="btn btn-flat large btn-primary"> <i class="fa fa-save"></i> Guardar Planilla</button>
-                <input id="btn_editar_planilla" type="submit"  disabled class="btn btn-flat large btn-google pull-right"
+                <input id="btn_editar_planilla" type="button"  disabled class="btn btn-flat large btn-google pull-right"
                    onclick='editarPlanilla()' value='Editar planilla'/>
 
             </fieldset>
@@ -62,14 +62,17 @@
                                 // log data to the console so we can see
                                 console.log(data);
                                 if ( ! data.success) {
-                                    if (data.errors.name) {
-                                        $('#grupo_planilla').append('<div class="help-block">' + data.errors.planilla_nombreCliente + '</div>'); // add the actual error message under our input
+                                    if (data.errors.planilla_nombreCliente) {
+                                        $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + data.errors.planilla_nombreCliente + '</div>'); // add the actual error message under our input
                                     }
                                 }else{
                                     // here we will handle errors and validation messages
                                     $('#btn_guardar_planilla').prop('disabled', true);
                                     $('#extra').prop('disabled', false);
                                     $('#btn_editar_planilla').prop('disabled', false);
+                                    document.getElementById('planilla_id').value=data.planilla_id;
+                                    alert("ID: "+data.planilla_id);
+                                    $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
                                 }
                             })
                             // using the fail promise callback
@@ -84,8 +87,49 @@
                     event.preventDefault();
                 });
 
-                });
+                });//Fin: ready
+            /**
+             * Una vez guardado los datos, es posible editarlos.
+             */
+            function editarPlanilla(){
+                    $('.help-block').remove(); // remove the error text
 
+                    //PREPARANDO los datos para enviar
+                    var datos = {
+                        'planilla_nombreCliente'    : $('#planilla_nombreCliente').val(),
+                        'planilla_id'    : $('#planilla_id').val()
+                    };
+
+                    $.ajax({
+                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url         : '/sya/planilla/editar', // the url where we want to POST
+                        data        : datos, // our data object
+                        dataType    : 'json', // what type of data do we expect back from the server
+                        encode          : true
+                    })
+                        // using the done promise callback
+                            .done(function(data) {
+
+                                // log data to the console so we can see
+                                console.log(data);
+                                if ( ! data.success) {
+                                    if (data.errors.planilla_nombreCliente) {
+                                        $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + data.errors.planilla_nombreCliente + '</div>'); // add the actual error message under our input
+                                    }
+                                }else{
+                                    $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
+                                }
+                            })
+                        // using the fail promise callback
+                            .fail(function(data) {
+                                // show any errors
+                                // best to remove for production
+                                console.log(data);
+                            });
+
+                    // stop the form from submitting the normal way and refreshing the page
+                    event.preventDefault();
+            }
             function guardarYGenerarExtra() {
 
                 $('#planilla').prop('disabled', true);
@@ -95,6 +139,21 @@
         </script>
 
         <!-- ================================================================================= -->
+        <div class="col-xs-12 col-md-6">
+            <div class="box-body" style="margin-top: 25px !important;">
+                <dl class="dl-horizontal">
+                    <dt>DESCRIPCIÓN</dt>
+                    <dd></dd>
+                    <dt>Paso 1:</dt>
+                    <dd style="text-align: left !important;">Asignar un nombre a la planilla.</dd>
+                    <dt>Paso 2:</dt>
+                    <dd style="text-align: left !important;">Agregar todas las columnas requeridas.</dd>
+                    <dt>Paso 3:</dt>
+                    <dd style="text-align: left !important;"> Reordenar las columnas para las planillas Excel.</dd>
+                </dl>
+            </div>
+
+        </div>
         <div class="col-xs-12 col-md-12">
             <hr>
         </div>

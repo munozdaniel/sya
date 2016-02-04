@@ -113,6 +113,10 @@ class PlanillaController extends ControllerBase
 
         }
     }
+
+    /**
+     * Permite guardar una nueva planilla utilizando ajax. Devuelve un json con los mensajes, y con el id de la planilla creada.
+     */
     public function crearAction()
     {
         $this->view->disable();
@@ -131,6 +135,39 @@ class PlanillaController extends ControllerBase
             $planilla->setPlanillaHabilitado(1);
 
             if (!$planilla->save())
+            {
+                foreach ($planilla->getMessages() as $message) {
+                    $errors[]=$message." <br>";
+                }
+                $data['success'] = false;
+                $data['errors']  = $errors;
+            }else{
+                $data['success'] = true;
+                $data['message'] = 'Operación exitosa';
+                $data['planilla_id'] = $planilla->getPlanillaId();
+            }
+        }// return all our data to an AJAX call
+        echo json_encode($data);
+    }
+
+    /**
+     * Permite editar el nombre de la planilla a traves de json. Recibe el nombre de la planilla y el ID
+     */
+    public function editarAction()
+    {
+        $this->view->disable();
+        $errors         = array();      // array to hold validation errors
+        $data           = array();      // array to pass back data
+        if (empty($_POST['planilla_nombreCliente']))
+            $errors['planilla_nombreCliente'] = 'El Nombre de la Planilla es requerido';
+        if ( ! empty($errors)) {
+            $data['success'] = false;
+            $data['errors']  = $errors;
+        }else {
+            $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
+            $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente",'string')));
+
+            if (!$planilla->update())
             {
                 foreach ($planilla->getMessages() as $message) {
                     $errors[]=$message." <br>";
