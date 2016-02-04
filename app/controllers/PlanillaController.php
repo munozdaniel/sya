@@ -78,6 +78,10 @@ class PlanillaController extends ControllerBase
      */
     public function newAction()
     {
+        $this->assets->collection('headerJs')
+            ->addJs('plugins/jQueryUI/jquery-ui.min.js');
+        $this->assets->collection('headerCss')
+            ->addCss('plugins/jQueryUI/jquery-ui.css');
 
     }
 
@@ -109,14 +113,43 @@ class PlanillaController extends ControllerBase
 
         }
     }
+    public function crearAction()
+    {
+        $this->view->disable();
+        $errors         = array();      // array to hold validation errors
+        $data           = array();      // array to pass back data
+        if (empty($_POST['planilla_nombreCliente']))
+            $errors['planilla_nombreCliente'] = 'El Nombre de la Planilla es requerido';
+        if ( ! empty($errors)) {
+            $data['success'] = false;
+            $data['errors']  = $errors;
+        }else {
+            $planilla = new Planilla();
+            $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente",'string')));
+            $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
+            $planilla->setPlanillaArmada(0);
+            $planilla->setPlanillaHabilitado(1);
 
+            if (!$planilla->save())
+            {
+                foreach ($planilla->getMessages() as $message) {
+                    $errors[]=$message." <br>";
+                }
+                $data['success'] = false;
+                $data['errors']  = $errors;
+            }else{
+                $data['success'] = true;
+                $data['message'] = 'Operación exitosa';
+            }
+        }// return all our data to an AJAX call
+        echo json_encode($data);
+    }
     /**
      * Creacion de una nueva planilla. Al usuario se le solicita unicamente el nombre de la planilla.
      *
      */
     public function createAction()
     {
-        $this->view->pick('planilla/new');
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
                 "controller" => "planilla",
@@ -128,7 +161,8 @@ class PlanillaController extends ControllerBase
 
         $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente")));
         $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
-
+        $planilla->setPlanillaArmada(0);
+        $planilla->setPlanillaHabilitado(1);
 
         if (!$planilla->save()) {
             foreach ($planilla->getMessages() as $message) {
@@ -141,15 +175,31 @@ class PlanillaController extends ControllerBase
             ));
         }
 
-        $this->flash->success("La Planilla ha sido creada correctamente");
+        $this->flashSession->success("La Planilla ha sido creada correctamente, por favor agregue las <strong> columnas extras</strong>");
+        $this->view->planilla = $planilla;
+         $this->response->redirect('planilla/columnas');
+        $this->view->disable();
+    }
 
-        return $this->dispatcher->forward(array(
-            "controller" => "planilla",
-            "action" => "index"
-        ));
+    /**
+     * Permite crear las columnas extras que contendrá la planilla, que dependerán del cliente.
+     */
+    public function columnasAction()
+    {
 
     }
 
+    /**
+     * Guarda instancias de columnas extras
+     */
+    public function createColumnasAction()
+    {
+        $columnas = $this->request->getPost('columna');
+        foreach( $columnas AS $columna) {
+            $this->flash->success($columna);
+        }
+        $this->view->pick('planilla/columnas');
+    }
     /**
      * Guarda los datos que se editaron.
      *
