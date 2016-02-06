@@ -237,6 +237,8 @@ class PlanillaController extends ControllerBase
         }
         $this->view->pick('planilla/columnas');
     }
+
+
     /**
      * Guarda los datos que se editaron.
      *
