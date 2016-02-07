@@ -237,7 +237,15 @@ class PlanillaController extends ControllerBase
         }
         $this->view->pick('planilla/columnas');
     }
-
+    public function ordenarAction()
+    {
+        $this->view->disable();
+        echo "entra";
+        foreach ($_GET['listItem'] as $position => $item)
+        {
+            echo "Posicion: ".$position." - Item: ".$item ."<br>";
+        }
+    }
 
     /**
      * Guarda los datos que se editaron.

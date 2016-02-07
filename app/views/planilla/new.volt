@@ -280,8 +280,31 @@
         <!-- ================================================================================= -->
         <div class="col-xs-12 col-md-12">
 
-            <fieldset id="ordenar" class="panel-border" disabled>
+            <fieldset id="ordenar" class="panel-border" >
                 <legend>Ordenar Columnas</legend>
+                <script type="text/javascript">
+                    // When the document is ready set up our sortable with it's inherant function(s)
+                    $(document).ready(function() {
+                        $("#test-list").sortable({
+                            handle : '.handle',
+                            update : function () {
+                                var order = $('#test-list').sortable('serialize');
+                                $("#info").load("ordenar?"+order);
+                            }
+                        });
+                    });
+                </script>
+                <pre>
+                    <div id="info">Waiting for update</div>
+                </pre>
+                <ul id="test-list">
+                    <li id="listItem_1"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 1 </strong>with a link to <a href="http://www.google.co.uk/" rel="nofollow">Google</a></li>
+                    <li id="listItem_2"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 2</strong></li>
+                    <li id="listItem_3"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 3</strong></li>
+                    <li id="listItem_4"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 4</strong></li>
+                </ul>
+
+<!--
                 <div class="form-group">
                     <div class="col-md-6">
                         <table>
@@ -350,7 +373,7 @@
 
 
                 </a>
-
+-->
 
             </fieldset>
         </div>
@@ -358,10 +381,7 @@
     </div>
 
     <!-- /.box-body -->
-    <!-- Footer -->
-    <div class="box-footer">
 
-    </div>
 </div>
 
 <!-- ====================================== -->
@@ -375,7 +395,7 @@
         $('#ordenar').prop('disabled', true);
         $('#guardar').prop('disabled', false);
     }
-    $('table tbody').sortable({
+    /*$('table tbody').sortable({
         helper: fixWidthHelper
     }).disableSelection();
 
@@ -384,17 +404,19 @@
             $(this).width($(this).width());
         });
         return ui;
-    }
+    }*/
 </script>
 
 <script>
+    /*
     $(function () {
         var sortable = $("#sortable");
         sortable.sortable();
         sortable.disableSelection();
-    });
+    });*/
 </script>
 <script>
+    /*
     $('#sortable').sortable({
         axis: 'y',
         update: function (event, ui) {
@@ -407,7 +429,7 @@
                 url: 'planilla/ordenar'
             });
         }
-    });
+    });*/
 </script>
 
 <!-- ====================================== -->
