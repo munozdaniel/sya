@@ -282,7 +282,7 @@
             <fieldset id="ordenar" class="panel-border" >
                 <legend>Ordenar Columnas</legend>
                 <div class="input-group margin col-md-5">
-                    <select id="cabecera-list" class="form-control ">
+                    <select id="cabecera-list" class="form-control" onchange="cargarTabla()">
                         <option value="">Seleccionar cabecera predefinida</option>
                     </select>
 
@@ -292,10 +292,6 @@
                     <input type="hidden" id="token_ordenar" name="<?php echo $this->security->getTokenKey() ?>"
                            value="<?php echo $this->security->getToken() ?>"/>
                 </div>
-
-
-
-
 
                 <script type="text/javascript">
                     // When the document is ready set up our sortable with it's inherant function(s)
@@ -310,7 +306,7 @@
                     });
                 </script>
                 <pre>
-                    <div id="info">Waiting for update</div>
+                    <div id="info"><em>El orden asignado se guardará para generar las planillas Excel</em></div>
                 </pre>
                 <ul id="listarColumnas">
                     <li id="listItem_1"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 1 </strong>with a link to <a href="http://www.google.co.uk/" rel="nofollow">Google</a></li>
@@ -339,31 +335,58 @@
             dataType: 'json', // what type of data do we expect back from the server
             encode: true
         })
-            // using the done promise callback
         .done(function (data) {
-            var select=document.getElementById("cabecera-list");
-            for(var item in data.mensaje)
-            {
-                var columna = data.mensaje[item];
-                // log data to the console so we can see
-                opt = document.createElement("option");
-                opt.value =  columna.valor;
-                opt.text= columna.nombre;
-                select.appendChild(opt);
+            if(data.success){
+                var select=document.getElementById("cabecera-list");
+                for(var item in data.mensaje)
+                {
+                    var columna = data.mensaje[item];
+                    // log data to the console so we can see
+                    opt = document.createElement("option");
+                    opt.value =  columna.valor;
+                    opt.text= columna.nombre;
+                    select.appendChild(opt);
+                }
             }
+            //FIXME: Que pasa si  no encuentra cabeceras ???
             console.log(data);
         })
-    // using the fail promise callback
         .fail(function (data) {
             // show any errors
             // best to remove for production
             console.log("FAIL");
             console.log(data);
         });
+        event.preventDefault();
+    });
+    function cargarTabla(){
+        var select = document.getElementById("cabecera-list");
+        var datos = {
+            'cabecera_id': select.value
+
+        };
+        $.ajax({
+            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url: '/sya/cabecera/buscarColumnas', // the url where we want to POST
+            data: datos, // our data object
+            dataType: 'json', // what type of data do we expect back from the server
+            encode: true
+        })
+            // using the done promise callback
+                .done(function (data) {
+                    console.log(data);
+                })
+            // using the fail promise callback
+                .fail(function (data) {
+                    // show any errors
+                    // best to remove for production
+                    console.log("FAIL");
+                    console.log(data);
+                });
 
         // stop the form from submitting the normal way and refreshing the page
         event.preventDefault();
-    });
+    }
     function habilitarOrdenarColumnas() {
         $('#extra').prop('disabled', true);
         $('#ordenar').prop('disabled', false);

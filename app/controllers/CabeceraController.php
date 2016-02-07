@@ -154,19 +154,46 @@ class CabeceraController extends ControllerBase
         $this->view->disable();
         if ($this->request->isPost()) {
             $cabeceras = Cabecera::find(array("order" => "cabecera_id DESC"));
-            $retorno= array();
-            foreach($cabeceras as $cab){
-                $item = array();
-                $item['nombre']=$cab->getCabeceraNombre() . " / ".$cab->getCabeceraFecha();
-                $item['valor']=$cab->getCabeceraId();
-                $retorno[]=$item;
+            if($cabeceras){
+                $retorno= array();
+                foreach($cabeceras as $cab){
+                    $item = array();
+                    $item['nombre']=$cab->getCabeceraNombre() . " / ".$cab->getCabeceraFecha();
+                    $item['valor']=$cab->getCabeceraId();
+                    $retorno[]=$item;
+                }
+                $data['success']=true;
+                $data['mensaje']=$retorno;
+            }else{
+                $data['success']=false;
+                $data['mensaje']="No hay cabeceras cargadas";
             }
-            $data['success']=true;
-            $data['mensaje']=$retorno;
             echo json_encode($data);
         }
     }
-
+    public function buscarColumnasAction()
+    {
+        $this->view->disable();
+        $retorno= array();
+        if ($this->request->isPost()) {
+            $columnas = Columna::findByColumna_cabeceraId($this->request->getPost('cabecera_id'));
+            if(empty($columnas))
+            {
+                $data['success']=false;
+                $data['mensaje']="No hay columnas cargadas.";
+            }else{
+                foreach($columnas as $col){
+                    $item = array();
+                    $item['nombre']=$col->getColumnaNombre() . " / ".$col->getColumnaId();
+                    $item['valor']=$col->getColumnaClave();
+                    $retorno[]=$item;
+                }
+            }
+        }
+        $data['success']=true;
+        $data['mensaje']=$retorno;
+        echo json_encode($data);
+    }
     /**
      * Creates a new cabecera
      */
