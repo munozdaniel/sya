@@ -96,59 +96,75 @@ class CabeceraController extends ControllerBase
         $this->view->disable();
         $error = array();      // array to hold validation errors
         $data = array();
-        $data['success']=false;
+        $data['success'] = false;
         if ($this->request->isPost()) {
             $this->db->begin();
 
             //si existe el token del formulario y es correcto(evita csrf)
             //if ($this->security->checkToken('token',$this->request->getPost('token'))) {
-                if (!$this->request->hasPost('columna')) {
-                    $error="No puede guardar columnas vacias.";
-                } else {
-                    //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
-                    $cabecera = new Cabecera();
-                    $cabecera->setCabeceraNombre("DANI");//Nombre recuperado del paso 1
-                    $cabecera->setCabeceraHabilitado(1);
+            if (!$this->request->hasPost('columna')) {
+                $error = "No puede guardar columnas vacias.";
+            } else {
+                //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
+                $cabecera = new Cabecera();
+                $cabecera->setCabeceraNombre("DANI");//Nombre recuperado del paso 1
+                $cabecera->setCabeceraHabilitado(1);
 
-                    if (!$cabecera->save()) {
-                        foreach ($cabecera->getMessages() as $message) {
-                            $error[] = $message . " <br>";
-                        }
-                    } else {
-                        $arregloColumnas = $this->request->getPost('columna');
-                        foreach ($arregloColumnas AS $columna) {
-                            if(!empty($columna)){
-                                $nuevaColumna = new Columna();
-                                $nuevaColumna->setColumnaNombre(strtoupper($columna));
-                                $nuevaColumna->setColumnaClave('clave_' . strtoupper($columna));
-                                $nuevaColumna->setColumnaExtra(1);
-                                $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
-                                $nuevaColumna->setColumnaHabilitado(1);
-                                if (!$nuevaColumna->save()) {
-                                    foreach ($nuevaColumna->getMessages() as $message) {
-                                        $error[] = $message . " <br>";
-                                    }
+                if (!$cabecera->save()) {
+                    foreach ($cabecera->getMessages() as $message) {
+                        $error[] = $message . " <br>";
+                    }
+                } else {
+                    $arregloColumnas = $this->request->getPost('columna');
+                    foreach ($arregloColumnas AS $columna) {
+                        if (!empty($columna)) {
+                            $nuevaColumna = new Columna();
+                            $nuevaColumna->setColumnaNombre(strtoupper($columna));
+                            $nuevaColumna->setColumnaClave('clave_' . strtoupper($columna));
+                            $nuevaColumna->setColumnaExtra(1);
+                            $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
+                            $nuevaColumna->setColumnaHabilitado(1);
+                            if (!$nuevaColumna->save()) {
+                                foreach ($nuevaColumna->getMessages() as $message) {
+                                    $error[] = $message . " <br>";
                                 }
-                            }else{
-                                $error = "Debe ingresar el nombre de la columna";
                             }
+                        } else {
+                            $error = "Debe ingresar el nombre de la columna";
                         }
                     }
                 }
-                if(empty($error))
-                {
-                    $this->db->commit();
-                    $data['success']=true;
-                    $data['mensaje']="Operacion Exitosa, las columnas han sido guardadas correctamente";
-                }
-                else{
-                    $this->db->rollback();
-                    $data['success'] = false;
-                    $data['mensaje']=$error;
-                }
+            }
+            if (empty($error)) {
+                $this->db->commit();
+                $data['success'] = true;
+                $data['mensaje'] = "Operacion Exitosa, las columnas han sido guardadas correctamente";
+            } else {
+                $this->db->rollback();
+                $data['success'] = false;
+                $data['mensaje'] = $error;
+            }
 
         }
         echo json_encode($data);
+    }
+
+    public function cargarCabeceraAction()
+    {
+        $this->view->disable();
+        if ($this->request->isPost()) {
+            $cabeceras = Cabecera::find(array("order" => "cabecera_id DESC"));
+            $retorno= array();
+            foreach($cabeceras as $cab){
+                $item = array();
+                $item['nombre']=$cab->getCabeceraNombre() . " / ".$cab->getCabeceraFecha();
+                $item['valor']=$cab->getCabeceraId();
+                $retorno[]=$item;
+            }
+            $data['success']=true;
+            $data['mensaje']=$retorno;
+            echo json_encode($data);
+        }
     }
 
     /**

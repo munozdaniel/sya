@@ -73,7 +73,7 @@
                                     $('#extra').prop('disabled', false);
                                     $('#btn_editar_planilla').prop('disabled', false);
                                     document.getElementById('planilla_id').value = data.planilla_id;
-                                    alert("ID: " + data.planilla_id);
+                                   // alert("ID: " + data.planilla_id);
                                     $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
                                 }
                             })
@@ -176,7 +176,6 @@
                     <button id="btn_guardar_columnas" type="submit" class="btn btn-flat large btn-primary">
                         <i class="fa fa-save"></i> Guardar Columnas
                     </button>
-
                 </div>
 
             </fieldset>
@@ -256,7 +255,7 @@
                             } else {
                                 $('#grupo_extra').append('<div class="help-block  alert-success">&nbsp;  ' + data.mensaje + '</div>'); // add the actual error message under our input
                                 var arregloColumnas = document.getElementsByName('columna[]');
-                                //Convirtiendo el arreglo de inputs a un arreglo de valores de los inputs
+                                //Vaciando los inputs
                                 var columnas = [];
                                 for (var i = 0; i < arregloColumnas.length; i++) {
                                     arregloColumnas[i].value='';
@@ -282,13 +281,29 @@
 
             <fieldset id="ordenar" class="panel-border" >
                 <legend>Ordenar Columnas</legend>
+                <div class="input-group margin col-md-5">
+                    <select id="cabecera-list" class="form-control ">
+                        <option value="">Seleccionar cabecera predefinida</option>
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a id="btn_cargar_columnas" class="btn btn-info btn-flat" ><i class="fa fa-refresh"></i></a>
+                    </span>
+                    <input type="hidden" id="token_ordenar" name="<?php echo $this->security->getTokenKey() ?>"
+                           value="<?php echo $this->security->getToken() ?>"/>
+                </div>
+
+
+
+
+
                 <script type="text/javascript">
                     // When the document is ready set up our sortable with it's inherant function(s)
                     $(document).ready(function() {
-                        $("#test-list").sortable({
+                        $("#listarColumnas").sortable({
                             handle : '.handle',
                             update : function () {
-                                var order = $('#test-list').sortable('serialize');
+                                var order = $('#listarColumnas').sortable('serialize');
                                 $("#info").load("ordenar?"+order);
                             }
                         });
@@ -297,83 +312,12 @@
                 <pre>
                     <div id="info">Waiting for update</div>
                 </pre>
-                <ul id="test-list">
+                <ul id="listarColumnas">
                     <li id="listItem_1"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 1 </strong>with a link to <a href="http://www.google.co.uk/" rel="nofollow">Google</a></li>
                     <li id="listItem_2"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 2</strong></li>
                     <li id="listItem_3"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 3</strong></li>
                     <li id="listItem_4"><img src="arrow.png" alt="move" width="16" height="16" class="handle" /><strong>Item 4</strong></li>
                 </ul>
-
-<!--
-                <div class="form-group">
-                    <div class="col-md-6">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Film</th>
-                                <th>Date</th>
-                                <th>Rating</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr>
-                                <td>The Shawshank Redemption</td>
-                                <td>1994</td>
-                                <td>9.2</td>
-                            </tr>
-                            <tr>
-                                <td>The Shawshank Redemption</td>
-                                <td>1994</td>
-                                <td>9.2</td>
-                            </tr>
-                            <tr>
-                                <td>The Shawshank Redemption</td>
-                                <td>1994</td>
-                                <td>9.2</td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Film</th>
-                                <th>Date</th>
-                                <th>Rating</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr>
-                                <td>The Shawshank Redemption</td>
-                                <td>1994</td>
-                                <td>9.2</td>
-                            </tr>
-                            <tr>
-                                <td>The Shawshank Redemption</td>
-                                <td>1994</td>
-                                <td>9.2</td>
-                            </tr>
-                            <tr>
-                                <td>The Shawshank Redemption</td>
-                                <td>1994</td>
-                                <td>9.2</td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <a data-toggle="collapse" data-target="#idiomas" class="btn btn-flat large btn-primary"
-                   onclick='habilitarGuardar()'>
-                    <i class="fa fa-save"></i> Guardar Columnas
-
-
-                </a>
--->
 
             </fieldset>
         </div>
@@ -386,7 +330,40 @@
 
 <!-- ====================================== -->
 <script>
+    var cargar = $("#btn_cargar_columnas"); //ID del Botón Agregar
 
+    $(cargar).click(function (e) {
+        $.ajax({
+            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url: '/sya/cabecera/cargarCabecera', // the url where we want to POST
+            dataType: 'json', // what type of data do we expect back from the server
+            encode: true
+        })
+            // using the done promise callback
+        .done(function (data) {
+            var select=document.getElementById("cabecera-list");
+            for(var item in data.mensaje)
+            {
+                var columna = data.mensaje[item];
+                // log data to the console so we can see
+                opt = document.createElement("option");
+                opt.value =  columna.valor;
+                opt.text= columna.nombre;
+                select.appendChild(opt);
+            }
+            console.log(data);
+        })
+    // using the fail promise callback
+        .fail(function (data) {
+            // show any errors
+            // best to remove for production
+            console.log("FAIL");
+            console.log(data);
+        });
+
+        // stop the form from submitting the normal way and refreshing the page
+        event.preventDefault();
+    });
     function habilitarOrdenarColumnas() {
         $('#extra').prop('disabled', true);
         $('#ordenar').prop('disabled', false);
@@ -395,41 +372,6 @@
         $('#ordenar').prop('disabled', true);
         $('#guardar').prop('disabled', false);
     }
-    /*$('table tbody').sortable({
-        helper: fixWidthHelper
-    }).disableSelection();
 
-    function fixWidthHelper(e, ui) {
-        ui.children().each(function () {
-            $(this).width($(this).width());
-        });
-        return ui;
-    }*/
 </script>
-
-<script>
-    /*
-    $(function () {
-        var sortable = $("#sortable");
-        sortable.sortable();
-        sortable.disableSelection();
-    });*/
-</script>
-<script>
-    /*
-    $('#sortable').sortable({
-        axis: 'y',
-        update: function (event, ui) {
-            var data = $(this).sortable('serialize');
-
-            // POST to server using $.post or $.ajax
-            $.ajax({
-                data: data,
-                type: 'POST',
-                url: 'planilla/ordenar'
-            });
-        }
-    });*/
-</script>
-
 <!-- ====================================== -->
