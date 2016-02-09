@@ -1,4 +1,5 @@
 <?php
+$manager = new \Phalcon\Mvc\Model\Transaction\Manager();
 
 class Cabecera extends \Phalcon\Mvc\Model
 {
@@ -26,7 +27,6 @@ class Cabecera extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $cabecera_fecha;
-
 
 
     /**
@@ -176,5 +176,35 @@ class Cabecera extends \Phalcon\Mvc\Model
         {
 
         }*/
+    }
+
+    /**
+     * Guarda una cabecera con las columnas basicas de una planilla.
+     * Esta operación se utiliza cuando se guarda una planilla nueva.
+     * @return boolean
+     */
+    public static function guardarCabeceraBasica($nombrePlanilla)
+    {
+        try {
+
+            $manager = new \Phalcon\Mvc\Model\Transaction\Manager();
+            $transaction = $manager->get();
+
+            $cabecera = new Cabecera();
+            $cabecera->setTransaction($transaction);
+
+            $cabecera->setCabeceraNombre($nombrePlanilla);
+            $cabecera->setCabeceraHabilitado(1);
+            $cabecera->setCabeceraFecha(date('Y-m-d'));
+            if (!$cabecera->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar la cabecera [Cabecera.php ln 200]");
+                return false;
+            }
+            Columna::guardarColumnasBasica($cabecera->getCabeceraId());
+            $transaction->commit();
+            return true;
+        } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
+            echo 'FALLO, motivo: ', $e->getMessage();
+        }
     }
 }
