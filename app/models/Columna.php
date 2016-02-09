@@ -45,6 +45,7 @@ class Columna extends \Phalcon\Mvc\Model
      */
     protected $columna_habilitado;
 
+
     /**
      * Method to set the value of field columna_id
      *
@@ -247,4 +248,331 @@ class Columna extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    /**
+     * Guarda las columnas basicas de una planilla.
+     * Esta operación se utiliza cuando se genera una cabeceraBasica
+     * FIXME: Muy vinculado al codigo, si cambian los nombres de los atributos en la bd, tengo que cambiar aca.
+     */
+    public static function guardarColumnasBasica($cabecera_id)
+    {
+        try {
+
+            $manager = new \Phalcon\Mvc\Model\Transaction\Manager();
+            $transaction = $manager->get();
+
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(1);
+            $columna->setColumnaNombre('ORDEN');
+            $columna->setColumnaClave('remito_nroOrden');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(2);
+            $columna->setColumnaNombre('REMITO');
+            $columna->setColumnaClave('remito_nro');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(3);
+            $columna->setColumnaNombre('PATENTE');
+            $columna->setColumnaClave('transporte_dominio');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(4);
+            $columna->setColumnaNombre('N° INTERNO');
+            $columna->setColumnaClave('transporte_nroInterno');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(5);
+            $columna->setColumnaNombre('TIPO EQUIPO');
+            $columna->setColumnaClave('tipoEquipo_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(6);
+            $columna->setColumnaNombre('TIPO CARGA');
+            $columna->setColumnaClave('tipoCarga_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(7);
+            $columna->setColumnaNombre('DNI');
+            $columna->setColumnaClave('chofer_dni');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(8);
+            $columna->setColumnaNombre('CHOFER');
+            $columna->setColumnaClave('chofer_nombreCompleto');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(9);
+            $columna->setColumnaNombre('FECHA');
+            $columna->setColumnaClave('remito_fecha');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(10);
+            $columna->setColumnaNombre('CLIENTE');
+            $columna->setColumnaClave('cliente_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(11);
+            $columna->setColumnaNombre('ORIGEN');
+            $columna->setColumnaClave('viaje_origen');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(12);
+            $columna->setColumnaNombre('DESTINO');
+            $columna->setColumnaClave('yacimient_destino');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(13);
+            $columna->setColumnaNombre('EQUIPO/POZO');
+            $columna->setColumnaClave('equipoPozo_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('CONCATENADO');
+            $columna->setColumnaClave('concatenado_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('OPERADORA');
+            $columna->setColumnaClave('operadora_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('LINEA-PSL');
+            $columna->setColumnaClave('linea_nombre');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('CENTRO COSTO');
+            $columna->setColumnaClave('centroCosto_codigo');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('OBSERVACIONES');
+            $columna->setColumnaClave('remito_observacion');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('KM');
+            $columna->setColumnaClave('tarifa_km');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('HS HIDRO/MALACATE');
+            $columna->setColumnaClave('tarifa_hsHidro');//Ahora esta unificado con las hsMalacate FIXME
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*//*
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('HS MOV Y DESMOV');
+            $columna->setColumnaClave('tarifa_movDesmov');//Ahora esta unificado
+            $columna->setColumnaHabilitado(1);
+            if(!$columna->save()){
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }*/
+            /*=================================*/
+            /* $columna = new Columna();
+             $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+             $columna->setColumnaPosicion(14);
+             $columna->setColumnaNombre('HS CARGA/DESCARGA');
+             $columna->setColumnaClave('tarifa_cargaDescarga');
+             $columna->setColumnaHabilitado(1);
+             $columna->save();*/
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('HS DE ESPERA');
+            $columna->setColumnaClave('tarifa_hsStand');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('HS TOTAL SERVICIO');
+            $columna->setColumnaClave('tarifa_hsServicio');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('CONFORMIDAD RE');
+            $columna->setColumnaClave('remito_conformidad');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(14);
+            $columna->setColumnaNombre('MOT NO CONFORM RE');
+            $columna->setColumnaClave('remito_noConformidad');
+            $columna->setColumnaHabilitado(1);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                return false;
+            }
+            /*=================================*/
+            $transaction->commit();
+            return true;
+        } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
+            echo 'FALLO, motivo: ', $e->getMessage();
+        }
+    }
 }
