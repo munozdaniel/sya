@@ -78,10 +78,12 @@ class PlanillaController extends ControllerBase
      */
     public function newAction()
     {
+
         $this->assets->collection('headerJs')
             ->addJs('plugins/jQueryUI/jquery-ui.min.js');
         $this->assets->collection('headerCss')
-            ->addCss('plugins/jQueryUI/jquery-ui.css');
+            ->addCss('plugins/jQueryUI/jquery-ui.css')
+            ->addCss('dist/css/planilla.css');
 
     }
 
@@ -115,7 +117,9 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Permite guardar una nueva planilla utilizando ajax. Devuelve un json con los mensajes, y con el id de la planilla creada.
+     * Permite guardar una nueva planilla utilizando ajax.
+     * Devuelve un json con los mensajes, y con el id de la planilla creada.
+     * Carga el combobox con las cabeceras predefinidas
      */
     public function crearAction()
     {
@@ -145,6 +149,8 @@ class PlanillaController extends ControllerBase
                 $data['success'] = true;
                 $data['message'] = 'Operación exitosa';
                 $data['planilla_id'] = $planilla->getPlanillaId();
+                $data['cabeceras']= Cabecera::findAllCabecera();
+
             }
         }// return all our data to an AJAX call
         echo json_encode($data);
@@ -227,7 +233,7 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Guarda instancias de columnas extras
+     * Guarda instancias de columnas extras: NO se usa mas
      */
     public function createColumnasAction()
     {
@@ -237,16 +243,26 @@ class PlanillaController extends ControllerBase
         }
         $this->view->pick('planilla/columnas');
     }
+
+    /**
+     * HAY QUE FINALIZARLO. DEBERIA IR En COLUMNASCONTroLLER
+     */
     public function ordenarAction()
     {
         $this->view->disable();
-        echo "entra";
         foreach ($_GET['listItem'] as $position => $item)
         {
             echo "Posicion: ".$position." - Item: ".$item ."<br>";
         }
     }
+    public function finalizarAction(){
+        if($this->request->isPost())
+        {
 
+        }
+        $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
+        $this->flash->success("La planilla ".$planilla->getPlanillaNombreCliente()." se ha creado con exito");
+    }
     /**
      * Guarda los datos que se editaron.
      *
