@@ -205,6 +205,31 @@ class Cabecera extends \Phalcon\Mvc\Model
             return true;
         } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
             echo 'FALLO, motivo: ', $e->getMessage();
+            return false;
         }
+    }
+
+    /**
+     * Busca todas las cabeceras en orden descendente por id.
+     * Devuelve un arreglo, cada elemento tiene un nombre y un valor.
+     * Nombre es el nombre de la cabecera mas la fecha
+     * Valor es el id de la cabecera.
+     * @return array|null
+     */
+    public static function  findAllCabecera()
+    {
+        $cabeceras = Cabecera::find(array("order" => "cabecera_id DESC"));
+        if ($cabeceras) {
+            $retorno = array();
+            foreach ($cabeceras as $cab) {
+                $item = array();
+                $item['nombre'] = $cab->getCabeceraNombre() . " / " . $cab->getCabeceraFecha();
+                $item['valor'] = $cab->getCabeceraId();
+                $retorno[] = $item;
+            }
+        }else{
+            $retorno = null;
+        }
+        return $retorno;
     }
 }
