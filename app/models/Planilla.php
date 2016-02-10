@@ -25,28 +25,21 @@ class Planilla extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    public $planilla_habilitado;
-    /**
-     * Method to set the value of field planilla_habilitado
-     *
-     * @param integer planilla_habilitado
-     * @return $this
-     */
-    public function setPlanillaHabilitado($planilla_habilitado)
-    {
-        $this->planilla_habilitado = $planilla_habilitado;
+    protected $planilla_armada;
 
-        return $this;
-    }
     /**
-     * Returns the value of field planilla_id
-     *
-     * @return integer
+     * @var integer
      */
-    public function getPlanillaHabilitado()
-    {
-        return $this->planilla_habilitado;
-    }
+    protected $planilla_cabeceraId;
+
+
+    /**
+     *
+     * @var integer
+     */
+    protected $planilla_habilitado;
+
+
     /**
      * Method to set the value of field planilla_id
      *
@@ -87,6 +80,32 @@ class Planilla extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field planilla_armada
+     *
+     * @param integer $planilla_armada
+     * @return $this
+     */
+    public function setPlanillaArmada($planilla_armada)
+    {
+        $this->planilla_armada = $planilla_armada;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field planilla_habilitado
+     *
+     * @param integer $planilla_habilitado
+     * @return $this
+     */
+    public function setPlanillaHabilitado($planilla_habilitado)
+    {
+        $this->planilla_habilitado = $planilla_habilitado;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field planilla_id
      *
      * @return integer
@@ -114,6 +133,43 @@ class Planilla extends \Phalcon\Mvc\Model
     public function getPlanillaFecha()
     {
         return $this->planilla_fecha;
+    }
+
+    /**
+     * Returns the value of field planilla_armada
+     *
+     * @return integer
+     */
+    public function getPlanillaArmada()
+    {
+        return $this->planilla_armada;
+    }
+
+    /**
+     * Returns the value of field planilla_habilitado
+     *
+     * @return integer
+     */
+    public function getPlanillaHabilitado()
+    {
+        return $this->planilla_habilitado;
+    }
+    public function setPlanillaCabeceraid($planilla_cabeceraId)
+    {
+        $this->planilla_cabeceraId = $planilla_cabeceraId;
+
+        return $this;
+    }
+    public function getPlanillaCabeceraid()
+    {
+        return $this->planilla_cabeceraId ;
+    }
+    /**
+     * Initialize method for model.
+     */
+    public function initialize()
+    {
+        $this->hasMany('planilla_id', 'Remito', 'remito_planillaId', array('alias' => 'Remito'));
     }
 
     /**
@@ -147,5 +203,6 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+
 
 }

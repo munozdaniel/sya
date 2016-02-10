@@ -91,6 +91,11 @@ class CabeceraController extends ControllerBase
         }
     }
 
+    /**
+     * Guarda todas las columnas extras que se agregaron en la interfaz.
+     * Si la cabecera ya existe, agrega mas columnas extras.
+     * Si la cabecera no existe, la crea y agrega sus columnas
+     */
     public function crearAction()
     {
         $this->view->disable();
@@ -106,32 +111,37 @@ class CabeceraController extends ControllerBase
                 $error = "No puede guardar columnas vacias.";
             } else {
                 //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
-                $cabecera = new Cabecera();
-                $cabecera->setCabeceraNombre("DANI");//Nombre recuperado del paso 1
-                $cabecera->setCabeceraHabilitado(1);
-
-                if (!$cabecera->save()) {
-                    foreach ($cabecera->getMessages() as $message) {
-                        $error[] = $message . " <br>";
-                    }
-                } else {
-                    $arregloColumnas = $this->request->getPost('columna');
-                    foreach ($arregloColumnas AS $columna) {
-                        if (!empty($columna)) {
-                            $nuevaColumna = new Columna();
-                            $nuevaColumna->setColumnaNombre(strtoupper($columna));
-                            $nuevaColumna->setColumnaClave('clave_' . strtoupper($columna));
-                            $nuevaColumna->setColumnaExtra(1);
-                            $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
-                            $nuevaColumna->setColumnaHabilitado(1);
-                            if (!$nuevaColumna->save()) {
-                                foreach ($nuevaColumna->getMessages() as $message) {
-                                    $error[] = $message . " <br>";
-                                }
-                            }
-                        } else {
-                            $error = "Debe ingresar el nombre de la columna";
+                $nombreCabecera = $this->request->getPost('planilla_nombreCliente');//Unique
+                $cabecera = Cabecera::findFirstByCabecera_nombre($nombreCabecera.' / '.date('d-m-Y'));
+                if($cabecera==null){
+                    $cabecera = new Cabecera();
+                    $cabecera->setCabeceraNombre($nombreCabecera.' / '.date('d-m-Y'));//Nombre recuperado del paso 1
+                    $cabecera->setCabeceraHabilitado(1);
+                    if (!$cabecera->save()) {
+                        foreach ($cabecera->getMessages() as $message) {
+                            $error[] = $message . " <br>";
                         }
+                    }
+                }
+                if(!Columna::guardarColumnasBasica($cabecera->getCabeceraId()))
+                    $error = "Hubo un error al generar las columnas básicas";
+
+                $arregloColumnas = $this->request->getPost('columna');
+                foreach ($arregloColumnas AS $columna) {
+                    if (!empty($columna)) {
+                        $nuevaColumna = new Columna();
+                        $nuevaColumna->setColumnaNombre(strtoupper($columna));
+                        $nuevaColumna->setColumnaClave('clave_' . strtoupper($columna));
+                        $nuevaColumna->setColumnaExtra(1);
+                        $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
+                        $nuevaColumna->setColumnaHabilitado(1);
+                        if (!$nuevaColumna->save()) {
+                            foreach ($nuevaColumna->getMessages() as $message) {
+                                $error[] = $message . " <br>";
+                            }
+                        }
+                    } else {
+                        $error = "Debe ingresar el nombre de la columna";
                     }
                 }
             }
@@ -149,34 +159,31 @@ class CabeceraController extends ControllerBase
         echo json_encode($data);
     }
 
+    /**
+     * Carga el combobox con todas las cabeceres disponibles.
+     */
     public function cargarCabeceraAction()
     {
         $this->view->disable();
         if ($this->request->isPost()) {
-            $cabeceras = Cabecera::find(array("order" => "cabecera_id DESC"));
-            if($cabeceras){
-                $retorno= array();
-                foreach($cabeceras as $cab){
-                    $item = array();
-                    $item['nombre']=$cab->getCabeceraNombre() . " / ".$cab->getCabeceraFecha();
-                    $item['valor']=$cab->getCabeceraId();
-                    $retorno[]=$item;
-                }
-                $data['success']=true;
-                $data['mensaje']=$retorno;
-            }else{
-                $data['success']=false;
-                $data['mensaje']="No hay cabeceras cargadas";
-            }
+            $data['success']=true;
+            $data['mensaje']= Cabecera::findAllCabecera();
             echo json_encode($data);
         }
     }
+
     public function buscarColumnasAction()
     {
         $this->view->disable();
         $retorno= array();
         if ($this->request->isPost()) {
-            $columnas = Columna::findByColumna_cabeceraId($this->request->getPost('cabecera_id'));
+            $columnas = Columna::find(array(
+                'conditions'=>'columna_cabeceraId = :cabecera_id:',
+                'bind' => array(
+                    'cabecera_id'=>$this->request->getPost('cabecera_id')
+                ),
+                'order'=>'columna_posicion ASC'
+            ));
             if(empty($columnas))
             {
                 $data['success']=false;
@@ -184,8 +191,8 @@ class CabeceraController extends ControllerBase
             }else{
                 foreach($columnas as $col){
                     $item = array();
-                    $item['nombre']=$col->getColumnaNombre() . " / ".$col->getColumnaId();
-                    $item['valor']=$col->getColumnaClave();
+                    $item['nombre']=$col->getColumnaNombre();
+                    $item['id']=$col->getColumnaId();
                     $retorno[]=$item;
                 }
             }

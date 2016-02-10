@@ -223,7 +223,7 @@ class Cabecera extends \Phalcon\Mvc\Model
             $retorno = array();
             foreach ($cabeceras as $cab) {
                 $item = array();
-                $item['nombre'] = $cab->getCabeceraNombre() . " / " . $cab->getCabeceraFecha();
+                $item['nombre'] = $cab->getCabeceraNombre();
                 $item['valor'] = $cab->getCabeceraId();
                 $retorno[] = $item;
             }

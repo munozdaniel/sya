@@ -252,16 +252,23 @@ class PlanillaController extends ControllerBase
         $this->view->disable();
         foreach ($_GET['listItem'] as $position => $item)
         {
-            echo "Posicion: ".$position." - Item: ".$item ."<br>";
+            //echo "Posicion: ".$position." - Item: ".$item ."<br>";
+            $columna = Columna::findFirstByColumna_id($item);
+            $columna->setColumnaPosicion($position);
+            if(!$columna->update())
+            {  echo "Hubo un problema al cargar el nuevo orden.";
+                return;
+            }
         }
+        echo "Reordenamiento exitoso!";
     }
     public function finalizarAction(){
         if($this->request->isPost())
         {
-
+            $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
+            $this->flash->success("La planilla ".$planilla->getPlanillaNombreCliente()." se ha creado con exito");
+            $this->redireccionar('planilla/search');
         }
-        $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
-        $this->flash->success("La planilla ".$planilla->getPlanillaNombreCliente()." se ha creado con exito");
     }
     /**
      * Guarda los datos que se editaron.

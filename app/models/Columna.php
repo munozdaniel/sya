@@ -431,7 +431,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(15);
             $columna->setColumnaNombre('OPERADORA');
             $columna->setColumnaClave('operadora_nombre');
             $columna->setColumnaHabilitado(1);
@@ -443,7 +443,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(16);
             $columna->setColumnaNombre('LINEA-PSL');
             $columna->setColumnaClave('linea_nombre');
             $columna->setColumnaHabilitado(1);
@@ -455,7 +455,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(17);
             $columna->setColumnaNombre('CENTRO COSTO');
             $columna->setColumnaClave('centroCosto_codigo');
             $columna->setColumnaHabilitado(1);
@@ -467,7 +467,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(18);
             $columna->setColumnaNombre('OBSERVACIONES');
             $columna->setColumnaClave('remito_observacion');
             $columna->setColumnaHabilitado(1);
@@ -479,7 +479,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(19);
             $columna->setColumnaNombre('KM');
             $columna->setColumnaClave('tarifa_km');
             $columna->setColumnaHabilitado(1);
@@ -491,7 +491,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(20);
             $columna->setColumnaNombre('HS HIDRO/MALACATE');
             $columna->setColumnaClave('tarifa_hsHidro');//Ahora esta unificado con las hsMalacate FIXME
             $columna->setColumnaHabilitado(1);
@@ -524,7 +524,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(21);
             $columna->setColumnaNombre('HS DE ESPERA');
             $columna->setColumnaClave('tarifa_hsStand');
             $columna->setColumnaHabilitado(1);
@@ -536,7 +536,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(22);
             $columna->setColumnaNombre('HS TOTAL SERVICIO');
             $columna->setColumnaClave('tarifa_hsServicio');
             $columna->setColumnaHabilitado(1);
@@ -548,7 +548,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(23);
             $columna->setColumnaNombre('CONFORMIDAD RE');
             $columna->setColumnaClave('remito_conformidad');
             $columna->setColumnaHabilitado(1);
@@ -560,7 +560,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
+            $columna->setColumnaPosicion(24);
             $columna->setColumnaNombre('MOT NO CONFORM RE');
             $columna->setColumnaClave('remito_noConformidad');
             $columna->setColumnaHabilitado(1);

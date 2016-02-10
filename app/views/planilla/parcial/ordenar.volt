@@ -1,8 +1,10 @@
-<fieldset id="ordenar" class="panel-border" >
+<fieldset id="ordenar" class="panel-border" disabled>
+    {{ form('planilla/finalizar','id':'finalizar','method':'post') }}
+
     <legend>Ordenar Columnas</legend>
     <div class="input-group margin col-md-5">
-        <select id="cabecera-list" class="form-control" onchange="cargarTabla()">
-            <option value="">Seleccionar cabecera predefinida</option>
+        <select id="cabecera-list" class="form-control" onchange="cargarTabla()" form="finalizar" required="true">
+            <option value> Seleccione una opción </option>
         </select>
         <span class="input-group-btn">
           <a id="btn_cargar_columnas" class="btn btn-info btn-flat"><i class="fa fa-refresh"></i></a>
@@ -12,7 +14,7 @@
     </div>
 
     <script type="text/javascript">
-        // When the document is ready set up our sortable with it's inherant function(s)
+        // Guarda el nuevo orden de las columnas
         $(document).ready(function () {
             $("#ul_columnas").sortable({
                 handle: '.handle',
@@ -23,9 +25,7 @@
             });
         });
     </script>
-                <pre>
-                    <div id="info"><em>El orden asignado se guardará para generar las planillas Excel</em></div>
-                </pre>
+
     <div class="contenedor-lista">
         <ol id="ul_columnas">
             <!--li id="listItem_1">
@@ -35,9 +35,11 @@
             </li-->
         </ol>
     </div>
+    <pre>
+        <div id="info"><em>El orden asignado se guardará para generar las planillas Excel</em></div>
+    </pre>
     <div align="center">
-        {{ form('planilla/finalizar','id':'finalizar','method':'post') }}
-        {{ submit_button('FINALIZAR LA CREACIÓN DE LA PLANILLA','class':'btn btn-flat btn-lg btn-primary ') }}
+        {{ submit_button('FINALIZAR LA CREACIÓN DE LA PLANILLA','class':'btn btn-flat btn-lg btn-primary') }}
         </form>
     </div>
 </fieldset>
@@ -71,11 +73,17 @@
     });
     function llenarComboBoxCabecera(cabeceras)
     {
+        $('#cabecera-list').empty();
+
         var select = document.getElementById("cabecera-list");
+        var optEmpty = document.createElement("option");
+        optEmpty.text="Seleccione una opción";
+        optEmpty.value="";
+        select.appendChild(optEmpty);
         for (var item in cabeceras) {
             var columna = cabeceras[item];
             // log data to the console so we can see
-            opt = document.createElement("option");
+            var opt = document.createElement("option");
             opt.value = columna.valor;
             opt.text = columna.nombre;
             select.appendChild(opt);
@@ -99,7 +107,6 @@
                     console.log(data);
                     $('#ul_columnas').empty();
                     var ul = document.getElementById("ul_columnas");
-                    var i = 6;
                     for (var item in data.mensaje) {
                         var columna = data.mensaje[item];
 
@@ -108,9 +115,8 @@
                         a.setAttribute("class", 'handle');
                         a.appendChild(document.createTextNode(columna.nombre));
                         li.appendChild(a);
-                        li.setAttribute("id", 'listItem_' + i);
+                        li.setAttribute("id", 'listItem_' + columna.id);
                         ul.appendChild(li);
-                        i++;
                     }
                 })
             // using the fail promise callback

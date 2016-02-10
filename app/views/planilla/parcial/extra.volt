@@ -75,7 +75,8 @@
         //PREPARANDO los datos para enviar
         var datos = {
             'columna': columnas,
-            'token': $('#token').val()
+            'token': $('#token').val(),
+            'planilla_nombreCliente':$('#planilla_nombreCliente').val()
 
         };
         $.ajax({

@@ -7,7 +7,7 @@
     <!-- Formulario-->
 
     <div align="right">
-        {{ link_to("planilla/new", "Crear Planilla",'class':'btn btn-large btn-danger btn-flat') }}
+        {{ link_to("planilla/new", "<i class='fa fa-plus-square'></i> Nueva Planilla ",'class':'btn btn-flat btn-large btn-danger') }}
     </div>
     {{ content() }}
     {{ form("planilla/search", "method":"post", "autocomplete" : "") }}

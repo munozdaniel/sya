@@ -65,7 +65,7 @@
                         <td>{{ planilla.getPlanillaId() }}</td>
                         <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                         <td>{{ planilla.getPlanillaFecha() }}</td>
-                        <td>{{ link_to("orden/verOrdenes/"~planilla.getPlanillaId(), "Ver Ordenes",'class':'btn-flat btn btn-block btn-github') }}</td>
+                        <td>{{ link_to("remito/verRemitos/"~planilla.getPlanillaId(), "Ver Ordenes",'class':'btn-flat btn btn-block btn-github') }}</td>
 
                         {% if admin == 1 %}
                             {% if planilla.getPlanillaHabilitado() == 1 %}
