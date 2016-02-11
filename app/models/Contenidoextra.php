@@ -25,7 +25,7 @@ class Contenidoextra extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $contenidoExtra_columnaExtraId;
+    protected $contenidoExtra_columnaId;
 
     /**
      * Method to set the value of field contenidoExtra_id
@@ -67,14 +67,14 @@ class Contenidoextra extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field contenidoExtra_columnaExtraId
+     * Method to set the value of field contenidoExtra_columnaId
      *
-     * @param integer $contenidoExtra_columnaExtraId
+     * @param integer $contenidoExtra_columnaId
      * @return $this
      */
-    public function setContenidoExtraColumnaExtraId($contenidoExtra_columnaExtraId)
+    public function setContenidoExtraColumnaId($contenidoExtra_columnaId)
     {
-        $this->contenidoExtra_columnaExtraId = $contenidoExtra_columnaExtraId;
+        $this->contenidoExtra_columnaId = $contenidoExtra_columnaId;
 
         return $this;
     }
@@ -110,13 +110,13 @@ class Contenidoextra extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field contenidoExtra_columnaExtraId
+     * Returns the value of field contenidoExtra_columnaId
      *
      * @return integer
      */
-    public function getContenidoExtraColumnaExtraId()
+    public function getContenidoExtraColumnaId()
     {
-        return $this->contenidoExtra_columnaExtraId;
+        return $this->contenidoExtra_columnaId;
     }
 
     /**
@@ -124,8 +124,8 @@ class Contenidoextra extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->hasMany('contenidoExtra_id', 'Orden', 'orden_contenidoExtraId', array('alias' => 'Orden'));
-        $this->belongsTo('contenidoExtra_columnaExtraId', 'Columnaextra', 'columnaExtra_id', array('alias' => 'Columnaextra'));
+        $this->hasMany('contenidoExtra_id', 'Remito', 'remito_contenidoExtraId', array('alias' => 'Remito'));
+        $this->belongsTo('contenidoExtra_columnaId', 'Columna', 'columna_id', array('alias' => 'Columna'));
     }
 
     /**

@@ -19,13 +19,13 @@ class Centrocosto extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $centroCosto_habilitado;
+    protected $centroCosto_lineaId;
 
     /**
      *
      * @var integer
      */
-    protected $centroCosto_lineaId;
+    protected $centroCosto_habilitado;
 
     /**
      * Method to set the value of field centroCosto_id
@@ -54,19 +54,6 @@ class Centrocosto extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field centroCosto_habilitado
-     *
-     * @param integer $centroCosto_habilitado
-     * @return $this
-     */
-    public function setCentroCostoHabilitado($centroCosto_habilitado)
-    {
-        $this->centroCosto_habilitado = $centroCosto_habilitado;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field centroCosto_lineaId
      *
      * @param integer $centroCosto_lineaId
@@ -75,6 +62,19 @@ class Centrocosto extends \Phalcon\Mvc\Model
     public function setCentroCostoLineaId($centroCosto_lineaId)
     {
         $this->centroCosto_lineaId = $centroCosto_lineaId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field centroCosto_habilitado
+     *
+     * @param integer $centroCosto_habilitado
+     * @return $this
+     */
+    public function setCentroCostoHabilitado($centroCosto_habilitado)
+    {
+        $this->centroCosto_habilitado = $centroCosto_habilitado;
 
         return $this;
     }
@@ -100,16 +100,6 @@ class Centrocosto extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field centroCosto_habilitado
-     *
-     * @return integer
-     */
-    public function getCentroCostoHabilitado()
-    {
-        return $this->centroCosto_habilitado;
-    }
-
-    /**
      * Returns the value of field centroCosto_lineaId
      *
      * @return integer
@@ -120,11 +110,21 @@ class Centrocosto extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field centroCosto_habilitado
+     *
+     * @return integer
+     */
+    public function getCentroCostoHabilitado()
+    {
+        return $this->centroCosto_habilitado;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
-        $this->hasMany('centroCosto_id', 'Cliente', 'cliente_centroCostoId', array('alias' => 'Cliente'));
+        $this->hasMany('centroCosto_id', 'Remito', 'remito_centroCostoId', array('alias' => 'Remito'));
         $this->belongsTo('centroCosto_lineaId', 'Linea', 'linea_id', array('alias' => 'Linea'));
     }
 
@@ -159,25 +159,5 @@ class Centrocosto extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-    public function validation()
-    {
 
-        $this->validate(
-            new \Phalcon\Mvc\Model\Validator\Uniqueness(
-                array(
-                    "field"   => "centroCosto_codigo",
-                    "message" => "El codigo Centro Costo ya existe"
-                )
-            )
-        );
-
-        return $this->validationHasFailed() != true;
-    }
-    public function getNombreLinea($linea_id)
-    {
-        $linea = Linea::findFirstByLinea_id($linea_id);
-        if($linea)
-            return $linea->getLineaNombre();
-        return "";
-    }
 }

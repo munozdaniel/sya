@@ -19,13 +19,13 @@ class Equipopozo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $equipoPozo_habilitado;
+    protected $equipoPozo_yacimientoId;
 
     /**
      *
      * @var integer
      */
-    protected $equipoPozo_yacimientoId;
+    protected $equipoPozo_habilitado;
 
     /**
      * Method to set the value of field equipoPozo_id
@@ -54,19 +54,6 @@ class Equipopozo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field equipoPozo_habilitado
-     *
-     * @param integer $equipoPozo_habilitado
-     * @return $this
-     */
-    public function setEquipoPozoHabilitado($equipoPozo_habilitado)
-    {
-        $this->equipoPozo_habilitado = $equipoPozo_habilitado;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field equipoPozo_yacimientoId
      *
      * @param integer $equipoPozo_yacimientoId
@@ -75,6 +62,19 @@ class Equipopozo extends \Phalcon\Mvc\Model
     public function setEquipoPozoYacimientoId($equipoPozo_yacimientoId)
     {
         $this->equipoPozo_yacimientoId = $equipoPozo_yacimientoId;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field equipoPozo_habilitado
+     *
+     * @param integer $equipoPozo_habilitado
+     * @return $this
+     */
+    public function setEquipoPozoHabilitado($equipoPozo_habilitado)
+    {
+        $this->equipoPozo_habilitado = $equipoPozo_habilitado;
 
         return $this;
     }
@@ -100,16 +100,6 @@ class Equipopozo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field equipoPozo_habilitado
-     *
-     * @return integer
-     */
-    public function getEquipoPozoHabilitado()
-    {
-        return $this->equipoPozo_habilitado;
-    }
-
-    /**
      * Returns the value of field equipoPozo_yacimientoId
      *
      * @return integer
@@ -120,11 +110,21 @@ class Equipopozo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field equipoPozo_habilitado
+     *
+     * @return integer
+     */
+    public function getEquipoPozoHabilitado()
+    {
+        return $this->equipoPozo_habilitado;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
-        $this->hasMany('equipoPozo_id', 'Cliente', 'cliente_equipoPozoId', array('alias' => 'Cliente'));
+        $this->hasMany('equipoPozo_id', 'Remito', 'remito_equipoPozoId', array('alias' => 'Remito'));
         $this->belongsTo('equipoPozo_yacimientoId', 'Yacimiento', 'yacimiento_id', array('alias' => 'Yacimiento'));
     }
 

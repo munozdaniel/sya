@@ -96,8 +96,7 @@ class Cliente extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->hasMany('cliente_id', 'Linea', 'linea_clienteId', array('alias' => 'Linea'));
-        $this->hasMany('cliente_id', 'Operadora', 'operadora_clienteId', array('alias' => 'Operadora'));
-        $this->hasMany('cliente_id', 'Orden', 'orden_clienteId', array('alias' => 'Orden'));
+        $this->hasMany('cliente_id', 'Remito', 'remito_clienteId', array('alias' => 'Remito'));
     }
 
     /**

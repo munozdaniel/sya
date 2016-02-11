@@ -2,11 +2,17 @@
 <fieldset id="ordenar" class="panel-border" disabled>
 
     <legend>Ordenar Columnas <small>(opcional)</small></legend>
+    <div class="input-group margin col-md-5">
+        <select id="cabecera-list" class="form-control" onchange="cargarTabla()" form="finalizar" required="true">
+            <option value> Seleccione una opción </option>
+        </select>
+        <span class="input-group-btn">
+          <a id="btn_cargar_columnas" class="btn btn-info btn-flat"><i class="fa fa-refresh"></i></a>
+        </span>
         <input type="hidden" id="token_ordenar" name="<?php echo $this->security->getTokenKey() ?>"
                value="<?php echo $this->security->getToken() ?>"/>
-    <div class="col-md-12">
-        <a class="btn btn-flat large btn-primary" onclick='cargarTabla()'>  <i class="fa fa-refresh"></i> Cargar columnas</a>
     </div>
+
     <script type="text/javascript">
         // Guarda el nuevo orden de las columnas
         $(document).ready(function () {
@@ -19,7 +25,7 @@
             });
         });
     </script>
-    <div class="col-md-12">
+
     <div class="contenedor-lista">
         <ol id="ul_columnas">
             <!--li id="listItem_1">
@@ -28,7 +34,6 @@
                 </a>
             </li-->
         </ol>
-    </div>
     </div>
     <pre>
         <div id="info"><em>El orden asignado se guardará para generar las planillas Excel</em></div>
@@ -43,10 +48,51 @@
     $('#link_finalizar').bind('click', function (e) {
         e.preventDefault();
     });
+    var cargar = $("#btn_cargar_columnas"); //ID del Botón Agregar
 
+    $(cargar).click(function (e) {
+        $.ajax({
+            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url: '/sya/cabecera/cargarCabecera', // the url where we want to POST
+            dataType: 'json', // what type of data do we expect back from the server
+            encode: true
+        })
+                .done(function (data) {
+                    if (data.success)
+                        llenarComboBoxCabecera(data.mensaje);
+                    //FIXME: Que pasa si  no encuentra cabeceras ???
+                    console.log(data);
+                })
+                .fail(function (data) {
+                    // show any errors
+                    // best to remove for production
+                    console.log("FAIL");
+                    console.log(data);
+                });
+        event.preventDefault();
+    });
+    function llenarComboBoxCabecera(cabeceras)
+    {
+        $('#cabecera-list').empty();
+
+        var select = document.getElementById("cabecera-list");
+        var optEmpty = document.createElement("option");
+        optEmpty.text="Seleccione una opción";
+        optEmpty.value="";
+        select.appendChild(optEmpty);
+        for (var item in cabeceras) {
+            var columna = cabeceras[item];
+            // log data to the console so we can see
+            var opt = document.createElement("option");
+            opt.value = columna.valor;
+            opt.text = columna.nombre;
+            select.appendChild(opt);
+        }
+    }
     function cargarTabla() {
+        var select = document.getElementById("cabecera-list");
         var datos = {
-            'cabecera_id': $("#cabecera_id").val()
+            'cabecera_id': select.value
 
         };
         $.ajax({

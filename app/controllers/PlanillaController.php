@@ -149,7 +149,7 @@ class PlanillaController extends ControllerBase
                 $data['success'] = true;
                 $data['message'] = 'Operación exitosa';
                 $data['planilla_id'] = $planilla->getPlanillaId();
-                $data['cabeceras']= Cabecera::findAllCabecera();
+               //$data['cabeceras']= Cabecera::findAllCabecera();
 
             }
         }// return all our data to an AJAX call

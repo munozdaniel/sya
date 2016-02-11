@@ -1,6 +1,6 @@
 {{ form("cabecera/crear","id":"form_columnas", "method":"post") }}
 <fieldset id="extra" class="panel-border" disabled>
-    <legend>Generar Columnas Extras</legend>
+    <legend>Agregar Columnas Extras <small>(opcional)</small></legend>
     <div id="grupo_extra" class="form-group col-md-6">
         <div id="contenedor">
             <div class="added">
@@ -76,12 +76,13 @@
         var datos = {
             'columna': columnas,
             'token': $('#token').val(),
+            'cabecera_id': $('#cabecera_id').val(),
             'planilla_nombreCliente':$('#planilla_nombreCliente').val()
 
         };
         $.ajax({
             type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-            url: '/sya/cabecera/crear', // the url where we want to POST
+            url: '/sya/cabecera/agregarExtra', // the url where we want to POST
             data: datos, // our data object
             dataType: 'json', // what type of data do we expect back from the server
             encode: true
@@ -103,6 +104,8 @@
                         for (var i = 0; i < arregloColumnas.length; i++) {
                             arregloColumnas[i].value = '';
                         }
+                        //Cargar columnas para reordenar
+                        cargarTabla();
                     }
                 })
             // using the fail promise callback

@@ -102,10 +102,12 @@
                     } else {
                         $('#grupo_planilla').append('<div class="block-columnas  alert-success">&nbsp; Operación Exitosa</div>');
                         //Habilitar columnas extras y ordenar columnas.
-                        $('#extra').prop('disabled', false);//Habilitar paso 2
-                        $('#ordenar').prop('disabled', false);//Habilitar paso 3
+                        $('#pnl_seleccionar').prop('disabled', true);//Deshabilitar paso 2
+                        $('#extra').prop('disabled', false);//Habilitar paso 3
+                        $('#ordenar').prop('disabled', false);//Habilitar paso 4
                         //Cargar la cabecera_id para agregarle las columnas extras
-                        document.getElementById('cabecera_id').value = data.cabecera_id
+                        document.getElementById('cabecera_id').value = data.cabecera_id;
+                        cargarTabla();
                     }
                 })
             // using the fail promise callback

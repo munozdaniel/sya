@@ -6,7 +6,13 @@
 
             <div id="grupo_planilla" class="form-group">
                 <label for="planilla_nombreCliente">Nombre de la Planilla</label>
-                {{ text_field("planilla_nombreCliente", "size" : 60,'class':'form-control', 'placeholder':'INGRESAR NOMBRE','':'') }}
+                {{ text_field("planilla_nombreCliente", "size" : 60,'class':'form-control', 'placeholder':'INGRESAR NOMBRE') }}
+            </div>
+            <div class="col-md-12">
+                <input type="radio" name="opciones" value="1" checked> Nueva Cabecera <br>
+                <input type="radio" name="opciones" value="0"> Utilizar Cabecera existente
+                <hr>
+
             </div>
             <button id="btn_guardar_planilla" type="submit" class="btn btn-flat large btn-primary"><i
                         class="fa fa-save"></i> Guardar Planilla
@@ -51,13 +57,13 @@
                         } else {
                             // here we will handle errors and validation messages
                             $('#btn_guardar_planilla').prop('disabled', true);//Dehsabilitar boton guardar planilla
-                            $('#extra').prop('disabled', false);//Habilitar paso 2
-                            $('#ordenar').prop('disabled', false);//Habilitar paso 3
                             $('#btn_editar_planilla').prop('disabled', false);//Habilitar boton editar planilla
+                            $('#pnl_seleccionar').prop('disabled', false);//Habilitar boton editar planilla
                             document.getElementById('planilla_id').value = data.planilla_id;
+                            ;
                             $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
                             //Recargar combo con cabeceras
-                            llenarComboBoxCabecera(data.cabeceras);
+                           // llenarComboBoxCabecera(data.cabeceras);
                         }
                     })
                 // using the fail promise callback

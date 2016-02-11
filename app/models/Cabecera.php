@@ -231,5 +231,20 @@ class Cabecera extends \Phalcon\Mvc\Model
             $retorno = null;
         }
         return $retorno;
+
+    }
+    public function validation()
+    {
+        $this->validate(new \Phalcon\Mvc\Model\Validator\Uniqueness(array(
+            "field"   => "cabecera_nombre",
+            "message" => "El nombre de la cabecera ya existe"
+        )));
+        $this->validate(new \Phalcon\Mvc\Model\Validator\PresenceOf(array(
+            "field" => 'cabecera_nombre',
+            "message" => 'El nombre de la cabecera es requerido'
+        )));
+        if ($this->validationHasFailed() == true) {
+            return false;
+        }
     }
 }

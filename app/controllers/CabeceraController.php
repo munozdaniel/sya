@@ -114,24 +114,30 @@ class CabeceraController extends ControllerBase
                 //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
                 $cabecera_id = $this->request->getPost('cabecera_id','int');
                 $cabecera = Cabecera::findFirstByCabecera_id($cabecera_id);
-                $arregloColumnas = $this->request->getPost('columna');
-                foreach ($arregloColumnas AS $columna) {
-                    if (!empty($columna)) {
-                        $nuevaColumna = new Columna();
-                        $nuevaColumna->setColumnaNombre(strtoupper($columna));
-                        $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
-                        $nuevaColumna->setColumnaExtra(1);
-                        $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
-                        $nuevaColumna->setColumnaHabilitado(1);
-                        if (!$nuevaColumna->save()) {
-                            foreach ($nuevaColumna->getMessages() as $message) {
-                                $error[] = $message . " <br>";
+                if(!$cabecera)
+                {
+                    $error = "Hubo un problema, no se encontro la cabecera.";
+                }else{
+                    $arregloColumnas = $this->request->getPost('columna');
+                    foreach ($arregloColumnas AS $columna) {
+                        if (!empty($columna)) {
+                            $nuevaColumna = new Columna();
+                            $nuevaColumna->setColumnaNombre(strtoupper($columna));
+                            $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
+                            $nuevaColumna->setColumnaExtra(1);
+                            $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
+                            $nuevaColumna->setColumnaHabilitado(1);
+                            if (!$nuevaColumna->save()) {
+                                foreach ($nuevaColumna->getMessages() as $message) {
+                                    $error[] = $message . " <br>";
+                                }
                             }
+                        } else {
+                            $error = "Debe ingresar el nombre de la columna";
                         }
-                    } else {
-                        $error = "Debe ingresar el nombre de la columna";
                     }
                 }
+
 
             }
             if (empty($error)) {
@@ -169,7 +175,7 @@ class CabeceraController extends ControllerBase
             $columnas = Columna::find(array(
                 'conditions'=>'columna_cabeceraId = :cabecera_id:',
                 'bind' => array(
-                    'cabecera_id'=>$this->request->getPost('cabecera_id')
+                    'cabecera_id'=>$this->request->getPost('cabecera_id','int')
                 ),
                 'order'=>'columna_posicion ASC'
             ));
