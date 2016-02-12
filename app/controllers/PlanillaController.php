@@ -270,6 +270,26 @@ class PlanillaController extends ControllerBase
             $this->redireccionar('planilla/search');
         }
     }
+    public function guardarCabeceraPredefinidaAction()
+    {
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
+        if(!$planilla)
+            $this->flash->error("Hubo un problema al enncontrar la planilla");
+        else{
+            $planilla->setPlanillaCabeceraid($this->request->getPost('cabecera_id'));
+            if($planilla->update())
+            {
+                $this->flash->success("La planilla se ha creado con exito.");
+                $this->redireccionar('planilla/search');
+            }else{
+                foreach($planilla->getMessages() as $mensaje)
+                {
+                    $this->flash->error($mensaje);
+                }
+            }
+        }
+
+    }
     /**
      * Guarda los datos que se editaron.
      *

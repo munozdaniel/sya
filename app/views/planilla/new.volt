@@ -36,18 +36,23 @@
             <hr>
         </div>
         <!-- ================================================================================= -->
-        <div class="col-xs-12 col-md-12">
-           {{ partial('planilla/parcial/basicas') }}
+        <div id="id_nuevaCabecera">
+            <div class="col-xs-12 col-md-12">
+               {{ partial('planilla/parcial/basicas') }}
+            </div>
+            <!-- ================================================================================= -->
+            <div class="col-xs-12 col-md-12">
+               {{ partial('planilla/parcial/extra') }}
+            </div>
+            <!-- ================================================================================= -->
+            <div class="col-xs-12 col-md-12">
+             {{ partial('planilla/parcial/ordenar') }}
+            </div>
         </div>
         <!-- ================================================================================= -->
-        <div class="col-xs-12 col-md-12">
-           {{ partial('planilla/parcial/extra') }}
+        <div id="id_cabeceraExistente" class="col-xs-12 col-md-12 ocultar">
+            {{ partial('planilla/parcial/seleccion') }}
         </div>
-        <!-- ================================================================================= -->
-        <div class="col-xs-12 col-md-12">
-         {{ partial('planilla/parcial/ordenar') }}
-        </div>
-        <!-- ================================================================================= -->
     </div>
     <!-- /.box-body -->
 </div>
