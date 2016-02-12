@@ -52,8 +52,8 @@
                 <th data-field="Nro" data-sortable="true">#</th>
                 <th data-field="dominio" data-sortable="true">Nombre de Planilla</th>
                 <th data-field="interno" data-sortable="true">Fecha de Creación</th>
-                <th data-sortable="true" align="center">Ordenes</th>
-                <th data-sortable="true" data-halign="center" data-align="center">Administrar</th>
+                <th data-sortable="true" data-halign="center" data-align="center">Remitos</th>
+                <th data-sortable="true" data-halign="center" data-align="center">Administrar Planilla</th>
             </tr>
 
             </thead>
@@ -65,7 +65,11 @@
                         <td>{{ planilla.getPlanillaId() }}</td>
                         <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                         <td>{{ planilla.getPlanillaFecha() }}</td>
-                        <td>{{ link_to("remito/verRemitos/"~planilla.getPlanillaId(), "Ver Ordenes",'class':'btn-flat btn btn-block btn-github') }}</td>
+                        <td>
+                            {{ link_to("remito/verRemitos/"~planilla.getPlanillaId(), "Ver Remitos",'class':'btn btn-flat  bg-light-blue-gradient','title':'VER TODOS LOS REMITOS') }}
+                            {{ link_to("remito/agregarRemito/"~planilla.getPlanillaId(), "Agregar Remito",'class':'btn btn-flat  bg-light-blue-gradient','title':'AGREGAR UN REMITO NUEVO') }}
+
+                        </td>
 
                         {% if admin == 1 %}
                             {% if planilla.getPlanillaHabilitado() == 1 %}
