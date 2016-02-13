@@ -5,7 +5,13 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class RemitoController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Agregar un remito nuevo');
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -402,5 +408,66 @@ class RemitoController extends ControllerBase
             $tabla[] = $fila;
         }
         return $tabla;
+    }
+
+    /**
+     * Nuevo remito, arma un formulario para cargar todos los datos correspondientes a un remito.
+     */
+    public function nuevoRemitoAction($planilla_id){
+        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
+        $columnas = Columna::find(array(
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
+            'bind'=>array('cabecera_id'=>$planilla->getPlanillaCabeceraid())
+        ));
+
+        if(count($columnas)!=0)
+        {
+            $this->view->columnaExtraForm = new ColumnaExtraForm(null,array('extra'=>$columnas));
+        }
+        $this->view->remitoForm = new RemitoForm(null,array('required'=>''));
+        $this->view->clienteForm = new ClienteNewForm(null,array('required'=>''));
+        $this->view->planilla = $planilla;
+    }
+
+    /**
+     * Guarda todos los campos correspondiente a un remito y sus dependientes.
+     */
+    public function guardarRemitoAction()
+    {
+        if (!$this->request->isPost()) {
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+        $this->db->begin();
+        $nuevoRemito = new Remito();
+        $planilla_id = $this->request->getPost("remito_planillaId");
+        /*==================== Generar Ultimo Nro de Remito ===============================*/
+        $ultimoRemito = Remito::findFirst(array(
+            "remito_ultima = 1 AND remito_habilitado=1 AND remito_planillaId = :planilla_id:",
+            'bind'=>array('planilla_id'=>$planilla_id)
+        ));
+        if(!$ultimoRemito){
+            $nuevoRemito->setRemitoUltima(1);
+            $nuevoRemito->setRemitoNroOrden(1);
+        }else{
+            $nuevoRemito->setRemitoUltima(1);
+            $ultimoRemito->setRemitoUltima(0);
+            $nuevoRemito->setRemitoNroOrden($ultimoRemito->getRemitoNroOrden()+1);
+            if(!$ultimoRemito->update())
+            {
+                $this->flash->error('Hubo un problema con la conexion, intenteló nuevamente');
+                $this->db->rollback();
+                return $this->dispatcher->forward(array(
+                    "controller" => "remito",
+                    "action" => "index"
+                ));
+            }
+        }
+        /*==================== Guardando Datos del Remito ===============================*/
+        $nuevoRemito->setRemitoPlanillaId($planilla_id);
+        $nuevoRemito->setRemitoFechaCreacion(date('Y-m-d'));
+
     }
 }

@@ -57,18 +57,7 @@ class ClienteForm extends \Phalcon\Forms\Form
             ));
         $listaOperadoras->setLabel('Operadora');
         $this->add($listaOperadoras);
-        /*======================= CLIENTE_FRS ==============================*/
 
-        //Primero El PRINCIPAL.
-        $dl_frs = new DataListElement('frs_codigo',
-            array(
-                array('placeholder' => 'CODIGO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
-                Frs::find(array('frs_habilitado=1','order'=>'frs_codigo')),
-                array('frs_id', 'frs_codigo'),
-                'frs_id'
-            ));
-        $dl_frs->setLabel('FRS');
-        $this->add($dl_frs);
         /*======================= CLIENTE - EQUIPO/POZO - YACIMIENTO ==============================*/
         //Primero El PRINCIPAL.
         $listaYacimiento = new DataListElement('yacimiento_destino',
