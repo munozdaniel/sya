@@ -102,7 +102,19 @@ $di->set('flash', function()
         'problema'   => 'alert alert-problema ',
     ));
 });
-
+$di->set(
+    'flashSession',
+    function () {
+        return new Phalcon\Flash\Session(array(
+            'error'     => 'alert alert-danger',
+            'success'   => 'alert alert-success',
+            'notice'    => 'alert alert-info ',
+            'warning'   => 'alert alert-warning ',
+            'exito'   => 'alert alert-exito ',
+            'problema'   => 'alert alert-problema ',
+        ));
+    }
+);
 /**
  * Register a user component
  */
@@ -115,7 +127,29 @@ $di->set('elemento', function(){
 $di->set('dispatcher', function() use ($di)
 {
     $eventsManager = $di->getShared('eventsManager');
-
+    $eventsManager->attach
+    (
+    //lanzamos antes de que se lance cualquier tipo de excepción
+        "dispatch:beforeException",
+        function($event, $dispatcher, $exception)
+        {
+            switch ($exception->getCode())
+            {
+                //en caso de que el servicio llamado no sea encontrado
+                //o la acción no se encuentre
+                case Phalcon\Mvc\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+                    //con dispatcher->forward le decimos que muestre el contenido
+                    //de la acción show404 del controlador error, a crearlo
+                    $dispatcher->forward(
+                        array(
+                            'controller' => 'error',
+                            'action'     => 'show404',
+                        )
+                    );
+                    return false;
+            }
+        }
+    );
     $roles = new Seguridad($di);
 
     /**
