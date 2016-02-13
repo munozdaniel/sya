@@ -351,7 +351,7 @@ class OperadoraController extends ControllerBase
                 $id = $this->request->getPost("id", "int");
 
                 $lista = Operadora::find(array(
-                    "operadora_clienteId = :id: AND operadora_habilitado=1",'bind'=>array('id'=>$id)
+                    "operadora_yacimientoId = :id: AND operadora_habilitado=1",'bind'=>array('id'=>$id)
                 ));
                 $resData = array();
 
