@@ -441,6 +441,8 @@ class RemitoController extends ControllerBase
             ));
         }
         $this->db->begin();
+
+
         $nuevoRemito = new Remito();
         $planilla_id = $this->request->getPost("remito_planillaId");
         /*==================== Generar Ultimo Nro de Remito ===============================*/
@@ -461,13 +463,107 @@ class RemitoController extends ControllerBase
                 $this->db->rollback();
                 return $this->dispatcher->forward(array(
                     "controller" => "remito",
-                    "action" => "index"
+                    "action" => "nuevoRemito",
+                    "params"=>$planilla_id
                 ));
             }
         }
         /*==================== Guardando Datos del Remito ===============================*/
         $nuevoRemito->setRemitoPlanillaId($planilla_id);
         $nuevoRemito->setRemitoFechaCreacion(date('Y-m-d'));
+        $nuevoRemito->setRemitoCreadoPor($this->session->get('auth')['usuario_nick']);
+        $nuevoRemito->setRemitoHabilitado(1);
+        $nuevoRemito->setRemitoFecha($this->request->getPost('remito_fecha'));
+        $nuevoRemito->setRemitoNro($this->request->getPost('remito_nro'));
+        $nuevoRemito->setRemitoPeriodo(date('m', date(strtotime(date($this->request->getPost("remito_fecha"))))));
+        $nuevoRemito->setRemitoObservacion($this->request->getPost('remito_observacion'));
+        $nuevoRemito->setRemitoConformidad($this->request->getPost('remito_conformidad'));
+        $nuevoRemito->setRemitoNoConformidad($this->request->getPost('remito_noConformidad'));
+        /* ==================== ==================== ==================== ==================== */
+        $nuevoRemito->setRemitoTransporteId($this->request->getPost('remito_transporteId'));
+        $nuevoRemito->setRemitoTipoEquipoId($this->request->getPost('remito_tipoEquipoId'));
+        $nuevoRemito->setRemitoTipoCargaId($this->request->getPost('remito_tipoCargaId'));
+        $nuevoRemito->setRemitoChoferId($this->request->getPost('remito_choferId'));
+        /* ==================== ==================== ==================== ==================== */
+        $nuevoRemito->setRemitoClienteId($this->request->getPost('cliente_id'));
+        $nuevoRemito->setRemitoCentroCostoId($this->request->getPost('centroCosto_id'));
+        $nuevoRemito->setRemitoEquipoPozoId($this->request->getPost('equipoPozo_id'));
+        /* ==================== ==================== ==================== ==================== */
+        $nuevoRemito->setRemitoViajeId($this->request->getPost('remito_viajeId'));
+        $nuevoRemito->setRemitoConcatenadoId($this->request->getPost('remito_concatenadoId'));
+        /* ==================== ==================== ==================== ==================== */
+        $tarifa = new Tarifa();
+        $tarifa->setTarifaHoraInicial($this->request->getPost("tarifa_horaInicial"));
+        $tarifa->setTarifaHoraFinal($this->request->getPost("tarifa_horaFinal"));
+        $tarifa->setTarifaHsServicio($this->request->getPost("tarifa_hsServicio"));
+        $tarifa->setTarifaHsHidro($this->request->getPost("tarifa_hsHidro"));
+        $tarifa->setTarifaHsMalacate($this->request->getPost("tarifa_hsMalacate"));
+        $tarifa->setTarifaHsStand($this->request->getPost("tarifa_hsStand"));
+        $tarifa->setTarifaKm($this->request->getPost("tarifa_km"));
+        if (!$tarifa->save()) {
+            foreach ($tarifa->getMessages() as $mensaje) {
+                $this->flash->error($mensaje);
+            }
+            $this->db->rollback();
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "nuevoRemito",
+                "params"=>$planilla_id
+            ));
+        }
+        $nuevoRemito->setRemitoTarifaId($tarifa->getTarifaId());
+        /* ==================== ==================== ==================== ==================== */
+        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
+        $columnas = Columna::find(array(
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
+            'bind'=>array('cabecera_id'=>$planilla->getPlanillaCabeceraid())
+        ));
 
+        if(count($columnas)!=0)
+        {
+            foreach($columnas as $col){
+                $contenidoExtra = new Contenidoextra();
+                $contenidoExtra->setContenidoExtraHabilitado(1);
+                $contenidoExtra->setContenidoExtraColumnaId($col->getColumnaId());
+                $contenidoExtra->setContenidoExtraDescripcion($this->request->getPost($col->getColumnaNombre()));
+                if(!$contenidoExtra->save())
+                {
+                    foreach ($tarifa->getMessages() as $mensaje) {
+                        $this->flash->error($mensaje);
+                    }
+                    $this->db->rollback();
+                    return $this->dispatcher->forward(array(
+                        "controller" => "remito",
+                        "action" => "nuevoRemito",
+                        "params"=>$planilla_id
+                    ));
+                }
+            }
+        }
+        /* ==================== ==================== ==================== ==================== */
+        if(!$nuevoRemito->save())
+        {
+            foreach ($nuevoRemito->getMessages() as $mensaje) {
+                $this->flash->error($mensaje);
+            }
+            $this->db->rollback();
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "nuevoRemito",
+                "params"=>$planilla_id
+            ));
+        }
+        //Limpieza del formulario.
+        $remitoForm = new RemitoForm();
+        $remitoForm->bind($_POST, $nuevoRemito);
+        $remitoForm->clear();
+
+        $this->db->commit();
+        $this->flash->success('Remito creado satisfactoriamente');
+        return $this->dispatcher->forward(array(
+            "controller" => "remito",
+            "action" => "nuevoRemito",
+            "params"=>array($planilla_id)
+        ));
     }
 }

@@ -110,7 +110,6 @@ class RemitoForm  extends Form
         /*=========================== FECHA =====================================*/
         $fecha = new Date("remito_fecha",array( 'class'=>'form-control',$required['clave']=>$required['valor']));
         $fecha->setLabel("Fecha");
-        $fecha->setFilters(array('date'));
         $fecha->addValidators(array(
             new PresenceOf(array(
                 'message' => 'La fecha es Requerida'
