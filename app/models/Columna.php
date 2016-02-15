@@ -46,6 +46,7 @@ class Columna extends \Phalcon\Mvc\Model
     protected $columna_habilitado;
 
 
+
     /**
      * Method to set the value of field columna_id
      *
@@ -574,5 +575,34 @@ class Columna extends \Phalcon\Mvc\Model
         } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
             echo 'FALLO, motivo: ', $e->getMessage();
         }
+    }
+    /**
+     * Busca todas las columnas por id (extras y no extra), y las devuelve
+     * @param $cabecera_id
+     * @return array|Columna[]
+     */
+    public static function columnasOrdenadasByPlanilla($cabecera_id)
+    {
+        $columnas = array();//Busco todas las columnas para armar el th ordenadamente
+        $columnas = Columna::find(array(
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 ORDER BY columna_posicion ASC",
+            'bind'=>array('cabecera_id'=>$cabecera_id)
+        ));
+        return $columnas;
+    }
+
+    /**
+     * Busca todas las columnas extras por id.
+     * @param $cabecera_id
+     * @return array|Columna[]
+     */
+    public static function columnasExtrasOrdenadasByPlanilla($cabecera_id)
+    {
+        $columnas = array();//Busco todas las columnas para armar el th ordenadamente
+        $columnas = Columna::find(array(
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1 ORDER BY columna_posicion ASC",
+            'bind'=>array('cabecera_id'=>$cabecera_id)
+        ));
+        return $columnas;
     }
 }

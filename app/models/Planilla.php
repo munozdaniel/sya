@@ -28,17 +28,16 @@ class Planilla extends \Phalcon\Mvc\Model
     protected $planilla_armada;
 
     /**
+     *
      * @var integer
      */
     protected $planilla_cabeceraId;
-
 
     /**
      *
      * @var integer
      */
     protected $planilla_habilitado;
-
 
     /**
      * Method to set the value of field planilla_id
@@ -88,6 +87,19 @@ class Planilla extends \Phalcon\Mvc\Model
     public function setPlanillaArmada($planilla_armada)
     {
         $this->planilla_armada = $planilla_armada;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field planilla_cabeceraId
+     *
+     * @param integer $planilla_cabeceraId
+     * @return $this
+     */
+    public function setPlanillaCabeceraId($planilla_cabeceraId)
+    {
+        $this->planilla_cabeceraId = $planilla_cabeceraId;
 
         return $this;
     }
@@ -146,6 +158,16 @@ class Planilla extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field planilla_cabeceraId
+     *
+     * @return integer
+     */
+    public function getPlanillaCabeceraId()
+    {
+        return $this->planilla_cabeceraId;
+    }
+
+    /**
      * Returns the value of field planilla_habilitado
      *
      * @return integer
@@ -154,22 +176,14 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         return $this->planilla_habilitado;
     }
-    public function setPlanillaCabeceraid($planilla_cabeceraId)
-    {
-        $this->planilla_cabeceraId = $planilla_cabeceraId;
 
-        return $this;
-    }
-    public function getPlanillaCabeceraid()
-    {
-        return $this->planilla_cabeceraId ;
-    }
     /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->hasMany('planilla_id', 'Remito', 'remito_planillaId', array('alias' => 'Remito'));
+        $this->belongsTo('planilla_cabeceraId', 'Cabecera', 'cabecera_id', array('alias' => 'Cabecera'));
     }
 
     /**
@@ -203,6 +217,5 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
 
 }
