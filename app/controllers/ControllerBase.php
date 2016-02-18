@@ -44,6 +44,36 @@ class ControllerBase extends Controller
         ');
     }
 
+    protected function importarDataTables()
+    {
+        $this->assets->collection('headerCss')
+            ->addCss('https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css',false)
+            ->addCss('https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css',false);
+        $this->assets->collection('footer')
+            ->addJs('https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js',false)
+            ->addJs('https://cdn.datatables.net/colreorder/1.3.1/js/dataTables.colReorder.min.js',false);
+
+        $this->assets->collection('footerInline')
+            ->addInlineJs("
+            $(document).ready(function() {
+              var table = $('#example').DataTable({
+                'paging':   true,
+                    'ordering': true,
+                    'info':     true,
+                   'colReorder': true,
+              });
+            $('#example tbody')
+                .on( 'mouseenter', 'td', function () {
+                    var colIdx = table.cell(this).index().column;
+table.colReorder.order( [1 , 0 ,9,10,11,2, 3, 4, 5,6,7,19,20,21,22,8,12,13,14,15,16,17,18,23,24 ], true );
+                    $( table.cells().nodes() ).removeClass( 'highlight' );
+                    $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
+                } );
+
+
+            } );
+        ");
+    }
     protected function importarJsTable()
     {
 
@@ -51,6 +81,7 @@ class ControllerBase extends Controller
             ->addCss('plugins/datatables/dataTables.bootstrap.css');
         $this->assets->collection('headerJs')
             ->addJs('js/bootstrap-table.js')
+            ->addJs('js/cookie/bootstrap-table-cookie.js')
             ->addJs('js/reorder/bootstrap-table-reorder-columns.js')
             ->addJs('js/reorder/jquery-ui.js')
             ->addJs('js/reorder/jquery.dragtable.js')
