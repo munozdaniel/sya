@@ -3,6 +3,7 @@
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\NativeArray as Paginator;
 use Phalcon\Paginator\Adapter\Model as PaginatorModelo;
+use \DataTables\DataTable;
 
 class RemitoController extends ControllerBase
 {
@@ -43,7 +44,7 @@ class RemitoController extends ControllerBase
     /**
      * Searches for remito
      */
-    public function verRemitosAction()
+    public function verRemitos2Action()
     {
         parent::importarDataTables();
 
@@ -86,127 +87,23 @@ class RemitoController extends ControllerBase
      * Muestra todos los remitos de una planilla.
      * Utiliza el plugin BoostrapTable.
      */
-    public function verRemitos1Action($planillaId)
-    {
-        parent::importarJsTable();
-        $numberPage = $this->request->getQuery("page", "int");
+    public function verRemitosAction($planillaId){
+        echo "PERRO";
+        if ($this->request->isAjax()) {
+            $builder = $this->modelsManager->createBuilder()
+                ->columns('remito_id, remito_nro, remito_transporteId, remito_conformidad')
+                ->from('Example\Models\Remito');
 
-        $cabeceraTh = Columna::columnasOrdenadasByPlanilla(27);
-        $select="";
-        foreach($cabeceraTh as $c){
-            $select .=$c->getColumnaClave()." , ";
+            $dataTables = new DataTable();
+            $dataTables->fromBuilder($builder)->sendResponse();
         }
-
-
-        $phql = "SELECT Remito.remito_id,Remito.remito_nro,Remito.remito_tipo, Remito.remito_planillaId,Planilla.planilla_nombreCliente,
- Remito.remito_periodo,Transporte.transporte_dominio,Transporte.transporte_nroInterno, Tipoequipo.tipoEquipo_nombre, Tipocarga.tipoCarga_nombre,
-  Chofer.chofer_nombreCompleto,Chofer.chofer_dni,Chofer.chofer_esFletero, Viaje.viaje_origen, Concatenado.concatenado_nombre, Tarifa.tarifa_hsServicio,Tarifa.tarifa_hsHidro,
-  Tarifa.tarifa_hsMalacate,Tarifa.tarifa_hsStand,Tarifa.tarifa_km, Remito.remito_clienteId, Centrocosto.centroCosto_codigo,Equipopozo.equipoPozo_nombre,
-   Operadora.operadora_nombre, Remito.remito_observacion, Remito.remito_pdf, Remito.remito_fecha, Remito.remito_conformidad, Remito.remito_noConformidad
-FROM Remito,Planilla,Transporte,Chofer,Tipocarga,Tipoequipo,Viaje,Concatenado,Cliente,Tarifa,Centrocosto,Equipopozo,Operadora
-WHERE Remito.remito_planillaId=Planilla.planilla_id AND
-Remito.remito_transporteId=Transporte.transporte_id AND
-Remito.remito_choferId=Chofer.chofer_id AND
-Remito.remito_tipoEquipoId=Tipoequipo.tipoEquipo_id AND
-Remito.remito_tipoCargaId=Tipocarga.tipoCarga_id AND
-Remito.remito_viajeId=Viaje.viaje_id AND
-Remito.remito_concatenadoId=Concatenado.concatenado_id AND
-Remito.remito_clienteId = Cliente.cliente_id AND
-Remito.remito_tarifaId=Tarifa.tarifa_id AND
-Remito.remito_centroCostoId = Centrocosto.centroCosto_id AND
-Equipopozo.equipoPozo_id=Remito.remito_equipoPozoId AND
-Remito.remito_operadoraId=Operadora.operadora_id AND
-Planilla.planilla_id=27
-";
-        $remito = $this->modelsManager->executeQuery($phql);
-        /*$remito = Remito::find(array(
-            'columns'=>'DISTINCT remito.*',
-            'conditions'=>''
-        ));*/
-        if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-
-        //$tabla = $this->generarTablaDeRemitosNuevo($remito);
-        if($cabeceraTh)
-        $this->view->cabeceraTh = $cabeceraTh;
-        $paginator = new Phalcon\Paginator\Adapter\QueryBuilder(array(
-            "builder" => $remito,
-            "limit"=> 20,
-            "page" => 1
-        ));
-
-        $this->view->page = $paginator->getPaginate();
-        $this->view->pick('remito/search');
-
     }
     /**
      * Searches for remito, suponiendo que siempre va a elegir una planilla
      */
     public function searchAction()
-    {/**
+    {
         parent::importarJsTable();
-
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Remito", $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        var_dump($parameters);
-        $cabeceraTh = Columna::columnasOrdenadasByPlanilla(27);
-        $select="";
-        foreach($cabeceraTh as $c){
-            $select .=$c->getColumnaClave()." , ";
-        }
-        $remito = $this->modelsManager
-            ->createBuilder($parameters)
-            ->columns('DISTINCT *')
-            ->addFrom('Remito','remito')
-            ->join('Planilla','planilla.planilla_id=Remito.remito_planillaId','planilla')
-            ->join('Cabecera','cabecera.cabecera_id=planilla.planilla_cabeceraId','cabecera')
-            ->join('Columna','columna.columna_cabeceraId=cabecera.cabecera_id','columna')
-            ->orderBy('columna.columna_posicion ASC')
-            ->getQuery()
-            ->execute()
-            ->toArray();
-        //$remito = Remito::find(array(
-        //    'columns'=>'DISTINCT remito.*',
-        //    'conditions'=>''
-        //));
-        if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-
-        //$tabla = $this->generarTablaDeRemitosNuevo($remito);
-        if($cabeceraTh)
-            $this->view->cabeceraTh = $cabeceraTh;
-        $paginator = new Paginator(array(
-            "data" => $remito,
-            "limit"=> 100000,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
-*/
-        parent::importarDataTables();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
