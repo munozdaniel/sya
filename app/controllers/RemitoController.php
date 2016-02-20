@@ -1,7 +1,8 @@
 <?php
  
 use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
+use Phalcon\Paginator\Adapter\NativeArray as Paginator;
+use Phalcon\Paginator\Adapter\Model as PaginatorModelo;
 
 class RemitoController extends ControllerBase
 {
@@ -9,6 +10,11 @@ class RemitoController extends ControllerBase
     {
         $this->view->setTemplateAfter('principal');
         $this->tag->setTitle('Agregar un remito nuevo');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
         parent::initialize();
 
     }
@@ -19,12 +25,27 @@ class RemitoController extends ControllerBase
     {
         $this->persistent->parameters = null;
     }
+    public function searchAjaxAction(){$this->importarDataTables();}
+    public function ajaxAction()
+    {
+        $this->view->disable();
+        $datos=array();
+        $datos['draw']=1;
+        $datos['recordsTotal']=57;
+        $datos['recordsFiltered']=57;
+        $columns = array();
+        $columns[] = array('first_name'=>'Daniel','last_name'=>'Munoz','position'=>'Analista',
+            'office'=>'SAN FRAN','start_date'=>'ojo','salary'=>'5pe');
+        $datos['data']=$columns;
 
+       echo json_encode($datos);
+    }
     /**
      * Searches for remito
      */
-    public function searchAction()
+    public function verRemitosAction()
     {
+        parent::importarDataTables();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -50,11 +71,173 @@ class RemitoController extends ControllerBase
             ));
         }
 
-        $paginator = new Paginator(array(
+        $paginator = new PaginatorModelo(array(
             "data" => $remito,
             "limit"=> 10,
             "page" => $numberPage
         ));
+        $this->view->pick('remito/search');
+
+        $this->view->page = $paginator->getPaginate();
+    }
+
+    /*====================================================*/
+    /**
+     * Muestra todos los remitos de una planilla.
+     * Utiliza el plugin BoostrapTable.
+     */
+    public function verRemitos1Action($planillaId)
+    {
+        parent::importarJsTable();
+        $numberPage = $this->request->getQuery("page", "int");
+
+        $cabeceraTh = Columna::columnasOrdenadasByPlanilla(27);
+        $select="";
+        foreach($cabeceraTh as $c){
+            $select .=$c->getColumnaClave()." , ";
+        }
+
+
+        $phql = "SELECT Remito.remito_id,Remito.remito_nro,Remito.remito_tipo, Remito.remito_planillaId,Planilla.planilla_nombreCliente,
+ Remito.remito_periodo,Transporte.transporte_dominio,Transporte.transporte_nroInterno, Tipoequipo.tipoEquipo_nombre, Tipocarga.tipoCarga_nombre,
+  Chofer.chofer_nombreCompleto,Chofer.chofer_dni,Chofer.chofer_esFletero, Viaje.viaje_origen, Concatenado.concatenado_nombre, Tarifa.tarifa_hsServicio,Tarifa.tarifa_hsHidro,
+  Tarifa.tarifa_hsMalacate,Tarifa.tarifa_hsStand,Tarifa.tarifa_km, Remito.remito_clienteId, Centrocosto.centroCosto_codigo,Equipopozo.equipoPozo_nombre,
+   Operadora.operadora_nombre, Remito.remito_observacion, Remito.remito_pdf, Remito.remito_fecha, Remito.remito_conformidad, Remito.remito_noConformidad
+FROM Remito,Planilla,Transporte,Chofer,Tipocarga,Tipoequipo,Viaje,Concatenado,Cliente,Tarifa,Centrocosto,Equipopozo,Operadora
+WHERE Remito.remito_planillaId=Planilla.planilla_id AND
+Remito.remito_transporteId=Transporte.transporte_id AND
+Remito.remito_choferId=Chofer.chofer_id AND
+Remito.remito_tipoEquipoId=Tipoequipo.tipoEquipo_id AND
+Remito.remito_tipoCargaId=Tipocarga.tipoCarga_id AND
+Remito.remito_viajeId=Viaje.viaje_id AND
+Remito.remito_concatenadoId=Concatenado.concatenado_id AND
+Remito.remito_clienteId = Cliente.cliente_id AND
+Remito.remito_tarifaId=Tarifa.tarifa_id AND
+Remito.remito_centroCostoId = Centrocosto.centroCosto_id AND
+Equipopozo.equipoPozo_id=Remito.remito_equipoPozoId AND
+Remito.remito_operadoraId=Operadora.operadora_id AND
+Planilla.planilla_id=27
+";
+        $remito = $this->modelsManager->executeQuery($phql);
+        /*$remito = Remito::find(array(
+            'columns'=>'DISTINCT remito.*',
+            'conditions'=>''
+        ));*/
+        if (count($remito) == 0) {
+            $this->flash->notice("The search did not find any remito");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+
+        //$tabla = $this->generarTablaDeRemitosNuevo($remito);
+        if($cabeceraTh)
+        $this->view->cabeceraTh = $cabeceraTh;
+        $paginator = new Phalcon\Paginator\Adapter\QueryBuilder(array(
+            "builder" => $remito,
+            "limit"=> 20,
+            "page" => 1
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+        $this->view->pick('remito/search');
+
+    }
+    /**
+     * Searches for remito, suponiendo que siempre va a elegir una planilla
+     */
+    public function searchAction()
+    {/**
+        parent::importarJsTable();
+
+        $numberPage = 1;
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Remito", $_POST);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+        var_dump($parameters);
+        $cabeceraTh = Columna::columnasOrdenadasByPlanilla(27);
+        $select="";
+        foreach($cabeceraTh as $c){
+            $select .=$c->getColumnaClave()." , ";
+        }
+        $remito = $this->modelsManager
+            ->createBuilder($parameters)
+            ->columns('DISTINCT *')
+            ->addFrom('Remito','remito')
+            ->join('Planilla','planilla.planilla_id=Remito.remito_planillaId','planilla')
+            ->join('Cabecera','cabecera.cabecera_id=planilla.planilla_cabeceraId','cabecera')
+            ->join('Columna','columna.columna_cabeceraId=cabecera.cabecera_id','columna')
+            ->orderBy('columna.columna_posicion ASC')
+            ->getQuery()
+            ->execute()
+            ->toArray();
+        //$remito = Remito::find(array(
+        //    'columns'=>'DISTINCT remito.*',
+        //    'conditions'=>''
+        //));
+        if (count($remito) == 0) {
+            $this->flash->notice("The search did not find any remito");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+
+        //$tabla = $this->generarTablaDeRemitosNuevo($remito);
+        if($cabeceraTh)
+            $this->view->cabeceraTh = $cabeceraTh;
+        $paginator = new Paginator(array(
+            "data" => $remito,
+            "limit"=> 100000,
+            "page" => $numberPage
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+*/
+        parent::importarDataTables();
+
+        $numberPage = 1;
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Remito", $_POST);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+
+        $remito = Remito::find($parameters);
+        if (count($remito) == 0) {
+            $this->flash->notice("The search did not find any remito");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+
+        $paginator = new PaginatorModelo(array(
+            "data" => $remito,
+            "limit"=> 10,
+            "page" => $numberPage
+        ));
+        $this->view->pick('remito/search');
 
         $this->view->page = $paginator->getPaginate();
     }
@@ -290,45 +473,13 @@ class RemitoController extends ControllerBase
             "action" => "index"
         ));
     }
-/**
- * Muestra todos los remitos de una planilla.
- * Utiliza el plugin BoostrapTable.
- */
-    public function verRemitosAction($planillaId)
-    {
-        parent::importarJsTable();
-        $numberPage = 1;
 
-        $remito = Remito::findByRemito_planillaId($planillaId);
-        if (count($remito) == 0) {
-            $this->flash->notice("La planilla seleccionada no contiene ordenes cargadas.");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "planilla",
-                "action" => "search"
-            ));
-        }
-        $tabla = $this->generarTablaDeRemitoes($remito);
-
-        $paginator = new Paginator(array(
-            "data" => $tabla,
-            "limit" => 3,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
-        $planilla = Planilla::findFirstByPlanilla_id($planillaId);
-        if($planilla)
-            $this->view->planilla = $planilla;
-        $this->view->pick('remito/search');
-
-    }
     /**
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
      * @param $remito
      * @return array
      */
-    private function generarTablaDeRemitoes($remito){
+    private function generarTablaDeRemitos($remito){
         $tabla = null;
         $remito = Remito::find();
         foreach ($remito as $unRemito) {
@@ -565,5 +716,208 @@ class RemitoController extends ControllerBase
             "action" => "nuevoRemito",
             "params"=>array($planilla_id)
         ));
+    }
+
+    /**
+     * Formulario de busqueda de remitos.
+     */
+    public function busquedaPersonalizadaAction()
+    {
+        $this->persistent->parameters = null;
+        //Las columnas extras se deberian generar cuando elige una planilla (ajax)
+        $this->view->remitoForm = new RemitoForm(null,array('required'=>''));
+        $this->view->clienteForm = new ClienteNewForm(null,array('required'=>''));
+    }
+    /**
+     * Realizar una busqueda con filtros, personalizada.
+     * Realizar una busqueda sin filtros. (Absolutamente Todos los remitos)
+     * Realizar la busqueda de todos los remitos por planilla.
+     */
+    public function listarRemitosAction()
+    {
+        parent::importarJsTable();
+        if ($this->request->isPost()) {
+            //$buscarRemitos = $this->generarCriterioBusqueda($_POST);
+            $query = Criteria::fromInput($this->di, "Remitos", $_POST);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["remito"] = "remito_id";
+
+        $remito = Remito::find($parameters);
+        if (count($remito) == 0) {
+            $this->flash->notice("No se han encontrado resultados.");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+
+        $tabla = $this->generarTablaDeRemitosNuevo($remito);
+        $planilla = Planilla::findFirstByPlanilla_id($tabla[0]['remito_planillaId']);
+        $cabeceraTh = Columna::columnasOrdenadasByPlanilla($planilla->getPlanillaCabeceraid());
+
+        if($cabeceraTh)
+            $this->view->cabeceraTh = $cabeceraTh;
+
+        /*$final = array();
+        foreach($tabla as $cont) {
+            $list = array();
+            for ($i = 0; $i < count($cabeceraTh); $i++) {
+                $list[$cabeceraTh[$i]->getColumnaClave()] = $cont[$cabeceraTh[$i]->getColumnaClave()];
+            }
+            $final[]=$list;
+        }
+*/
+        $paginator = new Paginator(array(
+            "data" => $tabla,
+            "limit" => 100,
+            "page" => $numberPage
+        ));
+
+        if($planilla)
+            $this->view->planilla = $planilla;
+        $this->view->page = $paginator->getPaginate();
+
+    }
+    /**
+     * Encargado de recuperar los datos por post para generar un arreglo que pueda ser usado por Criteria.
+     * @param $datos
+     * @return array
+     */
+    private function generarCriterioBusqueda($datos){
+        $buscarRemitos = array();
+        $buscarRemitos['remito_planillaId']= $this->request->get('remito_planillaId');
+        $buscarRemitos['remito_fecha']= $this->request->get('remito_fecha');
+        $buscarRemitos['remito_remito']= $this->request->get('remito_remito');
+        $buscarRemitos['remito_transporteId']= $this->request->get('remito_transporteId');
+        $buscarRemitos['remito_tipoEquipoId']= $this->request->get('remito_tipoEquipoId');
+        $buscarRemitos['remito_tipoCargaId']= $this->request->get('remito_tipoCargaId');
+        $buscarRemitos['remito_choferId']= $this->request->get('remito_choferId');
+        $buscarRemitos['remito_clienteId']= $this->request->get('cliente_id');
+        $buscarRemitos['remito_frsId']= $this->request->get('frs_id');
+        $buscarRemitos['remito_equipoPozoId']= $this->request->get('equipoPozo_id');
+        $buscarRemitos['remito_centroCostoId']= $this->request->get('centroCosto_id');
+        $buscarRemitos['remito_viajeId']= $this->request->get('remito_viajeId');
+        $buscarRemitos['remito_concatenadoId']= $this->request->get('remito_concatenadoId');
+        //Recupero la operadora_id y busco al cliente, y con el cliente puedo buscar las ordenes
+        if($this->request->has('operadora_id') && $this->request->getPost("operadora_id")!='')
+        {
+            $operadora = Operadora::findFirst(array(
+                "operadora_habilitado=1 AND operadora_id = :operadora_id:",
+                'bind'=>array('operadora_id'=>$this->request->getPost("operadora_id"))
+            ));
+            $buscarRemitos['remito_clienteId']= $operadora->getOperadoraClienteId();
+        }
+        if($this->request->has('linea_id') && $this->request->getPost("linea_id")!='')
+        {
+            $linea = Linea::findFirst(array(
+                "linea_habilitado=1 AND linea_id = :linea_id:",
+                'bind'=>array('linea_id'=>$this->request->getPost("linea_id"))
+            ));
+            $buscarRemitos['remito_clienteId']= $linea->getLineaClienteid();
+        }
+        if($this->request->has('yacimiento_id') && $this->request->getPost("yacimiento_id")!='')
+        {
+            $yacimiento = Yacimiento::findFirst(array(
+                "yacimiento_habilitado=1 AND yacimiento_id = :yacimiento_id:",
+                'bind'=>array('yacimiento_id'=>$this->request->getPost("yacimiento_id"))
+            ));
+            $operadora = Operadora::findFirst(array(
+                "operadora_habilitado=1 AND operadora_id = :operadora_id:",
+                'bind'=>array('operadora_id'=>$yacimiento->getYacimientoOperadoraId())
+            ));
+            if($operadora)
+                $buscarRemitos['remito_clienteId']= $operadora->getOperadoraClienteId();
+        }
+        return $buscarRemitos;
+    }
+
+    /**
+     * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
+     * @param $remito
+     * @return array
+     */
+    private function generarTablaDeRemitosNuevo($remito){
+        $tabla = array();
+        foreach ($remito as $unRemito) {
+            $fila = array();
+            $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
+
+            /*================ Planilla ================*/
+            $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
+            $fila['remito_planillaId']=$unRemito->getRemitoPlanillaId();
+
+            /*================ Remito ================*/
+            $fila['remito_nroOrden']=$unRemito->getRemitoNroOrden();
+            $fila['remito_fecha']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
+            $fila['remito_periodo']=$unRemito->getRemitoPeriodo();
+            $fila['remito_nro']=$unRemito->getRemitoNro();//remito Sya
+
+
+            /*================ Transporte ================*/
+            $fila['transporte_dominio']=$unRemito->getTransporte()->getTransporteDominio();
+            $fila['transporte_nroInterno']=$unRemito->getTransporte()->getTransporteNroInterno();
+
+            /*================ TipoEquipo ================*/
+            $fila['tipoEquipo_nombre']=$unRemito->getTipoequipo()->getTipoEquipoNombre();
+
+            /*================ TipoCarga ================*/
+            $fila['tipoCarga_nombre']=$unRemito->getTipocarga()->getTipoCargaNombre();
+
+            /*================ Chofer ================*/
+            $fila['chofer_dni']=$unRemito->getChofer()->getChoferDni();
+            $fila['chofer_nombreCompleto']=$unRemito->getChofer()->getChoferNombreCompleto();
+            $fila['chofer_esFletero']=($unRemito->getChofer()->getChoferEsFletero()==1?'SI':'NO');
+
+            /*================ Cliente ================*/
+            $fila['cliente_nombre']=$unRemito->getCliente()->getClienteNombre();
+
+            /*================ Operadora ================*/
+           //FIXME: NO puedo mostrar el nombre de la operadora!! Porque no tiene operadora cargada!
+           $fila['operadora_nombre'] = "9"; //$unRemito->getOperadora()->getOperadoraNombre();
+
+            /*================ EquipoPozo ================*/
+            $fila['equipoPozo_nombre']= $unRemito->getEquipopozo()->getEquipoPozoNombre();
+
+            /*================ Yacimiento ================*/
+            $yacimiento = Yacimiento::findFirstByYacimiento_id($unRemito->getEquipopozo()->getEquipopozoYacimientoid());
+            $fila['yacimiento_destino'] = $yacimiento->getYacimientoDestino();
+
+
+            /*================ CentroCosto ================*/
+            $fila['centroCosto_codigo'] = $unRemito->getCentrocosto()->getCentroCostoCodigo();
+
+            /*================ Linea ================*/
+            $linea = Linea::findFirstByLinea_id($unRemito->getCentrocosto()->getCentroCostoLineaId());
+            $fila['linea_nombre']= $linea->getLineaNombre();
+
+            /*================ Viaje ================*/
+            $fila['viaje_origen']= $unRemito->getViaje()->getViajeOrigen();
+            /*================ Concatenado ================*/
+            $fila['concatenado_nombre']= $unRemito->getConcatenado()->getConcatenadoNombre();
+
+            /*================ Tarifa ================*/
+            $tarifa = Tarifa::findFirst();
+            $fila['tarifa_hsServicio']= $unRemito->getTarifa()->getTarifaHsServicio();
+            $fila['tarifa_hsKm']=  $unRemito->getTarifa()->getTarifaKm();
+            $fila['tarifa_hsHidro']=  $unRemito->getTarifa()->getTarifaHsHidro();
+            $fila['tarifa_hsMalacate']=  $unRemito->getTarifa()->getTarifaHsMalacate();
+            $fila['tarifa_hsStand']=  $unRemito->getTarifa()->getTarifaHsStand();
+
+            /*================ Orden ================*/
+            $fila['remito_observaciones']=$unRemito->getRemitoObservacion();
+            $fila['remito_conformidad']=($unRemito->getRemitoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoConformidad());
+            $fila['remito_noConformidad']=($unRemito->getRemitoNoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoNoConformidad());
+
+            $tabla[] = $fila;
+        }
+        return $tabla;
     }
 }
