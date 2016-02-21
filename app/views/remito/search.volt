@@ -75,31 +75,9 @@
             {% for remito in page.items %}
                 <tr>
                     <td>X</td>
-                    <td>{{ remito.getRemitoNroOrden() }}</td>
-                    <td>{{ remito.getRemitoNro() }}</td>
-                    <td>{{ remito.getTransporte().getTransporteDominio() }}</td>
-                    <td>{{ remito.getTransporte().getTransporteNroInterno() }}</td>
-                    <td>{{ remito.getTipoequipo().getTipoequipoNombre() }}</td>
-                    <td>{{ remito.getTipocarga().getTipocargaNombre() }}</td>
-                    <td>{{ remito.getChofer().getChoferDni() }}</td>
-                    <td>{{ remito.getChofer().getChoferNombreCompleto() }}</td>
-                    <td>{{ remito.getRemitoFecha() }}</td>
-                    <td>{{ remito.getCliente().getClienteNombre() }}</td>
-                    <td>{{ remito.getViaje().getViajeOrigen() }}</td>
-                    <td>{{ remito.getEquipopozo().getYacimiento().getYacimientoDestino() }}</td>
-                    <td>{{ remito.getEquipopozo().getEquipopozoNombre() }}</td>
-                    <td>{{ remito.getConcatenado().getConcatenadoNombre() }}</td>
-                    <td>{{ remito.getRemitoOperadoraid() }}</td>
-                    <td>{{ remito.getCentrocosto().getLinea().getLineaNombre() }}</td>
-                    <td>{{ remito.getCentrocosto().getCentrocostoCodigo() }}</td>
-                    <td>{{ remito.getRemitoObservacion() }}</td>
-                    <td>{{ remito.getTarifa().getTarifaKm() }}</td>
-                    <td>{{ remito.getTarifa().getTarifaHshidro() }}</td>
-                    <td>{{ remito.getTarifa().getTarifaHsmalacate() }}</td>
-                    <td>{{ remito.getTarifa().getTarifaHsservicio() }}</td>
-                    <td>{{ remito.getTarifa().getTarifaHsstand() }}</td>
-                    <td>{{ remito.getRemitoConformidad() }}</td>
-                    <td>{{ remito.getRemitoNoconformidad() }}</td>
+                    {% for item in remito %}
+                    <td>{{ item }}</td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
         {% endif %}

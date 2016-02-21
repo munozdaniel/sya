@@ -118,10 +118,31 @@ class RemitoController extends ControllerBase
             $parameters = array();
         }
         $parameters["order"] = "remito_id";
-
-        $remito = Remito::find($parameters);
+        //$remito = Remito::find($parameters);
+        $remito = $this->modelsManager
+            ->createBuilder($parameters)
+            ->columns('Remito.remito_nroOrden,Remito.remito_nro, Transporte.transporte_dominio,Transporte.transporte_nroInterno,Tipoequipo.tipoEquipo_nombre,Tipocarga.tipoCarga_nombre,
+            Chofer.chofer_dni,Chofer.chofer_nombreCompleto, DATE_FORMAT(Remito.remito_fecha, \'%d/%m/%Y\'), Cliente.cliente_nombre,Y.yacimiento_destino, Equipopozo.equipoPozo_nombre,
+            Concatenado.concatenado_nombre,Operadora.operadora_nombre, L.linea_nombre, Centrocosto.centroCosto_codigo, Remito.remito_observacion, Tarifa.tarifa_km, Tarifa.tarifa_hsHidro,
+             Tarifa.tarifa_hsMalacate, Tarifa.tarifa_hsServicio, Tarifa.tarifa_hsStand, Remito.remito_conformidad, Remito.remito_noConformidad')
+            ->from('Remito')
+            ->join('Transporte')
+            ->join('Tipoequipo')
+            ->join('Tipocarga')
+            ->join('Chofer')
+            ->join('Cliente')
+            ->join('Equipopozo')
+            ->join('Yacimiento','Y.yacimiento_id=Equipopozo.equipoPozo_yacimientoId','Y')
+            ->join('Concatenado')
+            ->join('Operadora')
+            ->join('Centrocosto')
+            ->join('Linea','L.linea_id=Centrocosto.centroCosto_lineaId','L')
+            ->join('Tarifa')
+            ->getQuery()
+            ->execute();
+        echo "Total <br> ".count($remito);
         if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
+            $this->flash->notice("No se han encontrado resultados");
 
             return $this->dispatcher->forward(array(
                 "controller" => "remito",
@@ -131,7 +152,7 @@ class RemitoController extends ControllerBase
 
         $paginator = new PaginatorModelo(array(
             "data" => $remito,
-            "limit"=> 10,
+            "limit"=> 40,
             "page" => $numberPage
         ));
         $this->view->pick('remito/search');
