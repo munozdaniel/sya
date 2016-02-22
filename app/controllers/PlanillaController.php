@@ -84,7 +84,17 @@ class PlanillaController extends ControllerBase
         $this->assets->collection('headerCss')
             ->addCss('plugins/jQueryUI/jquery-ui.css')
             ->addCss('dist/css/planilla.css');
+        $this->view->fechaActual = date('m/Y');
+        $elemento = new DataListElement('cliente_nombre',
+            array(
+                array('placeholder' => 'Seleccionar Cliente','required'=>'', 'class'=>'form-control', 'maxlength' => 60),
+                Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
+                array('cliente_id', 'cliente_nombre'),
+                'cliente_id'
+            ));
+        $elemento->setLabel('Nombre del Cliente');
 
+        $this->view->selectCliente = $elemento;
     }
 
     /**
@@ -126,14 +136,19 @@ class PlanillaController extends ControllerBase
         $this->view->disable();
         $errors         = array();      // array to hold validation errors
         $data           = array();      // array to pass back data
-        if (empty($_POST['planilla_nombreCliente']))
-            $errors['planilla_nombreCliente'] = 'El Nombre de la Planilla es requerido';
+        if (empty($_POST['fechaActual']))
+            $errors['fechaActual'] = 'La fecha actual es requerida';
+        if (empty($_POST['tipo_planilla']))
+            $errors['tipo_planilla'] = 'El tipo de planilla es requerido';
+        if (empty($_POST['cliente_nombre']))
+            $errors['cliente_nombre'] = 'El nombre del cliente es requerido';
         if ( ! empty($errors)) {
             $data['success'] = false;
             $data['errors']  = $errors;
         }else {
             $planilla = new Planilla();
-            $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente",'string')));
+            date_default_timezone_set('America/Argentina/Mendoza');
+            $planilla->setPlanillaNombrecliente("PLANILLA_".$this->request->getPost('tipo_planilla')[0]."_".strtoupper($this->request->getPost("cliente_nombre",'string'))."_".$this->request->getPost('fechaActual')."_".date("h:i:s"));
             $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
             $planilla->setPlanillaArmada(0);
             $planilla->setPlanillaHabilitado(1);
@@ -149,7 +164,6 @@ class PlanillaController extends ControllerBase
                 $data['success'] = true;
                 $data['message'] = 'Operación exitosa';
                 $data['planilla_id'] = $planilla->getPlanillaId();
-               //$data['cabeceras']= Cabecera::findAllCabecera();
 
             }
         }// return all our data to an AJAX call
@@ -223,7 +237,41 @@ class PlanillaController extends ControllerBase
          $this->response->redirect('planilla/columnas');
         $this->view->disable();
     }
+    public function guardarCabeceraComoArregloAction()
+    {
+        $retorno = array();
+        $data['success']=true;
+        $this->view->disable();
 
+        if ($this->request->isPost()) {
+
+                if (isset($_POST['columnasBasicas'])) {
+                    $optionArray = $_POST['columnasBasicas'];
+                    $cadena= "";
+                    for ($i=0; $i<count($optionArray); $i++) {
+                        $item = $optionArray[$i];
+                        $cadena.= $item."-";
+                    }
+                    $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
+
+                    if(!$planilla)
+                        $retorno = "NO SE ENCONTRO LA PLANILLA";
+                    else{
+                        $planilla->setPlanillaCabecera($cadena);
+                        if(!$planilla->update())
+                            $retorno = "NO SE PUDO ACTUALIZAR LA PLANILLA";
+                        $data['cabeceraText'] = $cadena;
+
+                    }
+                }else{
+                    $data['success']=false;
+                    $retorno = "ES NECESARIO QUE SELECCIONE LAS COLUMNAS BASICAS A UTILIZAR";
+                }
+
+        }
+        $data['mensaje']=$retorno;
+        echo json_encode($data);
+    }
     /**
      * Permite crear las columnas extras que contendrá la planilla, que dependerán del cliente.
      */

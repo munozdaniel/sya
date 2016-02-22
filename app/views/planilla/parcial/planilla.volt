@@ -4,10 +4,34 @@
         <fieldset id="planilla" class="panel-border">
             <legend>Generar Planilla</legend>
 
-            <div id="grupo_planilla" class="form-group">
-                <label for="planilla_nombreCliente">Nombre de la Planilla</label>
-                {{ text_field("planilla_nombreCliente", "size" : 60,'class':'form-control', 'placeholder':'INGRESAR NOMBRE') }}
+            <div id="grupo_planilla" >
+                <div class="form-group">
+                     <strong>Fecha:</strong> {{ fechaActual }}
+                    {{ hidden_field('fechaActual','value':fechaActual) }}
+                </div>
+                <!-- radio -->
+                <div class="form-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="tipo_planilla" id="id_planilla_registro"
+                                   value="REGISTRO" checked>
+                            Planilla de Registro
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="tipo_planilla" id="id_planilla_oncall" value="ONCALL">
+                            Planilla On Call
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {#cliente_nombre#}
+                    {{ selectCliente.label() }}
+                    {{ selectCliente }}
+                </div>
             </div>
+            {#======================================================================================#}
             <div id="id_paneles" class="col-md-12 ocultar">
                 <div class="form-group">
                     <div class="radio">
@@ -23,17 +47,16 @@
                         </label>
                     </div>
                 </div>
-
                 <hr>
-
             </div>
+            {#======================================================================================#}
             <button id="btn_guardar_planilla" type="submit" class="btn btn-flat large btn-primary"><i
                         class="fa fa-save"></i> Guardar Planilla
             </button>
             <input id="btn_editar_planilla" type="button" disabled class="btn btn-flat large btn-google pull-right"
                    onclick='editarPlanilla()' value='Editar planilla'/>
         </fieldset>
-    </form>
+    {{ end_form() }}
 </div>
 <script>
     /**
@@ -41,14 +64,19 @@
      * continuar con el siguiente paso.
      */
     $(document).ready(function () {
-
         // PROCESANDO el formulario
         $('#form_planilla').submit(function (event) {
             $('.help-block').remove(); // remove the error text
+            var values = new Array();
+            $.each($("input[name='tipo_planilla']:checked"), function() {
+                values.push($(this).val());
+            });
 
             //PREPARANDO los datos para enviar
             var datos = {
-                'planilla_nombreCliente': $('#planilla_nombreCliente').val()
+                'fechaActual': $('#fechaActual').val(),
+                'tipo_planilla': values,
+                'cliente_nombre': $('#cliente_nombre').val()
             };
 
             $.ajax({
@@ -64,8 +92,9 @@
                         // log data to the console so we can see
                         console.log(data);
                         if (!data.success) {
-                            if (data.errors.planilla_nombreCliente) {
-                                $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + data.errors.planilla_nombreCliente + '</div>'); // add the actual error message under our input
+                            for (var item in data.errors) {
+                                var elemento = data.errors[item];
+                                $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + elemento + '</div>'); // add the actual error message under our input
                             }
                         } else {
                             // here we will handle errors and validation messages
