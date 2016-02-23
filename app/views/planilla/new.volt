@@ -15,9 +15,8 @@
     </table>
     <!-- Cuerpo -->
     <div class="box-body">
-        {{ partial('planilla/parcial/planilla') }}
-        <!-- ================================================================================= -->
-        <div class="col-xs-12 col-md-6">
+        <!-- =================================================================================
+        <div class="col-xs-12 col-md-12">
             <div class="box-body" style="margin-top: 25px !important;">
                 <dl class="dl-horizontal">
                     <dt>DESCRIPCIÓN</dt>
@@ -30,17 +29,15 @@
                     <dd style="text-align: left !important;"> Reordenar las columnas para las planillas Excel.</dd>
                 </dl>
             </div>
-        </div>
+        </div>-->
+        {{ partial('planilla/parcial/planilla') }}
+
         <!-- ================================================================================= -->
         <div class="col-xs-12 col-md-12">
             <hr>
         </div>
         <!-- ================================================================================= -->
         <div id="id_nuevaCabecera">
-            <div class="col-xs-12 col-md-12">
-               {{ partial('planilla/parcial/basicas') }}
-            </div>
-            <!-- ================================================================================= -->
             <div class="col-xs-12 col-md-12">
                {{ partial('planilla/parcial/extra') }}
             </div>

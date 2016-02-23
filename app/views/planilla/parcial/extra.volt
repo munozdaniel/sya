@@ -1,28 +1,30 @@
-{{ form("cabecera/crear","id":"form_columnas", "method":"post") }}
-<fieldset id="extra" class="panel-border" disabled>
-    <legend>Agregar Columnas Extras <small>(opcional)</small></legend>
-    <div id="grupo_extra" class="form-group col-md-6">
-        <div id="contenedor">
-            <div class="added">
-                <!-- Aca van a ir los inputs dinamicos-->
-                <em>Ingresar las columnas extras correspondientes a la nueva planilla</em>
+<div id="pnl_extra">
+    {{ form("cabecera/crear","id":"form_columnas", "method":"post") }}
+        <fieldset id="extra" class="panel-border" disabled>
+            <legend>Agregar Columnas Extras <small>(opcional)</small></legend>
+            <div id="grupo_extra" class="form-group col-md-6">
+                <div id="contenedor">
+                    <div class="added">
+                        <!-- Aca van a ir los inputs dinamicos-->
+                        <em>Ingresar las columnas extras correspondientes a la nueva planilla</em>
+                    </div>
+                    <input type="hidden" id="token" name="<?php echo $this->security->getTokenKey() ?>"
+                           value="<?php echo $this->security->getToken() ?>"/>
+                </div>
             </div>
-            <input type="hidden" id="token" name="<?php echo $this->security->getTokenKey() ?>"
-                   value="<?php echo $this->security->getToken() ?>"/>
-        </div>
-    </div>
-    <div class="col-md-6" style="margin-top: 25px !important;">
-        <a id="agregarCampo" class="btn btn-danger btn-flat" href="#"><i class="fa fa-plus"></i> Agregar
-            Columna Extra</a>
-    </div>
-    <div class="col-md-12">
-        <button id="btn_guardar_columnas" type="submit" class="btn btn-flat large btn-primary">
-            <i class="fa fa-save"></i> Guardar Columnas
-        </button>
-    </div>
+            <div class="col-md-6" style="margin-top: 25px !important;">
+                <a id="agregarCampo" class="btn btn-danger btn-flat" href="#"><i class="fa fa-plus"></i> Agregar
+                    Columna Extra</a>
+            </div>
+            <div class="col-md-12">
+                <button id="btn_guardar_columnas" type="submit" class="btn btn-flat large btn-primary">
+                    <i class="fa fa-save"></i> Guardar Columnas
+                </button>
+            </div>
 
-</fieldset>
-</form>
+        </fieldset>
+    {{ end_form() }}
+</div>
 <script>
     /**
      * Permite agregar inputs infinitamente

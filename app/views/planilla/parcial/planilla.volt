@@ -5,69 +5,54 @@
             <legend>Generar Planilla</legend>
 
             <div id="grupo_planilla" >
-                <div class="form-group">
-                     <strong>Fecha:</strong> {{ fechaActual }}
-                    {{ hidden_field('fechaActual','value':fechaActual) }}
-                </div>
-                <!-- radio -->
-                <div class="form-group">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="tipo_planilla" id="id_planilla_registro"
-                                   value="REGISTRO" checked>
-                            Planilla de Registro
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="tipo_planilla" id="id_planilla_oncall" value="ONCALL">
-                            Planilla On Call
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    {#cliente_nombre#}
-                    {{ selectCliente.label() }}
-                    {{ selectCliente }}
-                </div>
+                {# Genera alertas #}
             </div>
-            {#======================================================================================#}
-            <div id="id_paneles" class="col-md-12 ocultar">
-                <div class="form-group">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="opciones" id="rbt_nuevaCabecera" value="1" checked="" onchange="cambiarPanel()">
-                            Nueva Cabecera
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="opciones" id="rbt_cabeceraExistente" value="0">
-                            Utilizar Cabecera existente
-                        </label>
-                    </div>
+
+            <div class="form-group">
+                <strong>Fecha:</strong> {{ fechaActual }}
+                {{ hidden_field('fechaActual','value':fechaActual) }}
+            </div>
+            <div class="form-group">
+                {#cliente_nombre#}
+                {{ selectCliente.label() }}
+                {{ selectCliente }}
+            </div>
+            <!-- radio -->
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="tipo_planilla" id="id_planilla_registro"
+                               value="REGISTRO" checked>
+                        Planilla de Registro &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="radio" name="tipo_planilla" id="id_planilla_oncall" value="ONCALL">
+                        Planilla On Call
+                    </label>
                 </div>
                 <hr>
+                <button id="btn_guardar_planilla" type="submit" class="btn btn-flat btn-lg btn-primary"><i
+                            class="fa fa-save"></i> Guardar Planilla
+                </button>
             </div>
             {#======================================================================================#}
-            <button id="btn_guardar_planilla" type="submit" class="btn btn-flat large btn-primary"><i
-                        class="fa fa-save"></i> Guardar Planilla
-            </button>
-            <input id="btn_editar_planilla" type="button" disabled class="btn btn-flat large btn-google pull-right"
-                   onclick='editarPlanilla()' value='Editar planilla'/>
         </fieldset>
     {{ end_form() }}
 </div>
 <script>
     /**
-     * Realiza una llamada ajax para guardar los datos, si todo sale ok, permite habilitar los botones para
-     * continuar con el siguiente paso.
+     * Realiza una llamada ajax para guardar los datos, luego, permite habilitar los botones para
+     * seleccionar el el radio button para la cabecera.
      */
     $(document).ready(function () {
+        $('#pnl_cabecera').hide();
+        $('#pnl_extra').hide();
+        $('#pnl_ordenar').hide();
+
         // PROCESANDO el formulario
         $('#form_planilla').submit(function (event) {
             $('.help-block').remove(); // remove the error text
-            var values = new Array();
+            var values = [];
             $.each($("input[name='tipo_planilla']:checked"), function() {
                 values.push($(this).val());
             });
@@ -92,25 +77,22 @@
                         // log data to the console so we can see
                         console.log(data);
                         if (!data.success) {
-                            for (var item in data.errors) {
-                                var elemento = data.errors[item];
+                            for (var item in data.mensaje) {
+                                var elemento = data.mensaje[item];
                                 $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + elemento + '</div>'); // add the actual error message under our input
                             }
                         } else {
                             // here we will handle errors and validation messages
                             $('#btn_guardar_planilla').prop('disabled', true);//Dehsabilitar boton guardar planilla
-                            $('#btn_editar_planilla').prop('disabled', false);//Habilitar boton editar planilla
-                            $('#id_paneles').show();//Habilitar boton editar planilla
-                            $('#pnl_seleccionar').prop('disabled', false);//Habilitar div para seleccionar radio buttons
-                            document.getElementById('planilla_id').value = data.planilla_id;
+                            //$('#pnl_seleccionar').prop('disabled', false);//Habilitar div para seleccionar radio buttons
                             $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
-                            //Recargar combo con cabeceras
-                           // llenarComboBoxCabecera(data.cabeceras);
+                            document.getElementById('planilla_id').value = data.planilla_id;
+                            $('#pnl_cabecera').show();//Habilitar boton editar planilla
+
                         }
                     })
                 // using the fail promise callback
                     .fail(function (data) {
-
                         // show any errors
                         // best to remove for production
                         console.log(data);
@@ -121,6 +103,10 @@
         });
 
     });//Fin: ready
+</script>
+{{ partial('planilla/parcial/cabecera') }}
+<script>
+
     /**
      * Una vez guardado los datos, es posible editarlos.
      */
@@ -163,12 +149,13 @@
         // stop the form from submitting the normal way and refreshing the page
         event.preventDefault();
     }
+
     /*Cuando cambian los radio buttons, habilita un panel o el otro.*/
-    $('input[type=radio][name=opciones]').change(function() {
+    /*$('input[type=radio][name=opciones]').change(function() {
         if(this.value == 0){
             $("#id_cabeceraExistente").show();
             $("#id_nuevaCabecera").hide();
-            $.ajax({
+           *//* $.ajax({
                 type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
                 url: '/sya/cabecera/cargarCabecera', // the url where we want to POST
                 dataType: 'json', // what type of data do we expect back from the server
@@ -185,7 +172,7 @@
                         // best to remove for production
                         console.log("FAIL");
                         console.log(data);
-                    });
+                    });*//*
         }else{
             $("#id_cabeceraExistente").hide();
             $("#id_nuevaCabecera").show();
@@ -210,5 +197,5 @@
             select.appendChild(opt);
         }
     }
-
+    */
 </script>

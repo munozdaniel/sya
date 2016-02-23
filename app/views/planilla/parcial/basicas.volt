@@ -10,37 +10,37 @@
     </div>
     <div class="col-md-12"><hr></div>
     <div class="col-md-3">
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="ORDEN" checked/>ORDEN<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="REMITO" checked/>REMITO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="PATENTE" checked/>PATENTE<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="N° INTERNO" checked/>N° INTERNO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="TIPO DE EQUIPO" checked/>TIPO DE EQUIPO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="TIPO DE CARGA" checked/>TIPO DE CARGA<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Remito.remito_nroOrden" checked/>ORDEN<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Remito.remito_nro" checked/>REMITO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Transporte.transporte_dominio" checked/>PATENTE<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Transporte.nroInterno" checked/>N° INTERNO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tipoequipo.tipoEquipo_nombre" checked/>TIPO DE EQUIPO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tipocarga.tipoCarga_nombre" checked/>TIPO DE CARGA<br/>
     </div>
     <div class="col-md-3">
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="DNI" checked/>DNI<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="CHOFER" checked/>CHOFER<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="FECHA" checked/>FECHA<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="CLIENTE" checked/>CLIENTE<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="ORIGEN" checked/>ORIGEN<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="DESTINO" checked/>DESTINO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Chofer.chofer_dni" checked/>DNI<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Chofer.chofer_nombre" checked/>CHOFER<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Remito.remito_fecha" checked/>FECHA<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Cliente.cliente_nombre" checked/>CLIENTE<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Viaje.viaje_origen" checked/>ORIGEN<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Yacimiento.yacimiento_destino" checked/>DESTINO<br/>
     </div>
     <div class="col-md-3">
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="EQUIPO" checked/>EQUIPO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="CONCATENADO" checked/>CONCATENADO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="OPERADORA" checked/>OPERADORA<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="LINEA-PSL" checked/>LINEA-PSL<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="CENTRO COSTO" checked/>CENTRO COSTO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="OBSERVACIONES" checked/>OBSERVACIONES<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Equipopozo.equipoPozo_nombre" checked/>EQUIPO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Concatenado.concatenado_nombre" checked/>CONCATENADO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Operadora.operadora_nombre" checked/>OPERADORA<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Linea.linea_nombre" checked/>LINEA-PSL<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Centrocosto.centroCosto_codigo" checked/>CENTRO COSTO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Remito.remito_observaciones" checked/>OBSERVACIONES<br/>
     </div>
     <div class="col-md-3">
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="KM" checked/>KM<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="HS HIDRO" checked/>HS HIDRO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="HS MALACATE" checked/>HS MALACATE<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="HS DE ESPERA" checked/>HS DE ESPERA<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="HS TOTAL SERVICIO" checked/>HS TOTAL SERVICIO<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="CONFORMIDAD RE" checked/>CONFORMIDAD RE<br/>
-        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="MOT NO CONFORM RE" checked/>MOT NO CONFORM RE<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tarifa.tarifa_km" checked/>KM<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tarifa.tarifa_hsHidro" checked/>HS HIDRO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tarifa.tarifa_hsMalacate" checked/>HS MALACATE<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tarifa.tarifa_hsStand" checked/>HS DE ESPERA<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Tarifa.tarifa_hsServicio" checked/>HS TOTAL SERVICIO<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Remito.remito_conformidad" checked/>CONFORMIDAD RE<br/>
+        <input type="checkbox" name="col_basicas[]" class="columnas_basicas" value="Remito.remito_noConformidad" checked/>MOT NO CONFORM RE<br/>
     </div>
     <div class="col-md-12">
         <hr>
@@ -79,14 +79,13 @@
             values.push($(this).val());
         });
         var datos = {
-            'planilla_nombreCliente': $('#planilla_nombreCliente').val(),
             'planilla_id': $('#planilla_id').val(),
             'columnasBasicas':values
         };
 
         $.ajax({
             type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-            url: '/sya/cabecera/guardarCabeceraBasica', // the url where we want to POST
+            url: '/sya/planilla/guardarColumnasBasicas', // the url where we want to POST
             data: datos, // our data object
             dataType: 'json', // what type of data do we expect back from the server
             encode: true
@@ -106,8 +105,8 @@
                         $('#extra').prop('disabled', false);//Habilitar paso 3
                         $('#ordenar').prop('disabled', false);//Habilitar paso 4
                         //Cargar la cabecera_id para agregarle las columnas extras
-                        document.getElementById('cabecera_id').value = data.cabecera_id;
-                        cargarTabla();
+                        //document.getElementById('cabecera_id').value = data.cabecera_id;
+                        cargarTablaOriginal(data.cabeceraText);
                     }
                 })
             // using the fail promise callback
