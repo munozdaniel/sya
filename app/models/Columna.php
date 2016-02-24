@@ -257,7 +257,9 @@ class Columna extends \Phalcon\Mvc\Model
     public static function guardarColumnasBasica($cabecera_id)
     {
         try {
-
+            $data['success']=true;
+            $data['mensaje']="Operación Exitosa";
+            $retorno=array();
             $manager = new \Phalcon\Mvc\Model\Transaction\Manager();
             $transaction = $manager->get();
 
@@ -266,312 +268,429 @@ class Columna extends \Phalcon\Mvc\Model
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(1);
             $columna->setColumnaNombre('ORDEN');
-            $columna->setColumnaClave('remito_nroOrden');
+            $columna->setColumnaClave('Remito.remito_nroOrden');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
                 $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(2);
             $columna->setColumnaNombre('REMITO');
-            $columna->setColumnaClave('remito_nro');
+            $columna->setColumnaClave('Remito.remito_nro');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(3);
             $columna->setColumnaNombre('PATENTE');
-            $columna->setColumnaClave('transporte_dominio');
+            $columna->setColumnaClave('Transporte.transporte_dominio');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(4);
             $columna->setColumnaNombre('N° INTERNO');
-            $columna->setColumnaClave('transporte_nroInterno');
+            $columna->setColumnaClave('Transporte.nroInterno');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(5);
             $columna->setColumnaNombre('TIPO EQUIPO');
-            $columna->setColumnaClave('tipoEquipo_nombre');
+            $columna->setColumnaClave('Tipoequipo.tipoEquipo_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(6);
             $columna->setColumnaNombre('TIPO CARGA');
-            $columna->setColumnaClave('tipoCarga_nombre');
+            $columna->setColumnaClave('Tipocarga.tipoCarga_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(7);
             $columna->setColumnaNombre('DNI');
-            $columna->setColumnaClave('chofer_dni');
+            $columna->setColumnaClave('Chofer.chofer_dni');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(8);
             $columna->setColumnaNombre('CHOFER');
-            $columna->setColumnaClave('chofer_nombreCompleto');
+            $columna->setColumnaClave('Chofer.chofer_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(9);
             $columna->setColumnaNombre('FECHA');
-            $columna->setColumnaClave('remito_fecha');
+            $columna->setColumnaClave('Remito.remito_fecha');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(10);
             $columna->setColumnaNombre('CLIENTE');
-            $columna->setColumnaClave('cliente_nombre');
+            $columna->setColumnaClave('Cliente.cliente_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(11);
             $columna->setColumnaNombre('ORIGEN');
-            $columna->setColumnaClave('viaje_origen');
+            $columna->setColumnaClave('Viaje.viaje_origen');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(12);
             $columna->setColumnaNombre('DESTINO');
-            $columna->setColumnaClave('yacimient_destino');
+            $columna->setColumnaClave('Yacimiento.yacimiento_destino');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(13);
             $columna->setColumnaNombre('EQUIPO/POZO');
-            $columna->setColumnaClave('equipoPozo_nombre');
+            $columna->setColumnaClave('Equipopozo.equipoPozo_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(14);
             $columna->setColumnaNombre('CONCATENADO');
-            $columna->setColumnaClave('concatenado_nombre');
+            $columna->setColumnaClave('Concatenado.concatenado_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(15);
             $columna->setColumnaNombre('OPERADORA');
-            $columna->setColumnaClave('operadora_nombre');
+            $columna->setColumnaClave('Operadora.operadora_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(16);
             $columna->setColumnaNombre('LINEA-PSL');
-            $columna->setColumnaClave('linea_nombre');
+            $columna->setColumnaClave('Linea.linea_nombre');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(17);
             $columna->setColumnaNombre('CENTRO COSTO');
-            $columna->setColumnaClave('centroCosto_codigo');
+            $columna->setColumnaClave('Centrocosto.centroCosto_codigo');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(18);
             $columna->setColumnaNombre('OBSERVACIONES');
-            $columna->setColumnaClave('remito_observacion');
+            $columna->setColumnaClave('Remito.remito_observaciones');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(19);
             $columna->setColumnaNombre('KM');
-            $columna->setColumnaClave('tarifa_km');
+            $columna->setColumnaClave('Tarifa.tarifa_km');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(20);
-            $columna->setColumnaNombre('HS HIDRO/MALACATE');
+            $columna->setColumnaNombre('HS HIDRO');
             $columna->setColumnaClave('tarifa_hsHidro');//Ahora esta unificado con las hsMalacate FIXME
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
-            /*=================================*//*
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
+            /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(14);
-            $columna->setColumnaNombre('HS MOV Y DESMOV');
-            $columna->setColumnaClave('tarifa_movDesmov');//Ahora esta unificado
+            $columna->setColumnaPosicion(20);
+            $columna->setColumnaNombre('HS MALACATE');
+            $columna->setColumnaClave('Tarifa.tarifa_hsMalacate');//Ahora esta unificado con las hsMalacate FIXME
             $columna->setColumnaHabilitado(1);
-            if(!$columna->save()){
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
-            }*/
-            /*=================================*/
-            /* $columna = new Columna();
-             $columna->setTransaction($transaction);
-            $columna->setColumnaCabeceraId($cabecera_id);
-             $columna->setColumnaPosicion(14);
-             $columna->setColumnaNombre('HS CARGA/DESCARGA');
-             $columna->setColumnaClave('tarifa_cargaDescarga');
-             $columna->setColumnaHabilitado(1);
-             $columna->save();*/
+            $columna->setColumnaExtra(0);
+            if (!$columna->save()) {
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
+            }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(21);
             $columna->setColumnaNombre('HS DE ESPERA');
-            $columna->setColumnaClave('tarifa_hsStand');
+            $columna->setColumnaClave('Tarifa.tarifa_hsStand');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(22);
             $columna->setColumnaNombre('HS TOTAL SERVICIO');
-            $columna->setColumnaClave('tarifa_hsServicio');
+            $columna->setColumnaClave('Tarifa.tarifa_hsServicio');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(23);
             $columna->setColumnaNombre('CONFORMIDAD RE');
-            $columna->setColumnaClave('remito_conformidad');
+            $columna->setColumnaClave('Remito.remito_conformidad');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(24);
             $columna->setColumnaNombre('MOT NO CONFORM RE');
-            $columna->setColumnaClave('remito_noConformidad');
+            $columna->setColumnaClave('Remito.remito_noConformidad');
             $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
             if (!$columna->save()) {
-                $transaction->rollback("Ocurrió un problema al guardar una columna");
-                return false;
+               $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
             }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+
             /*=================================*/
             $transaction->commit();
-            return true;
+            $data['columnas']=$retorno;
+            return $data;
         } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
             echo 'FALLO, motivo: ', $e->getMessage();
         }
@@ -585,8 +704,8 @@ class Columna extends \Phalcon\Mvc\Model
     {
         $columnas = array();//Busco todas las columnas para armar el th ordenadamente
         $columnas = Columna::find(array(
-            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 ORDER BY columna_posicion ASC",
-            'bind'=>array('cabecera_id'=>$cabecera_id)
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 ORDER BY columna_posicion DESC",
+            'bind'=>array('cabecera_id'=>9)
         ));
         return $columnas;
     }

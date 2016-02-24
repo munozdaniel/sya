@@ -162,21 +162,6 @@ class Cabecera extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * @param $nombre
-     * @return cabecera_id
-     */
-    public static function guardar($nombre)
-    {
-        /*$cabecera = new Cabecera();
-        $cabecera->setCabeceraFecha(date('Y-m-d'));
-        $cabecera->setCabeceraHabilitado(1);
-        $cabecera->setCabeceraNombre(strtoupper($nombre));
-        if($cabecera->save())
-        {
-
-        }*/
-    }
 
     /**
      * Guarda una cabecera con las columnas basicas de una planilla.

@@ -40,6 +40,8 @@
         /*================================ NUEVA CABECERA ========================*/
         if($("input[name='opciones']:checked").val()==1)
         {
+            $("#id_cabeceraExistente").hide();
+            $("#id_nuevaCabecera").show();
             $('.help-block').remove(); // remove the error text
             var datos = {
                 'planilla_id': $('#planilla_id').val()
@@ -66,6 +68,7 @@
                             $('#ordenar').prop('disabled', false);
                             $('#pnl_extra').show();
                             $('#pnl_ordenar').show();
+                            $('#cabecera_id').value = data.cabecera_id;
                             cargarTablaReordenable(data.columnas);
                         }
                     })
@@ -82,27 +85,31 @@
 
             $("#id_cabeceraExistente").show();
             $("#id_nuevaCabecera").hide();
+             datos = {
+                'cliente_nombre': $('#cliente_nombre').val()
+            };
             $.ajax({
                 type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                url: '/sya/cabecera/cabecerasCargadas', // the url where we want to POST
+                url: '/sya/cabecera/todasLasCabeceras', // the url where we want to POST
+                data: datos, // our data object
                 dataType: 'json', // what type of data do we expect back from the server
                 encode: true
             })
                     .done(function (data) {
-                        console.log("OPCION 0 : "+data);
                         if (data.success)
                         {
-                            llenarComboBoxCabecera(data.columnas);
+                            llenarComboBoxCabecera(data.cabeceras);
                             $('#extra').prop('disabled', false);//Habilitar panel extra
                             $('#ordenar').prop('disabled', false);//Habilitar panel columnas para ordenar
                             $('#planilla').prop('disabled', false);//Deshabilitar panel planilla
+                            $('#cabecera_mje').append('<div class="help-block  alert-success">&nbsp; Por favor, seleccione la cabecera a utilizar</div>'); // add the actual error message under our input
 
                         }
                         else
                         {
                             for (var item in data.mensaje) {
                                 var elemento = data.mensaje[item];
-                                $('#id_paneles').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + elemento + '</div>'); // add the actual error message under our input
+                                $('#cabecera_mje').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + elemento + ' <br> Por favor, cree una nueva cabecera.</div>'); // add the actual error message under our input
                             }
                         }
                         //FIXME: Que pasa si  no encuentra cabeceras ???
@@ -118,7 +125,6 @@
     }
     function cargarTablaReordenable(columnas) {
 
-        console.log("ARREGLO: "+columnas);
         var ul = document.getElementById("ul_columnas");
         var i = 0;
         for(var item in columnas)
@@ -134,6 +140,29 @@
             li.setAttribute("id", 'listItem_' + i);
             ul.appendChild(li);
             i++;
+        }
+    }
+    /**
+     * Opcion 2
+     */
+    function llenarComboBoxCabecera(cabeceras)
+    {
+        $('#cabecera_id').empty();
+
+        var select = document.getElementById("cabecera_id");
+        var optEmpty = document.createElement("option");
+        optEmpty.text="Seleccione una opción";
+        optEmpty.value="";
+        select.appendChild(optEmpty);
+        for(var item in cabeceras)
+        {
+
+            var elemento = cabeceras[item];
+            // log data to the console so we can see
+            var opt = document.createElement("option");
+            opt.value = elemento['cabecera_id'];
+            opt.text = elemento['nombreCliente'];
+            select.appendChild(opt);
         }
     }
 </script>

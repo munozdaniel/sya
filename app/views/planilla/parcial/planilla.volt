@@ -179,23 +179,6 @@
 
         }
     });
-    function llenarComboBoxCabecera(cabeceras)
-    {
-        $('#cabecera-list').empty();
 
-        var select = document.getElementById("cabecera-list");
-        var optEmpty = document.createElement("option");
-        optEmpty.text="Seleccione una opción";
-        optEmpty.value="";
-        select.appendChild(optEmpty);
-        for (var item in cabeceras) {
-            var columna = cabeceras[item];
-            // log data to the console so we can see
-            var opt = document.createElement("option");
-            opt.value = columna.valor;
-            opt.text = columna.nombre;
-            select.appendChild(opt);
-        }
-    }
     */
 </script>

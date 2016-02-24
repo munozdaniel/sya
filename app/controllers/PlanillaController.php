@@ -20,7 +20,7 @@ class PlanillaController extends ControllerBase
     {
         $this->persistent->parameters = null;
         $miSesion = $this->session->get('auth');
-        if($miSesion['rol_nombre']=='ADMIN')
+        if ($miSesion['rol_nombre'] == 'ADMIN')
             $this->view->admin = 1;
         else
             $this->view->admin = 0;
@@ -67,7 +67,7 @@ class PlanillaController extends ControllerBase
 
         $this->view->page = $paginator->getPaginate();
         $miSesion = $this->session->get('auth');
-        if($miSesion['rol_nombre']=='ADMIN')
+        if ($miSesion['rol_nombre'] == 'ADMIN')
             $this->view->admin = 1;
         else
             $this->view->admin = 0;
@@ -87,8 +87,8 @@ class PlanillaController extends ControllerBase
         $this->view->fechaActual = date('m/Y');
         $elemento = new DataListElement('cliente_nombre',
             array(
-                array('placeholder' => 'Seleccionar Cliente','required'=>'', 'class'=>'form-control', 'maxlength' => 60),
-                Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
+                array('placeholder' => 'Seleccionar Cliente', 'required' => '', 'class' => 'form-control', 'maxlength' => 60),
+                Cliente::find(array('cliente_habilitado=1', 'order' => 'cliente_nombre')),
                 array('cliente_id', 'cliente_nombre'),
                 'cliente_id'
             ));
@@ -134,41 +134,42 @@ class PlanillaController extends ControllerBase
     public function crearAction()
     {
         $this->view->disable();
-        $errors         = array();      // array to hold validation errors
-        $data           = array();      // array to pass back data
+        $errors = array();      // array to hold validation errors
+        $data = array();      // array to pass back data
         if (empty($_POST['fechaActual']))
             $errors['fechaActual'] = 'La fecha actual es requerida';
         if (empty($_POST['tipo_planilla']))
             $errors['tipo_planilla'] = 'El tipo de planilla es requerido';
         if (empty($_POST['cliente_nombre']))
             $errors['cliente_nombre'] = 'El nombre del cliente es requerido';
-        if ( ! empty($errors)) {
+        if (!empty($errors)) {
             $data['success'] = false;
-            $data['errors']  = $errors;
-        }else {
+            $data['mensaje'] = $errors;
+        } else {
+            $this->db->begin();
             $planilla = new Planilla();
             date_default_timezone_set('America/Argentina/Mendoza');
-            $planilla->setPlanillaNombrecliente("PLANILLA_".$this->request->getPost('tipo_planilla')[0]."_".strtoupper($this->request->getPost("cliente_nombre",'string'))."_".$this->request->getPost('fechaActual')."_".date("h:i:s"));
+            $planilla->setPlanillaNombrecliente("PLANILLA_" . $this->request->getPost('tipo_planilla')[0] . "_" . strtoupper($this->request->getPost("cliente_nombre", 'string')) . "_" . $this->request->getPost('fechaActual') . "_" . date("h:i:s"));
             $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
             $planilla->setPlanillaArmada(0);
             $planilla->setPlanillaHabilitado(1);
 
-            if (!$planilla->save())
-            {
+            if (!$planilla->save()) {
                 foreach ($planilla->getMessages() as $message) {
-                    $errors[]=$message." <br>";
+                    $errors[] = $message . " <br>";
                 }
                 $data['success'] = false;
-                $data['errors']  = $errors;
-            }else{
-                $data['success'] = true;
-                $data['message'] = 'Operación exitosa';
-                $data['planilla_id'] = $planilla->getPlanillaId();
-
+                $data['mensaje'] = $errors;
+                $this->db->rollback();
+            } else {
+                    $data['planilla_id'] = $planilla->getPlanillaId();
+                    $data['success']=true;
+                    $this->db->commit();
             }
         }// return all our data to an AJAX call
         echo json_encode($data);
     }
+
 
     /**
      * Permite editar el nombre de la planilla a traves de json. Recibe el nombre de la planilla y el ID
@@ -176,31 +177,31 @@ class PlanillaController extends ControllerBase
     public function editarAction()
     {
         $this->view->disable();
-        $errors         = array();      // array to hold validation errors
-        $data           = array();      // array to pass back data
+        $errors = array();      // array to hold validation errors
+        $data = array();      // array to pass back data
         if (empty($_POST['planilla_nombreCliente']))
             $errors['planilla_nombreCliente'] = 'El Nombre de la Planilla es requerido';
-        if ( ! empty($errors)) {
+        if (!empty($errors)) {
             $data['success'] = false;
-            $data['errors']  = $errors;
-        }else {
+            $data['errors'] = $errors;
+        } else {
             $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
-            $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente",'string')));
+            $planilla->setPlanillaNombrecliente(strtoupper($this->request->getPost("planilla_nombreCliente", 'string')));
 
-            if (!$planilla->update())
-            {
+            if (!$planilla->update()) {
                 foreach ($planilla->getMessages() as $message) {
-                    $errors[]=$message." <br>";
+                    $errors[] = $message . " <br>";
                 }
                 $data['success'] = false;
-                $data['errors']  = $errors;
-            }else{
+                $data['errors'] = $errors;
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Operación exitosa';
             }
         }// return all our data to an AJAX call
         echo json_encode($data);
     }
+
     /**
      * Creacion de una nueva planilla. Al usuario se le solicita unicamente el nombre de la planilla.
      *
@@ -234,44 +235,12 @@ class PlanillaController extends ControllerBase
 
         $this->flashSession->success("La Planilla ha sido creada correctamente, por favor agregue las <strong> columnas extras</strong>");
         $this->view->planilla = $planilla;
-         $this->response->redirect('planilla/columnas');
+        $this->response->redirect('planilla/columnas');
         $this->view->disable();
     }
-    public function guardarCabeceraComoArregloAction()
-    {
-        $retorno = array();
-        $data['success']=true;
-        $this->view->disable();
 
-        if ($this->request->isPost()) {
 
-                if (isset($_POST['columnasBasicas'])) {
-                    $optionArray = $_POST['columnasBasicas'];
-                    $cadena= "";
-                    for ($i=0; $i<count($optionArray); $i++) {
-                        $item = $optionArray[$i];
-                        $cadena.= $item."-";
-                    }
-                    $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
 
-                    if(!$planilla)
-                        $retorno = "NO SE ENCONTRO LA PLANILLA";
-                    else{
-                        $planilla->setPlanillaCabecera($cadena);
-                        if(!$planilla->update())
-                            $retorno = "NO SE PUDO ACTUALIZAR LA PLANILLA";
-                        $data['cabeceraText'] = $cadena;
-
-                    }
-                }else{
-                    $data['success']=false;
-                    $retorno = "ES NECESARIO QUE SELECCIONE LAS COLUMNAS BASICAS A UTILIZAR";
-                }
-
-        }
-        $data['mensaje']=$retorno;
-        echo json_encode($data);
-    }
     /**
      * Permite crear las columnas extras que contendrá la planilla, que dependerán del cliente.
      */
@@ -286,7 +255,7 @@ class PlanillaController extends ControllerBase
     public function createColumnasAction()
     {
         $columnas = $this->request->getPost('columna');
-        foreach( $columnas AS $columna) {
+        foreach ($columnas AS $columna) {
             $this->flash->success($columna);
         }
         $this->view->pick('planilla/columnas');
@@ -298,46 +267,58 @@ class PlanillaController extends ControllerBase
     public function ordenarAction()
     {
         $this->view->disable();
-        foreach ($_GET['listItem'] as $position => $item)
-        {
+        foreach ($_GET['listItem'] as $position => $item) {
             //echo "Posicion: ".$position." - Item: ".$item ."<br>";
             $columna = Columna::findFirstByColumna_id($item);
             $columna->setColumnaPosicion($position);
-            if(!$columna->update())
-            {  echo "Hubo un problema al cargar el nuevo orden.";
+            if (!$columna->update()) {
+                echo "Hubo un problema al cargar el nuevo orden.";
                 return;
             }
         }
         echo "Reordenamiento exitoso!";
     }
-    public function finalizarAction(){
-        if($this->request->isPost())
-        {
-            $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
-            $this->flash->success("La planilla ".$planilla->getPlanillaNombreCliente()." se ha creado con exito");
-            $this->redireccionar('planilla/search');
-        }
-    }
+
+
     public function guardarCabeceraPredefinidaAction()
     {
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
-        if(!$planilla)
-            $this->flash->error("Hubo un problema al enncontrar la planilla");
-        else{
+        $this->view->disable();
+        $data = array();
+        $retorno = array();
+        if($this->request->isPost())
+        {
+            $data['success']= false;
+            $retorno[]= "Ocurrio un problema, la URL solicitada no existe.";
+
+        }
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id','int'));
+        if (!$planilla)
+        {
+            $data['success']=false;
+            $retorno[] = "La planilla no ha sido encontrada.";
+        }
+        else {
             $planilla->setPlanillaCabeceraid($this->request->getPost('cabecera_id'));
-            if($planilla->update())
-            {
-                $this->flash->success("La planilla se ha creado con exito.");
-                $this->redireccionar('planilla/search');
-            }else{
-                foreach($planilla->getMessages() as $mensaje)
-                {
-                    $this->flash->error($mensaje);
+            $planilla->setPlanillaArmada(1);
+            if (!$planilla->update()) {
+                $data['success']=false;
+                foreach($planilla->getMessages() as $mje){
+                    $retorno[] = $mje;
                 }
+            } else {
+                $data['success']=true;
             }
         }
+        $data['mensaje']=$retorno;
+        echo json_encode($data);
+
+
+
 
     }
+
+
+
     /**
      * Guarda los datos que se editaron.
      *
@@ -356,7 +337,7 @@ class PlanillaController extends ControllerBase
 
         $planilla = Planilla::findFirstByplanilla_id($planilla_id);
         if (!$planilla) {
-            $this->flash->error("La planilla N° " . $planilla_id. " no existe");
+            $this->flash->error("La planilla N° " . $planilla_id . " no existe");
 
             return $this->dispatcher->forward(array(
                 "controller" => "planilla",
@@ -427,6 +408,7 @@ class PlanillaController extends ControllerBase
             ));
         }
     }
+
     /**
      * Habilitacion logica.
      * @param $id
@@ -464,6 +446,7 @@ class PlanillaController extends ControllerBase
             "action" => "search"
         ));
     }
+
     /**
      * NO SE USA!
      * Eliminar una planilla de manera LOGICA.
@@ -484,10 +467,10 @@ class PlanillaController extends ControllerBase
                 "action" => "index"
             ));
         }
-        try{
+        try {
             $this->db->begin();
             $eliminados = Orden::eliminarByPlanilla_id($planilla_id);
-            if(!$eliminados){
+            if (!$eliminados) {
                 $this->flash->error("Hubo un problema al eliminar las ordenes relacionadas a la planilla N° $planilla_id");
                 $this->db->rollback();
                 return $this->dispatcher->forward(array(
@@ -495,7 +478,7 @@ class PlanillaController extends ControllerBase
                     "action" => "index"
                 ));
             }
-            $planilla->planilla_habilitado =0 ;
+            $planilla->planilla_habilitado = 0;
             if (!$planilla->update()) {
 
                 foreach ($planilla->getMessages() as $message) {
@@ -509,8 +492,7 @@ class PlanillaController extends ControllerBase
             }
             $this->db->commit();
             $this->flash->success("La planilla ha sido eliminada correctamente");
-        }
-        catch(Phalcon\Mvc\Model\Transaction\Failed $e) {
+        } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
             $this->flash->error('Transaccion Fallida: ', $e->getMessage());
         }
 

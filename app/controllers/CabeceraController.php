@@ -112,12 +112,11 @@ class CabeceraController extends ControllerBase
                 $error = "No puede guardar columnas vacias.";
             } else {
                 //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
-                $cabecera_id = $this->request->getPost('cabecera_id','int');
+                $cabecera_id = $this->request->getPost('cabecera_id', 'int');
                 $cabecera = Cabecera::findFirstByCabecera_id($cabecera_id);
-                if(!$cabecera)
-                {
+                if (!$cabecera) {
                     $error = "Hubo un problema, no se encontro la cabecera.";
-                }else{
+                } else {
                     $arregloColumnas = $this->request->getPost('columna');
                     foreach ($arregloColumnas AS $columna) {
                         if (!empty($columna)) {
@@ -154,112 +153,111 @@ class CabeceraController extends ControllerBase
         echo json_encode($data);
     }
 
-    /**
-     * Carga el combobox con todas las cabeceres disponibles.
-     */
-    public function cargarCabeceraAction()
-    {
-        $this->view->disable();
-        if ($this->request->isPost()) {
-            $data['success']=true;
-            $data['mensaje']= Cabecera::findAllCabecera();
-            echo json_encode($data);
-        }
-    }
 
-    public function buscarColumnasAction()
+    /**
+     * COn el nombre del cliente obtenido del comboBox, recupero todos las planillas con un LIKE %%
+     * A partir de todas las planillas obtengo todos las cabeceras_id
+     */
+    public function todasLasCabecerasAction()
     {
         $this->view->disable();
-        $retorno= array();
-        if ($this->request->isPost()) {
-            $columnas = Columna::find(array(
-                'conditions'=>'columna_cabeceraId = :cabecera_id:',
-                'bind' => array(
-                    'cabecera_id'=>$this->request->getPost('cabecera_id','int')
-                ),
-                'order'=>'columna_posicion ASC'
-            ));
-            if(empty($columnas))
+        $data=array();
+        $data['success']=false;
+
+        if($this->request->isPost()){
+            $planillas = Planilla::find(
+                array('conditions'=>"planilla_habilitado =1  AND planilla_nombreCliente LIKE :nombreCliente:",
+                    'bind'=>array('nombreCliente'=>"%".$this->request->getPost('cliente_nombre','string')."%")));
+            $data['planilla'] = count($planillas);
+            if(!$planillas)
             {
-                $data['success']=false;
-                $data['mensaje']="No hay columnas cargadas.";
-            }else{
-                foreach($columnas as $col){
+                $data['mensaje'] = array("NO SE ENCONTRARON CABECERAS CARGADAS " );
+            }
+            $retorno = array();
+            foreach($planillas as $planilla)
+            {
+                if($planilla->getPlanillaCabeceraId()!=null){
                     $item = array();
-                    $item['nombre']=$col->getColumnaNombre();
-                    $item['id']=$col->getColumnaId();
+                    $item['cabecera_id']=$planilla->getPlanillaCabeceraId();
+                    $item['nombreCliente']=$planilla->getPlanillaNombreCliente();
                     $retorno[]=$item;
                 }
             }
-        }
-        $data['success']=true;
-        $data['mensaje']=$retorno;
+            if(count($retorno)>0)
+            {
+                $data['success']=true;
+                $data['cabeceras']=$retorno;
+            }else{
+                $data['mensaje'] = array("HUBO UN PROBLEMA, NO SE ENCONTRARON CABECERAS CARGADAS - ".$this->request->getPost('cliente_nombre'));
+            }
+
+            echo json_encode($data);
+        }else{
+            $data['mensaje']=array("PROBLEMAS CON LA URL");
         echo json_encode($data);
+        }
     }
-    public function guardarCabeceraBasicaAction()
+    /**
+     * Crea una cabecera con las columnas basicas
+     * @param $planilla
+     * @return array
+     */
+    public function crearColumnasBasicasAction()
     {
-        $retorno = array();
-        $data['success']=true;
         $this->view->disable();
-        $cabecera = new Cabecera();
         if ($this->request->isPost()) {
-            $this->db->begin();
+            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id','int'));
+            if(!empty($planilla) && $planilla!=null)
+                $data = $this->columnasBasicas($planilla);
+            else{
+                $data['success']=false;
+                $data['mensaje']="La planilla no se encuentra disponible.";
+            }
+            echo json_encode($data);
+        }else{
+            echo json_encode(array('success'=>false,'mensaje'=>'NO ES POST'));
+        }
+    }
+    private function columnasBasicas($planilla)
+    {
+        $data = array();
+        $data['success']=true;
+        $retorno=array();
+
+
+            $cabecera = new Cabecera();
             $cabecera->setCabeceraFecha(date('Y-m-d'));
             $cabecera->setCabeceraHabilitado(1);
-            //Busco la planilla para obtener el nombre de la cabecera. Mas adelante la actualizo con la cabecera.
-            $planilla = Planilla::findFirst($this->request->getPost('planilla_id'));
-            $cabecera->setCabeceraNombre($planilla->getPlanillaNombreCliente().'/'.date('d-m-Y_H:i:s'));
-            if( !$cabecera->save())
-            {
-                foreach($cabecera->getMessages() as $mensaje)
-                {
-                    $retorno[]= $mensaje . "<br>";
+            $cabecera->setCabeceraNombre($planilla->getPlanillaNombrecliente());
+            if (!$cabecera->save()) {
+                foreach ($cabecera->getMessages() as $mensaje) {
+                    $retorno[] = $mensaje;
                 }
-                $data['success']=false;
-            }else{
-                if (isset($_POST['columnasBasicas'])) {
-                    $optionArray = $_POST['columnasBasicas'];
-                    for ($i=0; $i<count($optionArray); $i++) {
-                        $item = strtoupper($optionArray[$i]);
-                        $columna = new Columna();
-                        $columna->setColumnaCabeceraId($cabecera->getCabeceraId());
-                        $columna->setColumnaHabilitado(1);
-                        $columna->setColumnaExtra(0);
-                        $columna->setColumnaPosicion($i);
-                        $columna->setColumnaClave("CLAVE_".$item);
-                        $columna->setColumnaNombre($item);
-                        if(!$columna->save())
-                        {
-                            foreach($columna->getMessages() as $mensaje)
-                            {
-                                $retorno[]= $mensaje . "<br>";
-                            }
-                            $data['success']=false;
+                $data['success'] = false;
+            }
+            /*====== Crear columnas =======*/
+            else{
+                /*Creo manualmente las columnas*/
+                $data = Columna::guardarColumnasBasica($cabecera->getCabeceraId());
+                /*====== Actualizar Planilla =======*/
+                if ($data['success']) {
+                    $planilla->setPlanillaCabeceraId($cabecera->getCabeceraId());
+                    $planilla->setPlanillaArmada(1);
+                    if (!$planilla->update()) {
+                        foreach ($planilla->getMessages() as $mensaje) {
+                            $retorno[] = $mensaje;
                         }
+                        $data['success'] = false;
                     }
-                    $planilla->setPlanillaCabeceraid($cabecera->getCabeceraId());
-                    if(!$planilla->save())
-                    {
-                        foreach($planilla->getMessages() as $mensaje)
-                        {
-                            $retorno[]= $mensaje . "<br>";
-                        }
-                        $data['success']=false;
-                    }
-                }else{
-                    $retorno = "ES NECESARIO QUE SELECCIONE LAS COLUMNAS BASICAS A UTILIZAR";
                 }
             }
-        }
-        if($data['success']){
-            $this->db->commit();
-            $data['cabecera_id']= $cabecera->getCabeceraId();
-        }else{
-            $this->db->rollback();
-        }
-        $data['mensaje']=$retorno;
-        echo json_encode($data);
+        if($data['success'])
+            $data['mensaje']="OPERACION EXITOSA";
+        else
+            $data['mensaje']=$retorno;
+        return $data;
     }
+
     /**
      * Creates a new cabecera
      */

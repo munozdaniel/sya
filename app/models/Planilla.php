@@ -33,6 +33,7 @@ class Planilla extends \Phalcon\Mvc\Model
      */
     protected $planilla_cabeceraId;
 
+
     /**
      *
      * @var integer
@@ -218,4 +219,14 @@ class Planilla extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function validation()
+    {
+        $this->validate(new \Phalcon\Mvc\Model\Validator\Uniqueness(array(
+            "field"   => "planilla_nombreCliente",
+            "message" => "La Planilla ya existe"
+        )));
+        if ($this->validationHasFailed() == true) {
+            return false;
+        }
+    }
 }

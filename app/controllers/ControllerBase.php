@@ -55,7 +55,17 @@ class ControllerBase extends Controller
             ->addJs('https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js',false)
             ->addJs('https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js',false)
             ->addJs('https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js',false)
-            ->addJs('plugins/dataTableEditor/js/dataTables.editor.min.js');
+            ->addJs('plugins/dataTableEditor/js/dataTables.editor.min.js')
+
+            ->addJs('https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js',false)
+            ->addJs('https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js',false)
+            ->addJs('https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js',false)
+            ->addJs('https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js',false)
+            ->addJs('https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js',false)
+
+            ->addJs('https://cdn.datatables.net/fixedheader/3.1.1/js/dataTables.fixedHeader.min.js',false)
+            ->addJs('https://cdn.datatables.net/colreorder/1.3.1/js/dataTables.colReorder.min.js',false)
+           ;
 
 /*
         $this->assets->collection('footerInline')
@@ -101,16 +111,19 @@ table.colReorder.order( [1 , 0 ,9,10,11,2, 3, 4, 5,6,7,19,20,21,22,8,12,13,14,15
     {
 
         $this->assets->collection('headerCss')
-            ->addCss('plugins/datatables/dataTables.bootstrap.css');
+            ->addCss('plugins/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
+            ->addCss('https://rawgit.com/akottr/dragtable/master/dragtable.css',false)
+            ->addJs('plugins/bower_components/bootstrap-table/dist/extensions/reorder-rows/bootstrap-table-reorder-rows.css')
+            ->addJs('plugins/bower_components/bootstrap-table/dist/extensions/sticky-header/bootstrap-table-sticky-header.css');
         $this->assets->collection('headerJs')
-            ->addJs('js/bootstrap-table.js')
-            ->addJs('js/cookie/bootstrap-table-cookie.js')
-            ->addJs('js/reorder/bootstrap-table-reorder-columns.js')
-            ->addJs('js/reorder/jquery-ui.js')
-            ->addJs('js/reorder/jquery.dragtable.js')
-            ->addJs('js/sticky/bootstrap-table-sticky-header.js')
-            ->addJs('js/export/bootstrap-table-export.js')
-            ->addJs('js/export/tableExport.js');
+            ->addJs('plugins/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
+            ->addJs('plugins/bower_components/bootstrap-table/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js')
+            ->addJs('plugins/bower_components/bootstrap-table/dist/extensions/reorder-columns/bootstrap-table-reorder-columns.min.js')
+            ->addJs('js/jquery/jquery-ui.min.js')
+            ->addJs('https://rawgit.com/akottr/dragtable/master/jquery.dragtable.js',false)
+            ->addJs('js/jquery/jquery.dragtable.js')
+            ->addJs('plugins/bower_components/bootstrap-table/dist/extensions/export/bootstrap-table-export.min.js')
+            ->addJs('//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js',false);
         $this->assets->collection('footerInline')
             ->addInlineJs('
             $(document).on("click", ".enviar-dato", function () {
@@ -124,21 +137,10 @@ table.colReorder.order( [1 , 0 ,9,10,11,2, 3, 4, 5,6,7,19,20,21,22,8,12,13,14,15
         $('#toolbar').find('select').change(function () {
             table.bootstrapTable('refreshOptions', {
                 exportDataType: $(this).val()
+
             });
         });
     })")
-            ->addInlineJs("/*Scroll Arriba y Abajo*/
-    var
-        button = $('#botonTop'),
-       button2 = $('#botonBottom');
-
-    $(function () {
-        button.click(function () {
-            table.bootstrapTable('scrollTo', 0);
-        });
-        button2.click(function () {
-            table.bootstrapTable('scrollTo', 'bottom');
-        });
-    });");
+           ;
     }
 }
