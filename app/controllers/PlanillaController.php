@@ -268,13 +268,16 @@ class PlanillaController extends ControllerBase
     {
         $this->view->disable();
         foreach ($_GET['listItem'] as $position => $item) {
-            //echo "Posicion: ".$position." - Item: ".$item ."<br>";
+           //echo "Posicion: ".$position." - Item: ".$item ."<br>";
             $columna = Columna::findFirstByColumna_id($item);
-            $columna->setColumnaPosicion($position);
-            if (!$columna->update()) {
-                echo "Hubo un problema al cargar el nuevo orden.";
-                return;
-            }
+            if($columna){
+                $columna->setColumnaPosicion($position);
+                if (!$columna->update()) {
+                    echo "Hubo un problema al cargar el nuevo orden.";
+                    return;
+                }
+            }else
+            echo "NO SE HA ENCONTRADO LA COLUMNA <br>";
         }
         echo "Reordenamiento exitoso!";
     }

@@ -102,28 +102,30 @@ class CabeceraController extends ControllerBase
         $error = array();      // array to hold validation errors
         $data = array();
         $data['success'] = false;
-        $data['mensaje'] = "Ops, ha ocurrido un problema.";
+        $data['mensaje'] = "Ups, ha ocurrido un problema.";
         if ($this->request->isPost()) {
             $this->db->begin();
 
             //si existe el token del formulario y es correcto(evita csrf)
             //if ($this->security->checkToken('token',$this->request->getPost('token'))) {
             if (!$this->request->hasPost('columna')) {
-                $error = "No puede guardar columnas vacias.";
+                $error[] = "No puede guardar columnas vacias.";
             } else {
                 //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
                 $cabecera_id = $this->request->getPost('cabecera_id', 'int');
                 $cabecera = Cabecera::findFirstByCabecera_id($cabecera_id);
                 if (!$cabecera) {
-                    $error = "Hubo un problema, no se encontro la cabecera.";
+                    $error[] = "Hubo un problema, no se encontro la cabecera.";
                 } else {
                     $arregloColumnas = $this->request->getPost('columna');
+                    $posicion = 26;
                     foreach ($arregloColumnas AS $columna) {
                         if (!empty($columna)) {
                             $nuevaColumna = new Columna();
                             $nuevaColumna->setColumnaNombre(strtoupper($columna));
                             $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
                             $nuevaColumna->setColumnaExtra(1);
+                            $nuevaColumna->setColumnaPosicion($posicion++);
                             $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
                             $nuevaColumna->setColumnaHabilitado(1);
                             if (!$nuevaColumna->save()) {
@@ -132,15 +134,22 @@ class CabeceraController extends ControllerBase
                                 }
                             }
                         } else {
-                            $error = "Debe ingresar el nombre de la columna";
+                            $error[] = "Debe ingresar el nombre de la columna";
                         }
                     }
                 }
-
-
             }
             if (empty($error)) {
                 $this->db->commit();
+               $todasLasColumnas = $this->modelsManager->createBuilder()
+                    ->columns('columna_id, columna_nombre')
+                    ->from('Columna')
+                    ->where('columna_cabeceraId = :cabecera_id:',array('cabecera_id'=>$cabecera->getCabeceraId()))
+                    ->orderBy('columna_posicion ASC')
+                    ->getQuery()
+                    ->execute()
+                    ->toArray();
+                $data['columnas']=$todasLasColumnas;
                 $data['success'] = true;
                 $data['mensaje'] = "Operacion Exitosa, las columnas han sido guardadas correctamente";
             } else {
@@ -148,7 +157,6 @@ class CabeceraController extends ControllerBase
                 $data['success'] = false;
                 $data['mensaje'] = $error;
             }
-
         }
         echo json_encode($data);
     }
@@ -239,6 +247,7 @@ class CabeceraController extends ControllerBase
             else{
                 /*Creo manualmente las columnas*/
                 $data = Columna::guardarColumnasBasica($cabecera->getCabeceraId());
+                $data['cabecera_id']=$cabecera->getCabeceraId();
                 /*====== Actualizar Planilla =======*/
                 if ($data['success']) {
                     $planilla->setPlanillaCabeceraId($cabecera->getCabeceraId());

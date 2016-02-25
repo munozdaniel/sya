@@ -37,6 +37,8 @@
                data-toggle="table"
                data-toolbar="#toolbar"
                data-show-columns="true"
+               data-cookie="true"
+               data-cookie-id-table="tabla"
                data-search="true"
                data-show-toggle="false"{# Cambia de vista cada celda#}
                data-pagination="true"
@@ -67,7 +69,7 @@
                         <td>{{ planilla.getPlanillaFecha() }}</td>
                         <td>
                             {{ link_to("remito/verRemitos/"~planilla.getPlanillaId(), "Ver Remitos",'class':'btn btn-flat  bg-light-blue-gradient','title':'VER TODOS LOS REMITOS') }}
-                            {{ link_to("remito/agregarRemito/"~planilla.getPlanillaId(), "Agregar Remito",'class':'btn btn-flat  bg-light-blue-gradient','title':'AGREGAR UN REMITO NUEVO') }}
+                            {{ link_to("remito/nuevoRemito/"~planilla.getPlanillaId(), "Agregar Remito",'class':'btn btn-flat  bg-light-blue-gradient','title':'AGREGAR UN REMITO NUEVO') }}
 
                         </td>
 

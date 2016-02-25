@@ -78,9 +78,7 @@
         var datos = {
             'columna': columnas,
             'token': $('#token').val(),
-            'cabecera_id': $('#cabecera_id').val(),
-            'planilla_nombreCliente':$('#planilla_nombreCliente').val()
-
+            'cabecera_id': $('#id_cabecera_input').val()
         };
         $.ajax({
             type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
@@ -95,19 +93,20 @@
                     // log data to the console so we can see
                     console.log(data);
                     if (!data.success) {
-                        if (data.mensaje) {
-                            $('#grupo_extra').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + data.mensaje + '</div>'); // add the actual error message under our input
+                        for (var item in data.mensaje) {
+                            var elemento = data.mensaje[item];
+                            $('#grupo_extra').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + elemento + ' <br> Por favor, cree una nueva cabecera.</div>'); // add the actual error message under our input
                         }
                     } else {
-                        $('#grupo_extra').append('<div class="help-block  alert-success">&nbsp;  ' + data.mensaje + '</div>'); // add the actual error message under our input
+                        $('#grupo_extra').append('<div class="help-block  alert-success">&nbsp;  OPERACION EXITOSA</div>'); // add the actual error message under our input
                         var arregloColumnas = document.getElementsByName('columna[]');
                         //Vaciando los inputs
                         var columnas = [];
                         for (var i = 0; i < arregloColumnas.length; i++) {
                             arregloColumnas[i].value = '';
                         }
-                        //Cargar columnas para reordenar
-                        cargarTabla();
+                        cargarTablaReordenable(data.columnas);//Las columnas que entran como parametro
+                        console.log(data.columnas);
                     }
                 })
             // using the fail promise callback
