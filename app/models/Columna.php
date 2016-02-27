@@ -319,7 +319,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(4);
             $columna->setColumnaNombre('N° INTERNO');
-            $columna->setColumnaClave('Transporte.nroInterno');
+            $columna->setColumnaClave('Transporte.transporte_nroInterno');
             $columna->setColumnaHabilitado(1);
             $columna->setColumnaExtra(0);
             if (!$columna->save()) {
@@ -387,7 +387,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(8);
             $columna->setColumnaNombre('CHOFER');
-            $columna->setColumnaClave('Chofer.chofer_nombre');
+            $columna->setColumnaClave('Chofer.chofer_nombreCompleto');
             $columna->setColumnaHabilitado(1);
             $columna->setColumnaExtra(0);
             if (!$columna->save()) {
@@ -404,7 +404,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(9);
             $columna->setColumnaNombre('FECHA');
-            $columna->setColumnaClave('Remito.remito_fecha');
+            $columna->setColumnaClave('DATE_FORMAT(Remito.remito_fecha, \'%d/%m/%Y\')');
             $columna->setColumnaHabilitado(1);
             $columna->setColumnaExtra(0);
             if (!$columna->save()) {
@@ -557,7 +557,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna->setColumnaCabeceraId($cabecera_id);
             $columna->setColumnaPosicion(18);
             $columna->setColumnaNombre('OBSERVACIONES');
-            $columna->setColumnaClave('Remito.remito_observaciones');
+            $columna->setColumnaClave('Remito.remito_observacion');
             $columna->setColumnaHabilitado(1);
             $columna->setColumnaExtra(0);
             if (!$columna->save()) {
