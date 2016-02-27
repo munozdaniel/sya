@@ -26,69 +26,144 @@ class RemitoController extends ControllerBase
     {
         $this->persistent->parameters = null;
     }
-    public function searchAjaxAction(){$this->importarDataTables();}
-    public function ajaxAction()
+    public function searchAjaxAction(){
+
+        $this->importarJsTable();
+    }
+    public function dataAction($offset=0, $limit=5)
     {
         $this->view->disable();
-        $datos=array();
-        $datos['draw']=1;
-        $datos['recordsTotal']=57;
-        $datos['recordsFiltered']=57;
-        $columns = array();
-        $columns[] = array('first_name'=>'Daniel','last_name'=>'Munoz','position'=>'Analista',
-            'office'=>'SAN FRAN','start_date'=>'ojo','salary'=>'5pe');
-        $datos['data']=$columns;
-
-       echo json_encode($datos);
+        //if($this->request->isAjax())
+        //comprobamos si han llegado las variables get para setearlas
+        $offset = !isset($_GET["offset"]) || $_GET["offset"] == "undefined" ? 0 : $_GET["offset"];
+        $limit = !isset($_GET["limit"]) || $_GET["limit"] == "undefined" ? 5 : $_GET["limit"];
+        //obtenemos los posts
+        $pag = $this->get_posts($offset,$limit);
+        //obtenemos los enlaces para estos posts
+        $links = $this->crea_links();
+        //los devolvemos en formato json
+        echo json_encode(array("posts" => $pag,"links" => $links));
     }
-    /**
-     * Searches for remito
-     */
-    public function verRemitos2Action()
+    private function get_posts($offset = 0, $limit = 10)
     {
-        parent::importarDataTables();
+        if($offset == 0){
+            $_SESSION["actual"] = 1;
+        }else{
+            $_SESSION["actual"] = ($offset+$limit)/$limit;
+        }
+        $_SESSION["limit"] = $limit;
+        try {
 
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Remito", $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
+            $sql = "SELECT * FROM Remito LIMIT ?,?";
+            $query = $this->db->prepare($sql);
+            $query->bindValue(1, (int) $offset, PDO::PARAM_INT);
+            $query->bindValue(2, (int) $limit, PDO::PARAM_INT);
+            $query->execute();
+
+            //si existe el usuario
+            if($query->rowCount() > 0)
+            {
+
+                return $query->fetchAll();
+
+            }
+
+        }catch(PDOException $e){
+
+            print "Error!: " . $e->getMessage();
+
         }
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-
-        $remito = Remito::find($parameters);
-        if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-
-        $paginator = new PaginatorModelo(array(
-            "data" => $remito,
-            "limit"=> 10,
-            "page" => $numberPage
-        ));
-        $this->view->pick('remito/search');
-
-        $this->view->page = $paginator->getPaginate();
     }
+    //creamos los enlaces de nuestra paginación
+    private function crea_links()
+    {
 
+        //html para retornar
+        $html = "";
+
+        //página actual
+        $actual_pag = $_SESSION["actual"];
+
+        //limite por página
+        $limit = $_SESSION["limit"];
+
+        //total de enlaces que existen
+        $totalPag = floor($this->get_all_posts()/$limit);
+
+        //links delante y detrás que queremos mostrar
+        $pagVisibles = 2;
+
+        if($actual_pag <= $pagVisibles)
+        {
+            $primera_pag = 1;
+        }else{
+            $primera_pag = $actual_pag - $pagVisibles;
+        }
+
+        if($actual_pag + $pagVisibles <= $totalPag)
+        {
+            $ultima_pag = $actual_pag + $pagVisibles;
+        }else{
+            $ultima_pag = $totalPag;
+        }
+
+        $html .= '<p>';
+        $html .= ($actual_pag > 1) ?
+            ' <a href="#" class="btn btn-flat" onclick="paginate(0,'.$limit.')">Primera</a>' :
+            ' <a href="#" class="btn btn-flat disabled">Primera</a>';
+        $html .= ($actual_pag > 1) ?
+            ' <a href="#" class="btn btn-flat" onclick="paginate('.(($actual_pag-2)*$limit).','.$limit.')">Anterior</a>' :
+            ' <a href="#" class="btn btn-flat disabled">Anterior</a>';
+
+        for($i=$primera_pag; $i<=$ultima_pag+1; $i++)
+        {
+            $z = $i;
+            $html .= ($i == $actual_pag) ?
+                ' <a class="button secondary round disabled" href="#">'.$i.'</a>' :
+                ' <a class="btn btn-flat" href="#" onclick="paginate('.(($z-1)*$limit).','.$limit.')">'.$i.'</a>';
+        }
+
+        $html .= ($actual_pag < $totalPag) ?
+            ' <a href="#" class="btn btn-flat" onclick="paginate('.(($actual_pag)*$limit).','.$limit.')">Siguiente</a>' :
+            ' <a href="#" class="btn btn-flat disabled">Siguiente</a>';
+        $html .= ($actual_pag < $totalPag) ?
+            ' <a href="#" class="btn btn-flat" onclick="paginate('.(($totalPag)*$limit).','.$limit.')">Última</a>' :
+            ' <a href="#" class="btn btn-flat disabled">Última</a>';
+        $html .= '</p>';
+
+        return $html;
+
+    }
+    //obtenemos el número de posts totales
+    private function get_all_posts()
+    {
+        try {
+
+            $sql = "SELECT COUNT(*) from Remito";
+            $query = $this->db->prepare($sql);
+            $query->execute();
+
+            //si es true
+            if($query->rowCount() == 1)
+            {
+
+                return $query->fetchColumn();
+
+            }
+
+        }catch(PDOException $e){
+
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
     /*====================================================*/
     /**
      * Muestra todos los remitos de una planilla.
      * Utiliza el plugin BoostrapTable.
      */
     public function verRemitosAction($planillaId){
-        echo "PERRO";
         if ($this->request->isAjax()) {
             $builder = $this->modelsManager->createBuilder()
                 ->columns('remito_id, remito_nro, remito_transporteId, remito_conformidad')
@@ -107,10 +182,12 @@ class RemitoController extends ControllerBase
 
         $numberPage = 1;
         if ($this->request->isPost()) {
+            $paginador = $this->request->getPost('paginador');
             $query = Criteria::fromInput($this->di, "Remito", $_POST);
             $this->persistent->parameters = $query->getParams();
         } else {
             $numberPage = $this->request->getQuery("page", "int");
+            $paginador = 30;
         }
 
         $parameters = $this->persistent->parameters;
@@ -118,29 +195,57 @@ class RemitoController extends ControllerBase
             $parameters = array();
         }
         $parameters["order"] = "remito_id";
-        //$remito = Remito::find($parameters);
+        //BUSCAMOS LAS COLUMNAS NO EXTRA
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId','int'));
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_nombre,columna_clave')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_extra=0',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraId()))
+            ->orderBy('columna_posicion ASC')
+            ->getQuery()
+            ->execute();
+        $cad ="";
+        for($i=0;$i<count($columnas);$i++){
+            if($i!=0)
+                $cad .=",";
+            $cad .= $columnas[$i]->columna_clave;
+        }
+        $this->view->columnas= $columnas;
+
+        //BUSCAMOS TODOS LOS REMITOS
         $remito = $this->modelsManager
             ->createBuilder($parameters)
-            ->columns('Remito.remito_nroOrden,Remito.remito_nro, Transporte.transporte_dominio,Transporte.transporte_nroInterno,Tipoequipo.tipoEquipo_nombre,Tipocarga.tipoCarga_nombre,
-            Chofer.chofer_dni,Chofer.chofer_nombreCompleto, DATE_FORMAT(Remito.remito_fecha, \'%d/%m/%Y\'), Cliente.cliente_nombre,Y.yacimiento_destino, Equipopozo.equipoPozo_nombre,
-            Concatenado.concatenado_nombre,Operadora.operadora_nombre, L.linea_nombre, Centrocosto.centroCosto_codigo, Remito.remito_observacion, Tarifa.tarifa_km, Tarifa.tarifa_hsHidro,
-             Tarifa.tarifa_hsMalacate, Tarifa.tarifa_hsServicio, Tarifa.tarifa_hsStand, Remito.remito_conformidad, Remito.remito_noConformidad')
+            ->columns($cad)
             ->from('Remito')
-            ->join('Transporte')
             ->join('Tipoequipo')
+            ->join('Transporte')
             ->join('Tipocarga')
             ->join('Chofer')
             ->join('Cliente')
             ->join('Equipopozo')
-            ->join('Yacimiento','Y.yacimiento_id=Equipopozo.equipoPozo_yacimientoId','Y')
+            ->join('Yacimiento','Yacimiento.yacimiento_id=Equipopozo.equipoPozo_yacimientoId','Yacimiento')
             ->join('Concatenado')
             ->join('Operadora')
+            ->join('Viaje')
             ->join('Centrocosto')
-            ->join('Linea','L.linea_id=Centrocosto.centroCosto_lineaId','L')
+            ->join('Linea','Linea.linea_id=Centrocosto.centroCosto_lineaId','Linea')
             ->join('Tarifa')
             ->getQuery()
-            ->execute();
-        echo "Total <br> ".count($remito);
+            ->execute()->toArray();
+        //BUSCAMOS LAS COLUMNAS EXTRAS Y  CONTENIDOS EXTRA
+        $extra = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_nombre,Contenidoextra.contenidoExtra_descripcion')
+            ->from('Columna')
+            ->join('Contenidoextra')
+            ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_extra=1',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraId()))
+            ->orderBy('columna_posicion ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        $this->view->extra=$extra;
+        $total = array_merge($remito,$extra);
+        echo "Total  ".count($remito);
         if (count($remito) == 0) {
             $this->flash->notice("No se han encontrado resultados");
 
@@ -149,10 +254,9 @@ class RemitoController extends ControllerBase
                 "action" => "index"
             ));
         }
-
-        $paginator = new PaginatorModelo(array(
-            "data" => $remito,
-            "limit"=> 40,
+        $paginator = new Paginator(array(
+            "data" => $total,
+            "limit"=> $paginador,
             "page" => $numberPage
         ));
         $this->view->pick('remito/search');
@@ -221,6 +325,7 @@ class RemitoController extends ControllerBase
 
     /**
      * Creates a new remito
+     * X
      */
     public function createAction()
     {
@@ -396,6 +501,7 @@ class RemitoController extends ControllerBase
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
      * @param $remito
      * @return array
+     * X
      */
     private function generarTablaDeRemitos($remito){
         $tabla = null;
@@ -557,6 +663,7 @@ class RemitoController extends ControllerBase
         $nuevoRemito->setRemitoClienteId($this->request->getPost('cliente_id'));
         $nuevoRemito->setRemitoCentroCostoId($this->request->getPost('centroCosto_id'));
         $nuevoRemito->setRemitoEquipoPozoId($this->request->getPost('equipoPozo_id'));
+        $nuevoRemito->setRemitoOperadoraId($this->request->getPost('operadora_id'));
         /* ==================== ==================== ==================== ==================== */
         $nuevoRemito->setRemitoViajeId($this->request->getPost('remito_viajeId'));
         $nuevoRemito->setRemitoConcatenadoId($this->request->getPost('remito_concatenadoId'));
