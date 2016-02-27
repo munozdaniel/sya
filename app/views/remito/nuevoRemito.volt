@@ -4,6 +4,7 @@
         <h3>{{ planilla.getPlanillaNombreCliente() }} <br> {{ date('d/m/Y',(planilla.getPlanillaFecha()) | strtotime) }}
         </h3>
     {% endif %}
+
     <table width="100%">
         <tr>
             <td align="left">
@@ -28,7 +29,9 @@
 <!-- Cuerpo -->
 {# =================================== PLANILLA ================================== #}
 {#Campos Ocultos#}
-{{ hidden_field('remito_planillaId','value':planilla.getPlanillaId()) }}
+{% if planilla is defined %}
+    {{ hidden_field('remito_planillaId','value':planilla.getPlanillaId()) }}
+{% endif %}
 <div class="box box-primary">
     <div class=" box-body">
         <div class="box-header">
