@@ -21,36 +21,43 @@
             </select>
         </label>
     </div>
-    <table id="tabla"
-           data-show-pagination-switch="true"
-           data-page-list="[10, 25, 50, 100, ALL]"
-           data-escape="false"{# Para usar html en las celdas#}
-           data-show-refresh="true"
-           data-toggle="table"
-           data-toolbar="#toolbar"
-           data-show-columns="true"
-           data-cookie="true"
-           data-cookie-id-table="tabla"
-           data-search="true"
-           data-show-toggle="false"{# Cambia de vista cada celda#}
+    <table data-toggle="table"
+           data-url="data"
+           data-query-params="queryParams"
            data-pagination="true"
+           data-search="true"
+           data-height="300"
+           {#Fin: Basico #}
+           data-show-pagination-switch="true"
+           data-page-list="[3, 25, 50, 100, ALL]"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-toolbar="#toolbar"
            data-reorderable-columns="true"
            data-show-export="true"
            data-click-to-select="true"
            data-row-style="rowStyle"
-           class="table table-bordered table-striped">
+           class="">
         <thead>
         <tr>
             <th data-field="state" data-checkbox="true"></th>
+            {% for col in columnas %}
+                <th data-sortable="true">{{ col.columna_nombre }}</th>
+            {% endfor %}
         </tr>
         </thead>
-        <tbody class="paginacion">
-        <!--cargamos los links-->
-        <div class="links"></div>
-
-        </tbody>
     </table>
 </div>
+<script>
+    function queryParams() {
+        return {
+            type: 'owner',
+            sort: 'updated',
+            direction: 'desc',
+            per_page: 100,
+            page: 1
+        };
+    }
+</script>
 
 <script>
     //evitamos el comportamiento por defecto de los links
@@ -96,6 +103,6 @@
 
     //al cargar la página llamamos a la función paginate
     $(window).bind("load", function(){
-        paginate();
+     //   paginate();
     })
 </script>

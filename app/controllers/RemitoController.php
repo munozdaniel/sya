@@ -29,6 +29,16 @@ class RemitoController extends ControllerBase
     public function searchAjaxAction(){
 
         $this->importarJsTable();
+        $planilla = Planilla::findFirstByPlanilla_id(147);
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_nombre,columna_clave')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraId()))
+            ->orderBy('columna_posicion ASC')
+            ->getQuery()
+            ->execute();
+        $this->view->columnas = $columnas;
     }
     public function dataAction($offset=0, $limit=5)
     {
@@ -42,7 +52,8 @@ class RemitoController extends ControllerBase
         //obtenemos los enlaces para estos posts
         $links = $this->crea_links();
         //los devolvemos en formato json
-        echo json_encode(array("posts" => $pag,"links" => $links));
+       // echo json_encode(array("posts" => $pag,"links" => $links));
+        echo json_encode($pag);
     }
     private function get_posts($offset = 0, $limit = 10)
     {
