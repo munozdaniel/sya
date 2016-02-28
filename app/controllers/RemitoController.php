@@ -28,6 +28,9 @@ class RemitoController extends ControllerBase
     }
     public function searchDataTableAction()
     {
+        $this->assets->collection('footer')
+            ->addCss('plugins/excel/tableExport.js')
+            ->addCss('plugins/excel/jquery.base64.js');
         $this->importarDataTables();
         /*Criteria*/
         $numberPage = 1;
@@ -58,10 +61,30 @@ class RemitoController extends ControllerBase
             "limit"=> 3,
             "page" => $numberPage
         ));
-
+        //Posiciones:
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_posicion')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
+            ->orderBy('columna_id ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        $this->view->columnas = $columnas;
+        //Vistas
         $this->view->page = $paginator->getPaginate();
     }
-
+    public function generarExcelAction()
+    {
+        $json = $this->request->get('json');
+        $json = json_decode($json);
+        var_dump($json);
+       return  $this->redireccionar('remito/searchDataTable');
+    }
+        /*==============================================================================================*/
+    /**
+     * @return bool
+     */
     public function searchAjaxAction(){
 
         $this->importarJsTable();

@@ -48,6 +48,7 @@ class ControllerBase extends Controller
     {
         $this->assets->collection('headerCss')
             ->addCss('https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css',false)
+            ->addCss('https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css',false)
             ->addCss('https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css',false)
             ->addCss('https://cdn.datatables.net/fixedheader/3.1.1/css/fixedHeader.dataTables.min.css',false)
             ->addCss('//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',false)
@@ -56,6 +57,13 @@ class ControllerBase extends Controller
             ->addJs('https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js',false)
             ->addJs('https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js',false)
             ->addJs('https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js',false)
+
+            //Excel
+            ->addJs('https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js',false)
+            ->addJs('https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js',false)
+            ->addJs('https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js',false)
+            ->addJs('https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js',false)
+           //Fin:Excel
            // ->addJs('plugins/dataTableEditor/js/dataTables.editor.min.js')
 
           /*  ->addJs('https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js',false)

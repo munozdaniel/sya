@@ -11,7 +11,7 @@
                 </td>
                 <td align="right">
                     {{ link_to("remito/nuevoRemito", "<i class='fa fa-plus-square'></i> Agregar Remito",'class':'btn btn-flat btn-large btn-danger') }}
-                    {{ link_to("remito/generarExcel", "<i class='fa fa-file'></i> Generar Excel",'class':'btn btn-flat btn-gris') }}
+                    {{ link_to("remito/generarExcel/json=", "<i class='fa fa-file'></i> Generar Excel",'class':'btn btn-flat btn-gris') }}
                 </td>
             </tr>
         </table>
@@ -20,6 +20,7 @@
 <!-- /.box-header -->
 {{ content() }}
 <div class="box box-body">
+    <a href="#" class="btn btn-soundcloud pull-left " onClick ="$('#example').tableExport({type:'excel',escape:'false'});">EXPORTAR PAGINA</a><br>
     {{ link_to("remito/searchDataTable", "First") }}
     {{ link_to("remito/searchDataTable?page="~page.before, "Previous") }}
     {{ link_to("remito/searchDataTable?page="~page.next, "Next") }}
@@ -82,27 +83,33 @@
         </tbody>
     </table>
     </div>
+
 <script>
     $(document).ready(function() {
+        var posiciones = [];
+        {% for col in columnas %}
+            posiciones.push({{ col['columna_posicion']}}) ;
+        {% endfor %}
+
         var table = $('#example').DataTable({
-            'paging':   true,
+            dom: 'Bfrtip',
+            buttons: [
+                'excelHtml5'
+            ],
+            'paging':   false,
             'ordering': true,
             'info':     true,
-            'colReorder': true,
-            stateSave: true,
+            stateSave: false,
             fixedHeader: true,
             scrollY:        '80vh',
             scrollX:        'true',
-            scrollCollapse: true
+            scrollCollapse: true,
+            colReorder: {
 
+                order: [2,9,0 , 1 ,10,11, 3, 4, 5,6,7,8,12,13,14,15,16,17,18 ]
+            }
         });
-        $('#example tbody')
-                .on( 'mouseenter', 'td', function () {
-                    var colIdx = table.cell(this).index().column;
-                    table.colReorder.order( [0 , 1 ,9,10,11,2, 3, 4, 5,6,7,19,20,21,22,8,12,13,14,15,16,17,18,23,24 ], true );
-                    $( table.cells().nodes() ).removeClass( 'highlight' );
-                    $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
-                } );
+
 
 
     } );
