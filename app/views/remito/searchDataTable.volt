@@ -52,35 +52,7 @@
 
         </tr>
         </thead>
-        <tbody>
-        {% if page.items is defined %}
-            {% for remito in page.items %}
-                    <tr>
 
-                    <td>{{ remito.getRemitoNroOrden() }}</td>
-                    <td>{{ remito.getRemitoNro() }}</td>
-                    <td>{{ remito.getPlanilla().getPlanillaNombreCliente() }}</td>
-                    <td>{{ remito.getTransporte().getTransporteDominio() }}</td>
-                    <td>{{ remito.getTipoequipo().getTipoequipoNombre() }}</td>
-                    <td>{{ remito.getTipocarga().getTipocargaNombre() }}</td>
-                    <td>{{ remito.getChofer().getChoferNombreCompleto() }}</td>
-                    <td>{{ remito.getChofer().getChoferDni() }}</td>
-                    <td>{{ remito.getViaje().getViajeOrigen() }}</td>
-                    <td>{{ remito.getConcatenado().getConcatenadoNombre() }}</td>
-                    <td>{{ remito.getTarifa().getTarifaKm() }}</td>
-                    <td>{{ remito.getCliente().getClienteNombre() }}</td>
-                    <td>{{ remito.getCentrocosto().getCentrocostoCodigo() }}</td>
-                    <td>{{ remito.getEquipopozo().getEquipopozoNombre() }}</td>
-                    <td>{{ remito.getOperadora().getOperadoraNombre() }}</td>
-                    <td>{{ remito.getRemitoObservacion() }}</td>
-                    <td>{{ remito.getRemitoFecha() }}</td>
-                    <td>{{ remito.getRemitoConformidad() }}</td>
-                    <td>{{ remito.getRemitoNoConformidad() }}</td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-
-        </tbody>
     </table>
     </div>
 
@@ -88,15 +60,16 @@
     $(document).ready(function() {
         var posiciones = [];
         {% for col in columnas %}
-            posiciones.push({{ col['columna_posicion']}}) ;
+        posiciones.push({{ col['columna_posicion']}}) ;
         {% endfor %}
 
         var table = $('#example').DataTable({
+            "processing": true,
             dom: 'Bfrtip',
             buttons: [
                 'excelHtml5'
             ],
-            'paging':   false,
+            'paging':   true,
             'ordering': true,
             'info':     true,
             stateSave: false,
@@ -104,9 +77,40 @@
             scrollY:        '80vh',
             scrollX:        'true',
             scrollCollapse: true,
+            "columns": [
+                { "data": "remito_id" },
+                { "data": "remito_nro" },
+                { "data": "remito_nroOrden" },
+                { "data": "remito_tipo" },
+                { "data": "remito_planillaId" },
+                { "data": "remito_id" },
+                { "data": "remito_nro" },
+                { "data": "remito_nroOrden" },
+                { "data": "remito_tipo" },
+                { "data": "remito_planillaId" },
+                { "data": "remito_id" },
+                { "data": "remito_nro" },
+                { "data": "remito_nroOrden" },
+                { "data": "remito_tipo" },
+                { "data": "remito_planillaId" },
+                { "data": "remito_planillaId" },
+                { "data": "remito_planillaId" },
+                { "data": "remito_planillaId" },
+                { "data": "remito_conformidad" }
+            ],
             colReorder: {
 
                 order: [2,9,0 , 1 ,10,11, 3, 4, 5,6,7,8,12,13,14,15,16,17,18 ]
+            },
+            ajax: 'busquedaAjax',
+            "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                var $nRow = $(nRow);
+                if ( aData['remito_planillaId'] == 27 )
+                {console.log("es uno");
+                    $nRow.css({"background-color":"rgba(221, 75, 57, 0.6)"});
+                }else{
+                    console.log(aData['remito_planillaId']);
+                }
             }
         });
 

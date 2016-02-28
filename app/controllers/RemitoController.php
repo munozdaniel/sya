@@ -131,20 +131,22 @@ class RemitoController extends ControllerBase
 
     }
 
-    public function dataAction($offset=0, $limit=5)
+    public function busquedaAjaxAction($offset=0, $limit=5)
     {
         $this->view->disable();
         //if($this->request->isAjax())
         //comprobamos si han llegado las variables get para setearlas
         $offset = !isset($_GET["offset"]) || $_GET["offset"] == "undefined" ? 0 : $_GET["offset"];
-        $limit = !isset($_GET["limit"]) || $_GET["limit"] == "undefined" ? 5 : $_GET["limit"];
+        $limit = !isset($_GET["limit"]) || $_GET["limit"] == "undefined" ? 200000 : $_GET["limit"];
         //obtenemos los posts
         $pag = $this->get_posts($offset,$limit);
         //obtenemos los enlaces para estos posts
         $links = $this->crea_links();
         //los devolvemos en formato json
        // echo json_encode(array("posts" => $pag,"links" => $links));
-        echo json_encode($pag);
+
+        $remito = Remito::find()->toArray();
+        echo json_encode(array('data'=>$remito));
     }
     private function get_posts($offset = 0, $limit = 10)
     {
