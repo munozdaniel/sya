@@ -26,9 +26,46 @@ class RemitoController extends ControllerBase
     {
         $this->persistent->parameters = null;
     }
+    public function searchDataTableAction()
+    {
+        $this->importarDataTables();
+        /*Criteria*/
+        $numberPage = 1;
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Remito", $_POST);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+
+        $remito = Remito::find($parameters);
+        if (count($remito) == 0) {
+            $this->flash->notice("The search did not find any remito");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+        $paginator = new PaginatorModelo(array(
+            "data" => $remito,
+            "limit"=> 3,
+            "page" => $numberPage
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+    }
+
     public function searchAjaxAction(){
 
         $this->importarJsTable();
+        /*Recuperamos la cabecera de cierta planilla*/
         $planilla = Planilla::findFirstByPlanilla_id(147);
         $columnas = $this->modelsManager
             ->createBuilder()
@@ -38,8 +75,39 @@ class RemitoController extends ControllerBase
             ->orderBy('columna_posicion ASC')
             ->getQuery()
             ->execute();
+
         $this->view->columnas = $columnas;
+
+        /*Criteria*/
+        $numberPage = 1;
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Remito", $_POST);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+
+        $remito = Remito::find($parameters);
+        if (count($remito) == 0) {
+            $this->flash->notice("The search did not find any remito");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "index"
+            ));
+        }
+        //Recuperamos la planilla que contenga los criteria
+        //
+
+
     }
+
     public function dataAction($offset=0, $limit=5)
     {
         $this->view->disable();
