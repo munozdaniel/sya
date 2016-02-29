@@ -145,8 +145,30 @@ class RemitoController extends ControllerBase
         //los devolvemos en formato json
        // echo json_encode(array("posts" => $pag,"links" => $links));
 
-        $remito = Remito::find()->toArray();
-        echo json_encode(array('data'=>$remito));
+        //$remito = Remito::findByRemito_planillaId(27)->toArray();
+        /*=================*/
+        $retorno = array();
+        foreach($_POST as $arreglo)
+        {
+            $retorno[$arreglo['name']]= $arreglo['value'];
+        }
+        /*====================*/
+        $band = "NO";
+
+        if (!empty($retorno)) {
+            $query = Criteria::fromInput($this->di, "Remito", $retorno);
+            $this->persistent->parameters = $query->getParams();
+            $band = "SI";
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+
+        $remito = Remito::find($parameters)->toArray();
+        echo json_encode(array('data'=>$remito,'retorno'=>$retorno,'criteria'=>$band));
     }
     private function get_posts($offset = 0, $limit = 10)
     {

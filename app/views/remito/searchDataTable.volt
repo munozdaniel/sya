@@ -17,6 +17,27 @@
         </table>
     </div>
 </div>
+{#=============================================================================================================#}
+<form id="myform" method="post">
+
+
+<div align="center">
+    <h1>Search remito</h1>
+</div>
+            <label for="remito_id">Remito</label>
+            {{ text_field("remito_id", "type" : "numeric") }}
+            <label for="remito_nro">Remito Of Nro</label>
+            {{ text_field("remito_nro", "type" : "numeric") }}
+            <label for="remito_planillaId">Remito Of PlanillaId</label>
+            {{ text_field("remito_planillaId", "type" : "numeric") }}
+        <div class="submit">
+            <input type="submit" id="btn" name="btn" class="btn" value="Submit" />
+        </div>
+
+
+</form>
+
+{#=============================================================================================================#}
 <!-- /.box-header -->
 {{ content() }}
 <div class="box box-body">
@@ -58,61 +79,78 @@
 
 <script>
     $(document).ready(function() {
-        var posiciones = [];
-        {% for col in columnas %}
-        posiciones.push({{ col['columna_posicion']}}) ;
-        {% endfor %}
+        // this is the id of the form
+        $("#myform").submit(function(e) {
 
-        var table = $('#example').DataTable({
-            "processing": true,
-            dom: 'Bfrtip',
-            buttons: [
-                'excelHtml5'
-            ],
-            'paging':   true,
-            'ordering': true,
-            'info':     true,
-            stateSave: false,
-            fixedHeader: true,
-            scrollY:        '80vh',
-            scrollX:        'true',
-            scrollCollapse: true,
-            "columns": [
-                { "data": "remito_id" },
-                { "data": "remito_nro" },
-                { "data": "remito_nroOrden" },
-                { "data": "remito_tipo" },
-                { "data": "remito_planillaId" },
-                { "data": "remito_id" },
-                { "data": "remito_nro" },
-                { "data": "remito_nroOrden" },
-                { "data": "remito_tipo" },
-                { "data": "remito_planillaId" },
-                { "data": "remito_id" },
-                { "data": "remito_nro" },
-                { "data": "remito_nroOrden" },
-                { "data": "remito_tipo" },
-                { "data": "remito_planillaId" },
-                { "data": "remito_planillaId" },
-                { "data": "remito_planillaId" },
-                { "data": "remito_planillaId" },
-                { "data": "remito_conformidad" }
-            ],
-            colReorder: {
+            var Data = $("#myform").serializeArray();
 
-                order: [2,9,0 , 1 ,10,11, 3, 4, 5,6,7,8,12,13,14,15,16,17,18 ]
-            },
-            ajax: 'busquedaAjax',
-            "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                var $nRow = $(nRow);
-                if ( aData['remito_planillaId'] == 27 )
-                {console.log("es uno");
-                    $nRow.css({"background-color":"rgba(221, 75, 57, 0.6)"});
-                }else{
-                    console.log(aData['remito_planillaId']);
+
+            /**======================= DATATABLE ===========================*/
+            var posiciones = [];
+            {% for col in columnas %}
+            posiciones.push({{ col['columna_posicion']}}) ;
+            {% endfor %}
+            console.log( $( this ).serialize());
+            var table = $('#example').DataTable({
+                "processing": true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'excelHtml5'
+                ],
+                'paging':   true,
+                'ordering': true,
+                'info':     true,
+                stateSave: false,
+                fixedHeader: true,
+                scrollY:        '80vh',
+                scrollX:        'true',
+                scrollCollapse: true,
+                "columns": [
+                    { "data": "remito_id" },
+                    { "data": "remito_nro" },
+                    { "data": "remito_nroOrden" },
+                    { "data": "remito_tipo" },
+                    { "data": "remito_planillaId" },
+                    { "data": "remito_id" },
+                    { "data": "remito_nro" },
+                    { "data": "remito_nroOrden" },
+                    { "data": "remito_tipo" },
+                    { "data": "remito_planillaId" },
+                    { "data": "remito_id" },
+                    { "data": "remito_nro" },
+                    { "data": "remito_nroOrden" },
+                    { "data": "remito_tipo" },
+                    { "data": "remito_planillaId" },
+                    { "data": "remito_planillaId" },
+                    { "data": "remito_planillaId" },
+                    { "data": "remito_planillaId" },
+                    { "data": "remito_conformidad" }
+                ],
+                colReorder: {
+
+                    order: [2,9,0 , 1 ,10,11, 3, 4, 5,6,7,8,12,13,14,15,16,17,18 ]
+                },
+                ajax:{
+                    'url':'busquedaAjax',
+                    'type':'POST',
+                    'data': Data,
+                    dataType: 'json'
+                },
+                "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                    var $nRow = $(nRow);
+                    if ( aData['remito_planillaId'] == 27 )
+                    {console.log("es uno");
+                        $nRow.css({"background-color":"rgba(221, 75, 57, 0.6)"});
+                    }else{
+                        console.log(aData['remito_planillaId']);
+                    }
                 }
-            }
+            });
+
+            /** =========================== FIN: DATATABLE =================================*/
+            e.preventDefault(); // avoid to execute the actual submit of the form.
         });
+
 
 
 
