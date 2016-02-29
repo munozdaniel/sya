@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\NativeArray as Paginator;
 use Phalcon\Paginator\Adapter\Model as PaginatorModelo;
@@ -26,41 +26,19 @@ class RemitoController extends ControllerBase
     {
         $this->persistent->parameters = null;
     }
+    /**
+     * =================================================================================================
+     *                          BUSQUEDA DE REMITOS
+     * =================================================================================================
+     */
+
+    /**
+     * OK.
+     * Se encarga de mostrar el formulario de busqueda de remitos, y de preparar la tabla a generar por la busqueda.
+     */
     public function searchDataTableAction()
     {
-        $this->assets->collection('footer')
-            ->addCss('plugins/excel/tableExport.js')
-            ->addCss('plugins/excel/jquery.base64.js');
         $this->importarDataTables();
-        /*Criteria*/
-        /*$numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Remito", $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-
-        $remito = Remito::find($parameters);
-        if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-        $paginator = new PaginatorModelo(array(
-            "data" => $remito,
-            "limit"=> 3,
-            "page" => $numberPage
-        ));*/
         //Posiciones:
         $columnas = $this->modelsManager
             ->createBuilder()
@@ -70,20 +48,129 @@ class RemitoController extends ControllerBase
             ->orderBy('columna_id ASC')
             ->getQuery()
             ->execute()->toArray();
-        $this->view->columnas = $columnas;
         //Vistas
-        //$this->view->page = $paginator->getPaginate();
+        $this->view->columnas = $columnas;
         $this->view->remitoForm = new RemitoForm();
         $this->view->clienteForm = new ClienteNewForm();
     }
-    public function generarExcelAction()
+
+    /**
+     * Llamada ajax por el submit de searchDataTable. Se encarga de realizar un criteria con los datos enviado por POST
+     * (form serializable) y luego busca los datos que se van a mostrar en la datatable.
+     * Devuelve un arreglo.
+     */
+    public function busquedaAjaxAction()
     {
-        $json = $this->request->get('json');
-        $json = json_decode($json);
-        var_dump($json);
-       return  $this->redireccionar('remito/searchDataTable');
+        $this->view->disable();
+        /*=================*/
+        $retorno = array();
+        foreach($_POST as $arreglo)
+        {
+            $retorno[$arreglo['name']]= $arreglo['value'];
+        }
+        /*====================*/
+        $band = "NO";
+
+        if (!empty($retorno)) {
+            $query = Criteria::fromInput($this->di, "Remito", $retorno);
+            $this->persistent->parameters = $query->getParams();
+            $band = "SI";
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+        $remito = Remito::find($parameters);
+        $tabla= $this->generarTablaDeRemitosNuevo($remito);
+        echo json_encode(array('data'=>$tabla));
     }
-        /*==============================================================================================*/
+    /**
+     * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
+     * @param $remito
+     * @return array
+     */
+    private function generarTablaDeRemitosNuevo($remito){
+        $tabla = array();
+        foreach ($remito as $unRemito) {
+            $fila = array();
+            $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
+
+            /*================ Planilla ================*/
+            $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
+            $fila['remito_planillaId']=$unRemito->getRemitoPlanillaId();
+
+            /*================ Remito ================*/
+            $fila['remito_nroOrden']=$unRemito->getRemitoNroOrden();
+            $fila['remito_fecha']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
+            $fila['remito_nro']=$unRemito->getRemitoNro();//remito Sya
+            $fila['remito_pdf']=$unRemito->getRemitoPdf();//remito Sya
+
+
+            /*================ Transporte ================*/
+            $fila['transporte_dominio']=$unRemito->getTransporte()->getTransporteDominio();
+            $fila['transporte_nroInterno']=$unRemito->getTransporte()->getTransporteNroInterno();
+
+            /*================ TipoEquipo ================*/
+            $fila['tipoEquipo_nombre']=$unRemito->getTipoequipo()->getTipoEquipoNombre();
+
+            /*================ TipoCarga ================*/
+            $fila['tipoCarga_nombre']=$unRemito->getTipocarga()->getTipoCargaNombre();
+
+            /*================ Chofer ================*/
+            $fila['chofer_dni']=$unRemito->getChofer()->getChoferDni();
+            $fila['chofer_nombreCompleto']=$unRemito->getChofer()->getChoferNombreCompleto();
+            $fila['chofer_esFletero']=($unRemito->getChofer()->getChoferEsFletero()==1?'SI':'NO');
+
+            /*================ Cliente ================*/
+            $fila['cliente_nombre']=$unRemito->getCliente()->getClienteNombre();
+
+            /*================ Operadora ================*/
+            //FIXME: NO puedo mostrar el nombre de la operadora!! Porque no tiene operadora cargada!
+            if($unRemito->getOperadora() != null)
+                $fila['operadora_nombre'] = $unRemito->getOperadora()->getOperadoraNombre();
+            else
+                $fila['operadora_nombre'] = "NO ESTA CARGADO";
+
+            /*================ EquipoPozo ================*/
+            $fila['equipoPozo_nombre']= $unRemito->getEquipopozo()->getEquipoPozoNombre();
+
+            /*================ Yacimiento ================*/
+            $yacimiento = Yacimiento::findFirstByYacimiento_id($unRemito->getEquipopozo()->getEquipopozoYacimientoid());
+            $fila['yacimiento_destino'] = $yacimiento->getYacimientoDestino();
+
+
+            /*================ CentroCosto ================*/
+            $fila['centroCosto_codigo'] = $unRemito->getCentrocosto()->getCentroCostoCodigo();
+
+            /*================ Linea ================*/
+            $linea = Linea::findFirstByLinea_id($unRemito->getCentrocosto()->getCentroCostoLineaId());
+            $fila['linea_nombre']= $linea->getLineaNombre();
+
+            /*================ Viaje ================*/
+            $fila['viaje_origen']= $unRemito->getViaje()->getViajeOrigen();
+            /*================ Concatenado ================*/
+            $fila['concatenado_nombre']= $unRemito->getConcatenado()->getConcatenadoNombre();
+
+            /*================ Tarifa ================*/
+            $tarifa = Tarifa::findFirst();
+            $fila['tarifa_hsServicio']= $unRemito->getTarifa()->getTarifaHsServicio();
+            $fila['tarifa_hsKm']=  $unRemito->getTarifa()->getTarifaKm();
+            $fila['tarifa_hsHidro']=  $unRemito->getTarifa()->getTarifaHsHidro();
+            $fila['tarifa_hsMalacate']=  $unRemito->getTarifa()->getTarifaHsMalacate();
+            $fila['tarifa_hsStand']=  $unRemito->getTarifa()->getTarifaHsStand();
+
+            /*================ Orden ================*/
+            $fila['remito_observaciones']=$unRemito->getRemitoObservacion();
+            $fila['remito_conformidad']=($unRemito->getRemitoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoConformidad());
+            $fila['remito_noConformidad']=($unRemito->getRemitoNoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoNoConformidad());
+
+            $tabla[] = $fila;
+        }
+        return $tabla;
+    }
+    /*==============================================================================================*/
     /**
      * @return bool
      */
@@ -128,179 +215,12 @@ class RemitoController extends ControllerBase
             ));
         }
         //Recuperamos la planilla que contenga los criteria
-        //
-
 
     }
 
-    public function busquedaAjaxAction($offset=0, $limit=5)
-    {
-        $this->view->disable();
-        //if($this->request->isAjax())
-        //comprobamos si han llegado las variables get para setearlas
-        $offset = !isset($_GET["offset"]) || $_GET["offset"] == "undefined" ? 0 : $_GET["offset"];
-        $limit = !isset($_GET["limit"]) || $_GET["limit"] == "undefined" ? 200000 : $_GET["limit"];
-        //obtenemos los posts
-        $pag = $this->get_posts($offset,$limit);
-        //obtenemos los enlaces para estos posts
-        $links = $this->crea_links();
-        //los devolvemos en formato json
-       // echo json_encode(array("posts" => $pag,"links" => $links));
 
-        //$remito = Remito::findByRemito_planillaId(27)->toArray();
-        /*=================*/
-        $retorno = array();
-        foreach($_POST as $arreglo)
-        {
-            $retorno[$arreglo['name']]= $arreglo['value'];
-        }
-        /*====================*/
-        $band = "NO";
-
-        if (!empty($retorno)) {
-            $query = Criteria::fromInput($this->di, "Remito", $retorno);
-            $this->persistent->parameters = $query->getParams();
-            $band = "SI";
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        $remito = Remito::find($parameters);
-        $tabla= $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data'=>$tabla,'retorno'=>$retorno,'criteria'=>$band));
-    }
-    private function get_posts($offset = 0, $limit = 10)
-    {
-        if($offset == 0){
-            $_SESSION["actual"] = 1;
-        }else{
-            $_SESSION["actual"] = ($offset+$limit)/$limit;
-        }
-        $_SESSION["limit"] = $limit;
-        try {
-
-            $sql = "SELECT * FROM Remito LIMIT ?,?";
-            $query = $this->db->prepare($sql);
-            $query->bindValue(1, (int) $offset, PDO::PARAM_INT);
-            $query->bindValue(2, (int) $limit, PDO::PARAM_INT);
-            $query->execute();
-
-            //si existe el usuario
-            if($query->rowCount() > 0)
-            {
-
-                return $query->fetchAll();
-
-            }
-
-        }catch(PDOException $e){
-
-            print "Error!: " . $e->getMessage();
-
-        }
-
-    }
-    //creamos los enlaces de nuestra paginación
-    private function crea_links()
-    {
-
-        //html para retornar
-        $html = "";
-
-        //página actual
-        $actual_pag = $_SESSION["actual"];
-
-        //limite por página
-        $limit = $_SESSION["limit"];
-
-        //total de enlaces que existen
-        $totalPag = floor($this->get_all_posts()/$limit);
-
-        //links delante y detrás que queremos mostrar
-        $pagVisibles = 2;
-
-        if($actual_pag <= $pagVisibles)
-        {
-            $primera_pag = 1;
-        }else{
-            $primera_pag = $actual_pag - $pagVisibles;
-        }
-
-        if($actual_pag + $pagVisibles <= $totalPag)
-        {
-            $ultima_pag = $actual_pag + $pagVisibles;
-        }else{
-            $ultima_pag = $totalPag;
-        }
-
-        $html .= '<p>';
-        $html .= ($actual_pag > 1) ?
-            ' <a href="#" class="btn btn-flat" onclick="paginate(0,'.$limit.')">Primera</a>' :
-            ' <a href="#" class="btn btn-flat disabled">Primera</a>';
-        $html .= ($actual_pag > 1) ?
-            ' <a href="#" class="btn btn-flat" onclick="paginate('.(($actual_pag-2)*$limit).','.$limit.')">Anterior</a>' :
-            ' <a href="#" class="btn btn-flat disabled">Anterior</a>';
-
-        for($i=$primera_pag; $i<=$ultima_pag+1; $i++)
-        {
-            $z = $i;
-            $html .= ($i == $actual_pag) ?
-                ' <a class="button secondary round disabled" href="#">'.$i.'</a>' :
-                ' <a class="btn btn-flat" href="#" onclick="paginate('.(($z-1)*$limit).','.$limit.')">'.$i.'</a>';
-        }
-
-        $html .= ($actual_pag < $totalPag) ?
-            ' <a href="#" class="btn btn-flat" onclick="paginate('.(($actual_pag)*$limit).','.$limit.')">Siguiente</a>' :
-            ' <a href="#" class="btn btn-flat disabled">Siguiente</a>';
-        $html .= ($actual_pag < $totalPag) ?
-            ' <a href="#" class="btn btn-flat" onclick="paginate('.(($totalPag)*$limit).','.$limit.')">Última</a>' :
-            ' <a href="#" class="btn btn-flat disabled">Última</a>';
-        $html .= '</p>';
-
-        return $html;
-
-    }
-    //obtenemos el número de posts totales
-    private function get_all_posts()
-    {
-        try {
-
-            $sql = "SELECT COUNT(*) from Remito";
-            $query = $this->db->prepare($sql);
-            $query->execute();
-
-            //si es true
-            if($query->rowCount() == 1)
-            {
-
-                return $query->fetchColumn();
-
-            }
-
-        }catch(PDOException $e){
-
-            print "Error!: " . $e->getMessage();
-
-        }
-    }
     /*====================================================*/
-    /**
-     * Muestra todos los remitos de una planilla.
-     * Utiliza el plugin BoostrapTable.
-     */
-    public function verRemitosAction($planillaId){
-        if ($this->request->isAjax()) {
-            $builder = $this->modelsManager->createBuilder()
-                ->columns('remito_id, remito_nro, remito_transporteId, remito_conformidad')
-                ->from('Example\Models\Remito');
 
-            $dataTables = new DataTable();
-            $dataTables->fromBuilder($builder)->sendResponse();
-        }
-    }
     /**
      * Searches for remito, suponiendo que siempre va a elegir una planilla
      */
@@ -447,7 +367,7 @@ class RemitoController extends ControllerBase
             $this->tag->setDefault("remito_creadoPor", $remito->getRemitoCreadopor());
             $this->tag->setDefault("remito_habilitado", $remito->getRemitoHabilitado());
             $this->tag->setDefault("remito_ultima", $remito->getRemitoUltima());
-            
+
         }
     }
 
@@ -491,7 +411,7 @@ class RemitoController extends ControllerBase
         $remito->setRemitoCreadopor($this->request->getPost("remito_creadoPor"));
         $remito->setRemitoHabilitado($this->request->getPost("remito_habilitado"));
         $remito->setRemitoUltima($this->request->getPost("remito_ultima"));
-        
+
 
         if (!$remito->save()) {
             foreach ($remito->getMessages() as $message) {
@@ -563,7 +483,7 @@ class RemitoController extends ControllerBase
         $remito->setRemitoCreadopor($this->request->getPost("remito_creadoPor"));
         $remito->setRemitoHabilitado($this->request->getPost("remito_habilitado"));
         $remito->setRemitoUltima($this->request->getPost("remito_ultima"));
-        
+
 
         if (!$remito->save()) {
 
@@ -992,88 +912,5 @@ class RemitoController extends ControllerBase
         return $buscarRemitos;
     }
 
-    /**
-     * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
-     * @param $remito
-     * @return array
-     */
-    private function generarTablaDeRemitosNuevo($remito){
-        $tabla = array();
-        foreach ($remito as $unRemito) {
-            $fila = array();
-            $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
 
-            /*================ Planilla ================*/
-            $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
-            $fila['remito_planillaId']=$unRemito->getRemitoPlanillaId();
-
-            /*================ Remito ================*/
-            $fila['remito_nroOrden']=$unRemito->getRemitoNroOrden();
-            $fila['remito_fecha']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
-            $fila['remito_nro']=$unRemito->getRemitoNro();//remito Sya
-            $fila['remito_pdf']=$unRemito->getRemitoPdf();//remito Sya
-
-
-            /*================ Transporte ================*/
-            $fila['transporte_dominio']=$unRemito->getTransporte()->getTransporteDominio();
-            $fila['transporte_nroInterno']=$unRemito->getTransporte()->getTransporteNroInterno();
-
-            /*================ TipoEquipo ================*/
-            $fila['tipoEquipo_nombre']=$unRemito->getTipoequipo()->getTipoEquipoNombre();
-
-            /*================ TipoCarga ================*/
-            $fila['tipoCarga_nombre']=$unRemito->getTipocarga()->getTipoCargaNombre();
-
-            /*================ Chofer ================*/
-            $fila['chofer_dni']=$unRemito->getChofer()->getChoferDni();
-            $fila['chofer_nombreCompleto']=$unRemito->getChofer()->getChoferNombreCompleto();
-            $fila['chofer_esFletero']=($unRemito->getChofer()->getChoferEsFletero()==1?'SI':'NO');
-
-            /*================ Cliente ================*/
-            $fila['cliente_nombre']=$unRemito->getCliente()->getClienteNombre();
-
-            /*================ Operadora ================*/
-           //FIXME: NO puedo mostrar el nombre de la operadora!! Porque no tiene operadora cargada!
-            if($unRemito->getOperadora() != null)
-               $fila['operadora_nombre'] = $unRemito->getOperadora()->getOperadoraNombre();
-           else
-               $fila['operadora_nombre'] = "NO ESTA CARGADO";
-
-            /*================ EquipoPozo ================*/
-            $fila['equipoPozo_nombre']= $unRemito->getEquipopozo()->getEquipoPozoNombre();
-
-            /*================ Yacimiento ================*/
-            $yacimiento = Yacimiento::findFirstByYacimiento_id($unRemito->getEquipopozo()->getEquipopozoYacimientoid());
-            $fila['yacimiento_destino'] = $yacimiento->getYacimientoDestino();
-
-
-            /*================ CentroCosto ================*/
-            $fila['centroCosto_codigo'] = $unRemito->getCentrocosto()->getCentroCostoCodigo();
-
-            /*================ Linea ================*/
-            $linea = Linea::findFirstByLinea_id($unRemito->getCentrocosto()->getCentroCostoLineaId());
-            $fila['linea_nombre']= $linea->getLineaNombre();
-
-            /*================ Viaje ================*/
-            $fila['viaje_origen']= $unRemito->getViaje()->getViajeOrigen();
-            /*================ Concatenado ================*/
-            $fila['concatenado_nombre']= $unRemito->getConcatenado()->getConcatenadoNombre();
-
-            /*================ Tarifa ================*/
-            $tarifa = Tarifa::findFirst();
-            $fila['tarifa_hsServicio']= $unRemito->getTarifa()->getTarifaHsServicio();
-            $fila['tarifa_hsKm']=  $unRemito->getTarifa()->getTarifaKm();
-            $fila['tarifa_hsHidro']=  $unRemito->getTarifa()->getTarifaHsHidro();
-            $fila['tarifa_hsMalacate']=  $unRemito->getTarifa()->getTarifaHsMalacate();
-            $fila['tarifa_hsStand']=  $unRemito->getTarifa()->getTarifaHsStand();
-
-            /*================ Orden ================*/
-            $fila['remito_observaciones']=$unRemito->getRemitoObservacion();
-            $fila['remito_conformidad']=($unRemito->getRemitoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoConformidad());
-            $fila['remito_noConformidad']=($unRemito->getRemitoNoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoNoConformidad());
-
-            $tabla[] = $fila;
-        }
-        return $tabla;
-    }
 }

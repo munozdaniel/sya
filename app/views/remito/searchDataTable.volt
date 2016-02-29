@@ -19,7 +19,6 @@
 <!-- /.box-header -->
 {{ content() }}
 <section id="seccion-tabla" class="box box-body ocultar">
-    <a href="#" class="btn btn-soundcloud pull-left " onClick ="$('#example').tableExport({type:'excel',escape:'false'});">EXPORTAR PAGINA</a><br>
 
 
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -72,15 +71,31 @@
             /**======================= DATATABLE ===========================*/
             var posiciones = [];
             {% for col in columnas %}
-            posiciones.push({{ col['columna_posicion']}}) ;
+                posiciones.push({{ col['columna_posicion']}}) ;
             {% endfor %}
            // console.log( $( this ).serialize());
             var table = $('#example').DataTable({
                 "processing": true,
+
                 dom: 'Bfrtip',
                 buttons: [
-                    'excelHtml5'
+                    {
+                        extend:'excelHtml5',
+                        text: 'EXPORTAR TODO'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: 'EXPORTAR SELECCIONADOS',
+                        exportOptions: {
+                            modifier: {
+                                selected: true
+                            }
+                        }
+                    }
                 ],
+                select: {
+                    style: 'multi'
+                },
                 'paging':   true,
                 'ordering': true,
                 'info':     true,
@@ -121,7 +136,7 @@
                 ],
                 colReorder: {
 
-                    order: [2,9,0 , 1 ,10,11, 3, 4, 5,6,7,8,12,13,14,15,16,17,18,19,20,21,22,23 ]
+                    order: posiciones
                 },
                 ajax:{
                     'url':'busquedaAjax',
@@ -155,10 +170,9 @@
                 },
                 "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                     var $nRow = $(nRow);
-                    console.log( aData['remito_pdf']);
                     if ( aData['remito_pdf'] == "" ||  aData['remito_pdf'] == null )
                     {
-                        $nRow.css({"background-color":"rgba(221, 75, 57, 0.6)"});
+                        $nRow.css({"color":"red"});
                     }
                 }
             });
