@@ -168,9 +168,9 @@ class RemitoController extends ControllerBase
             $parameters = array();
         }
         $parameters["order"] = "remito_id";
-
-        $remito = Remito::find($parameters)->toArray();
-        echo json_encode(array('data'=>$remito,'retorno'=>$retorno,'criteria'=>$band));
+        $remito = Remito::find($parameters);
+        $tabla= $this->generarTablaDeRemitosNuevo($remito);
+        echo json_encode(array('data'=>$tabla,'retorno'=>$retorno,'criteria'=>$band));
     }
     private function get_posts($offset = 0, $limit = 10)
     {
@@ -1010,8 +1010,8 @@ class RemitoController extends ControllerBase
             /*================ Remito ================*/
             $fila['remito_nroOrden']=$unRemito->getRemitoNroOrden();
             $fila['remito_fecha']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
-            $fila['remito_periodo']=$unRemito->getRemitoPeriodo();
             $fila['remito_nro']=$unRemito->getRemitoNro();//remito Sya
+            $fila['remito_pdf']=$unRemito->getRemitoPdf();//remito Sya
 
 
             /*================ Transporte ================*/
@@ -1034,7 +1034,10 @@ class RemitoController extends ControllerBase
 
             /*================ Operadora ================*/
            //FIXME: NO puedo mostrar el nombre de la operadora!! Porque no tiene operadora cargada!
-           $fila['operadora_nombre'] = "9"; //$unRemito->getOperadora()->getOperadoraNombre();
+            if($unRemito->getOperadora() != null)
+               $fila['operadora_nombre'] = $unRemito->getOperadora()->getOperadoraNombre();
+           else
+               $fila['operadora_nombre'] = "NO ESTA CARGADO";
 
             /*================ EquipoPozo ================*/
             $fila['equipoPozo_nombre']= $unRemito->getEquipopozo()->getEquipoPozoNombre();
