@@ -1,52 +1,26 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Listado de Remitos <br>
-            <small>searchDataTable</small>
-        </h3>
-
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("remito/index", "<i class='fa fa-search'></i> Buscar Remitos",'class':'btn btn-flat btn-large bg-olive') }}
+                    {{ link_to("remito/searchDataTable", "<i class='fa fa-search'></i> Busqueda de Remitos",'class':'btn btn-flat btn-large bg-olive') }}
                 </td>
-                <td align="right">
-                    {{ link_to("remito/nuevoRemito", "<i class='fa fa-plus-square'></i> Agregar Remito",'class':'btn btn-flat btn-large btn-danger') }}
-                    {{ link_to("remito/generarExcel/json=", "<i class='fa fa-file'></i> Generar Excel",'class':'btn btn-flat btn-gris') }}
-                </td>
+
             </tr>
         </table>
     </div>
 </div>
 {#=============================================================================================================#}
-<form id="myform" method="post">
-
-
-<div align="center">
-    <h1>Search remito</h1>
-</div>
-            <label for="remito_id">Remito</label>
-            {{ text_field("remito_id", "type" : "numeric") }}
-            <label for="remito_nro">Remito Of Nro</label>
-            {{ text_field("remito_nro", "type" : "numeric") }}
-            <label for="remito_planillaId">Remito Of PlanillaId</label>
-            {{ text_field("remito_planillaId", "type" : "numeric") }}
-        <div class="submit">
-            <input type="submit" id="btn" name="btn" class="btn" value="Submit" />
-        </div>
-
-
-</form>
+<section id="seccion-busqueda">
+    {{ partial("remito/parcial/input") }}
+</section>
 
 {#=============================================================================================================#}
 <!-- /.box-header -->
 {{ content() }}
-<div class="box box-body">
+<section id="seccion-tabla" class="box box-body ocultar">
     <a href="#" class="btn btn-soundcloud pull-left " onClick ="$('#example').tableExport({type:'excel',escape:'false'});">EXPORTAR PAGINA</a><br>
-    {{ link_to("remito/searchDataTable", "First") }}
-    {{ link_to("remito/searchDataTable?page="~page.before, "Previous") }}
-    {{ link_to("remito/searchDataTable?page="~page.next, "Next") }}
-    {{ link_to("remito/searchDataTable?page="~page.last, "Last") }}
-    {{ page.current~"/"~page.total_pages }}
+
 
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
@@ -75,14 +49,15 @@
         </thead>
 
     </table>
-    </div>
+    </section>
 
 <script>
     $(document).ready(function() {
         // this is the id of the form
-        $("#myform").submit(function(e) {
-
-            var Data = $("#myform").serializeArray();
+        $("#form-buscarRemitos").submit(function(e) {
+            $('#seccion-busqueda').hide();
+            $('#seccion-tabla').show();
+            var Data = $("#form-buscarRemitos").serializeArray();
 
 
             /**======================= DATATABLE ===========================*/

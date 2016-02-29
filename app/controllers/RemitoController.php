@@ -33,7 +33,7 @@ class RemitoController extends ControllerBase
             ->addCss('plugins/excel/jquery.base64.js');
         $this->importarDataTables();
         /*Criteria*/
-        $numberPage = 1;
+        /*$numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, "Remito", $_POST);
             $this->persistent->parameters = $query->getParams();
@@ -60,7 +60,7 @@ class RemitoController extends ControllerBase
             "data" => $remito,
             "limit"=> 3,
             "page" => $numberPage
-        ));
+        ));*/
         //Posiciones:
         $columnas = $this->modelsManager
             ->createBuilder()
@@ -72,7 +72,9 @@ class RemitoController extends ControllerBase
             ->execute()->toArray();
         $this->view->columnas = $columnas;
         //Vistas
-        $this->view->page = $paginator->getPaginate();
+        //$this->view->page = $paginator->getPaginate();
+        $this->view->remitoForm = new RemitoForm();
+        $this->view->clienteForm = new ClienteNewForm();
     }
     public function generarExcelAction()
     {
