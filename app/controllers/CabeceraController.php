@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class CabeceraController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Agregar un remito nuevo');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -397,5 +408,107 @@ class CabeceraController extends ControllerBase
             "action" => "index"
         ));
     }
+    /*==========================================================================================*/
+    /*========================== REODENAR LAS COLUMNAS DE UNA CABECERA==========================*/
+    /*==========================================================================================*/
+    /**
+     * Permite seleccionar una planilla desde un datalist.
+     *
+     */
 
+    public function reordenarAction()
+    {
+        $this->assets->collection('headerJs')
+            ->addJs('plugins/jQueryUI/jquery-ui.min.js');
+        $this->assets->collection('headerCss')
+            ->addCss('plugins/jQueryUI/jquery-ui.css')
+            ->addCss('dist/css/planilla.css');
+        $this->view->formulario = new RemitoBuscarPlanillaForm(null, array('required'=>''));
+    }
+
+    /**
+     * obtiene todas las columnas perteneciente a la planilla seleccionada.
+     * Busca la planilla, obtiene la cabecera y recupera todas las columnas por cabecera.
+     * [[ AJAX ]]
+     */
+    public function buscarColumnasPorPlanillaAction()
+    {
+        $this->view->disable();
+        $data = array();
+        $mensajes = array();
+        if(!$this->request->isPost()){
+            $data['success']=false;
+            $mensajes[]= "La URL solicitada no se encuentra disponible.";
+        }
+        else{
+            if($this->request->getPost('planilla_id','int')==null)
+            {
+                $data['success']=false;
+                $mensajes[]= "Por favor seleccione una planilla.";
+            }else{
+            $planilla = Planilla::findFirst(array('planilla_id = :planilla_id: AND planilla_habilitado=1 AND planilla_armada =1',
+                'bind'=>array('planilla_id'=>$this->request->getPost('planilla_id','int'))));
+            if(!$planilla){
+                $data['success']=false;
+                foreach($planilla->getMessages() as $mje){
+                    $mensajes[] = $mje." <br>";
+                }
+            }else{
+                $columnas = Columna::find(array('columna_cabeceraId = :cabecera_id: AND columna_habilitado=1',
+                    'bind'=>array('cabecera_id'=>$planilla->getPlanillaCabeceraId()),'order'=>'columna_posicion ASC'));
+                if($columnas){
+                    $retorno = array();
+                    foreach($columnas as $col)
+                    {
+                        $item = array();
+                        $item['columna_id']=$col->getColumnaId();
+                        $item['columna_nombre']=$col->getColumnaNombre();
+                        $retorno[]=$item;
+                    }
+                    if(count($retorno)==0){
+                        $data['success']=false;
+                        $mensajes[]='La planilla seleccionada no contiene una cabecera con columnas para reordenar.';
+                    }
+                    else{
+
+                        $data['success']=true;
+                        $mensajes[]='Operación Exitosa';
+                        $data['columnas']=$retorno;
+                    }
+                }else{
+                    $data['success']=false;
+                    $mensajes[]='No se encontraron columnas referidas a la planilla seleccionada.';
+                }
+            }
+            }
+        }
+        $data['mensaje']=$mensajes;
+        echo  json_encode($data);
+    }
+
+    /**
+     * Segun las columnas reordenadas se iran actualizando las posiciones.
+     */
+    public function ordenarAction()
+    {
+        $this->view->disable();
+        if($_GET['listItem']!=null){
+        foreach ($_GET['listItem'] as $position => $item) {
+            //echo "Posicion: ".$position." - Item: ".$item ."<br>";
+            $columna = Columna::findFirstByColumna_id($item);
+            if($columna){
+                $columna->setColumnaPosicion($position);
+                if (!$columna->update()) {
+                    echo "HUBO UN PROBLEMA AL ACTUALIZAR LAS NUEVAS POSICIONES.";
+                    return;
+                }
+            }else
+                echo "NO SE HA ENCONTRADO LA COLUMNA <br>";
+        }
+        echo "OPERACIÓN EXITOSA, LAS COLUMNAS SE HAN REORDENADO.";
+        }
+        else{
+            echo "DEBE SELECCIONAR UNA PLANILLA CON COLUMNAS";
+        }
+    }
 }
