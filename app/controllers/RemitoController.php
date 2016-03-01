@@ -20,15 +20,73 @@ class RemitoController extends ControllerBase
 
     }
     /**
+     * =================================================================================================
+     *                          BUSQUEDA DE REMITOS POR PLANILLA
+     * =================================================================================================
+     */
+    /**
+     * Arma un formulario con un datalist de planillas. Seleccionando la planilla se obtendrán todas sus columnas
+     * para que sean reordenadas.
      * Index action
      */
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        $this->importarDataTables();
+        //Posiciones:
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_posicion')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
+            ->orderBy('columna_id ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        //Vistas
+        $this->view->columnas = $columnas;
+        $this->view->clienteForm = new ClienteNewForm();
+        $this->view->formulario = new RemitoBuscarPlanillaForm(null, array('required'=>'true'));
     }
     /**
+     * @return bool
+     */
+    public function buscarRemitoPorPlanillaAction(){
+        //SELECT2
+        $this->assets->collection('headerCss')
+            ->addCss('plugins/select2/select2.min.css');
+        $this->assets->collection('footer')
+            ->addJs('plugins/select2/select2.full.min.js');
+        //DATATABLES
+        $this->importarDataTables();
+        //Posiciones:
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_posicion')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
+            ->orderBy('columna_id ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        //Vistas
+        $this->view->columnas = $columnas;
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1','order'=>'planilla_nombreCliente DESC')),
+            array(
+                'using'      => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty'   => false,
+                'emptyText'  => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class'=>'form-control autocompletar',
+                'style'=>'width:100%',
+                'required'=>''
+            ));
+
+    }
+
+    /**
      * =================================================================================================
-     *                          BUSQUEDA DE REMITOS
+     *                          BUSQUEDA DE REMITOS GRAL AJAX
      * =================================================================================================
      */
 
@@ -84,7 +142,7 @@ class RemitoController extends ControllerBase
         $parameters["order"] = "remito_id";
         $remito = Remito::find($parameters);
         $tabla= $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data'=>$tabla));
+        echo json_encode(array('data'=>$tabla,'retorno'=>$retorno,'param'=>$parameters));
     }
     /**
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
@@ -171,55 +229,7 @@ class RemitoController extends ControllerBase
         return $tabla;
     }
     /*==============================================================================================*/
-    /**
-     * @return bool
-     */
-    public function searchAjaxAction(){
 
-        $this->importarJsTable();
-        /*Recuperamos la cabecera de cierta planilla*/
-        $planilla = Planilla::findFirstByPlanilla_id(147);
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_nombre,columna_clave')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraId()))
-            ->orderBy('columna_posicion ASC')
-            ->getQuery()
-            ->execute();
-
-        $this->view->columnas = $columnas;
-
-        /*Criteria*/
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Remito", $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-
-        $remito = Remito::find($parameters);
-        if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-        //Recuperamos la planilla que contenga los criteria
-
-    }
-
-
-    /*====================================================*/
 
     /**
      * Searches for remito, suponiendo que siempre va a elegir una planilla
