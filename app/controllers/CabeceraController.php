@@ -418,13 +418,24 @@ class CabeceraController extends ControllerBase
 
     public function reordenarAction()
     {
+        $this->importarSelect2();
+        //Assets para reordenar columnas.
         $this->assets->collection('headerJs')
             ->addJs('plugins/jQueryUI/jquery-ui.min.js');
         $this->assets->collection('headerCss')
             ->addCss('plugins/jQueryUI/jquery-ui.css')
             ->addCss('dist/css/planilla.css');
-        $this->view->formulario = new RemitoBuscarPlanillaForm(null, array('required'=>''));
-    }
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1','order'=>'planilla_nombreCliente DESC')),
+            array(
+                'using'      => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty'   => false,
+                'emptyText'  => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class'=>'form-control autocompletar',
+                'style'=>'width:100%',
+                'required'=>''
+            ));    }
 
     /**
      * obtiene todas las columnas perteneciente a la planilla seleccionada.

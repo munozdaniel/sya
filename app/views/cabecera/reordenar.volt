@@ -26,12 +26,15 @@
                 <div class="row">
                     <div class="col-md-6 col-md-offset-2">
                         {{ formulario.label('planilla_nombreCliente') }}
-                        <div class="input-group">
-                            {{ formulario.render('planilla_nombreCliente') }}
+                            {{ formulario.render() }}
                             <span class="input-group-btn">
                                 <a onclick="generarColumnas()" class="btn btn-primary btn-flat">BUSCAR COLUMNAS</a>
                             </span>
-                        </div>
+                            <script>
+                                $(function () {
+                                    $(".autocompletar").select2();
+                                });
+                            </script>
                     </div>
                 </div>
             </div>
