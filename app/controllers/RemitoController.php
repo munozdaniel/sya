@@ -52,10 +52,7 @@ class RemitoController extends ControllerBase
      */
     public function buscarRemitoPorPlanillaAction(){
         //SELECT2
-        $this->assets->collection('headerCss')
-            ->addCss('plugins/select2/select2.min.css');
-        $this->assets->collection('footer')
-            ->addJs('plugins/select2/select2.full.min.js');
+        $this->importarSelect2();
         //DATATABLES
         $this->importarDataTables();
         //Posiciones:
