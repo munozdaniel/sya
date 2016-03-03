@@ -700,14 +700,16 @@ class Columna extends \Phalcon\Mvc\Model
      * @param $cabecera_id
      * @return array|Columna[]
      */
-    public static function columnasOrdenadasByPlanilla($cabecera_id)
+    public static function verColumnasOrdenadasByCabeceraId($cabecera_id)
     {
-        $columnas = array();//Busco todas las columnas para armar el th ordenadamente
+        //Busco todas las columnas para armar el th ordenadamente
         $columnas = Columna::find(array(
             "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 ORDER BY columna_posicion DESC",
-            'bind'=>array('cabecera_id'=>9)
+            'bind'=>array('cabecera_id'=>$cabecera_id)
         ));
-        return $columnas;
+        if($columnas)
+            return $columnas;
+        return null;
     }
 
     /**
@@ -715,13 +717,15 @@ class Columna extends \Phalcon\Mvc\Model
      * @param $cabecera_id
      * @return array|Columna[]
      */
-    public static function columnasExtrasOrdenadasByPlanilla($cabecera_id)
+    public static function verColumnasExtrasOrdenadasByCabeceraId($cabecera_id)
     {
-        $columnas = array();//Busco todas las columnas para armar el th ordenadamente
+        //Busco todas las columnas para armar el th ordenadamente
         $columnas = Columna::find(array(
             "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1 ORDER BY columna_posicion ASC",
             'bind'=>array('cabecera_id'=>$cabecera_id)
         ));
-        return $columnas;
-    }
+        if($columnas)
+            return $columnas;
+        return null;    }
+
 }
