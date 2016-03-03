@@ -1,5 +1,12 @@
 <div class="box box-primary">
     <div class="box-header">
+        <h3>BUSQEUDA PERSONALIZADA
+            <small>
+                <br> - Falta Guardar el orden de las columnas.
+                <br> - Tarda en cargar, se mostrará un mje "CARGANDO..."
+                <br> - Hay qeu mejorar la busqueda por diferentes campos.
+            </small>
+        </h3>
         <table width="100%">
             <tr>
                 <td align="left">

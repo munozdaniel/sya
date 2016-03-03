@@ -82,6 +82,35 @@ class RemitoController extends ControllerBase
     }
 
     /**
+     * Se encarga de buscar todos los remitos segun la planilla_id enviada por post.
+     * Muestra las columnas extras.
+     */
+    public function busquedaPorPlanillaAjaxAction()
+    {
+        $this->view->disable();
+        /*=================*/
+        $retorno = array();
+        foreach($_POST as $arreglo)
+        {
+            $retorno[$arreglo['name']]= $arreglo['value'];
+        }
+        /*====================*/
+
+        if (!empty($retorno)) {
+            $query = Criteria::fromInput($this->di, "Remito", $retorno);
+            $this->persistent->parameters = $query->getParams();
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+        $remito = Remito::find($parameters);
+        $tabla= $this->generarTablaDeRemitosNuevo($remito);
+        echo json_encode(array('data'=>$tabla,'retorno'=>$retorno,'param'=>$parameters));
+    }
+    /**
      * =================================================================================================
      *                          BUSQUEDA DE REMITOS GRAL AJAX
      * =================================================================================================
@@ -124,12 +153,10 @@ class RemitoController extends ControllerBase
             $retorno[$arreglo['name']]= $arreglo['value'];
         }
         /*====================*/
-        $band = "NO";
 
         if (!empty($retorno)) {
             $query = Criteria::fromInput($this->di, "Remito", $retorno);
             $this->persistent->parameters = $query->getParams();
-            $band = "SI";
         }
 
         $parameters = $this->persistent->parameters;
@@ -139,14 +166,14 @@ class RemitoController extends ControllerBase
         $parameters["order"] = "remito_id";
         $remito = Remito::find($parameters);
         $tabla= $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data'=>$tabla,'retorno'=>$retorno,'param'=>$parameters));
+        echo json_encode(array('data'=>$tabla));
     }
     /**
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
      * @param $remito
      * @return array
      */
-    private function generarTablaDeRemitosNuevo($remito){
+    private function generarTablaDeRemitosNuevo($remito,$extra=''){
         $tabla = array();
         foreach ($remito as $unRemito) {
             $fila = array();
@@ -209,7 +236,6 @@ class RemitoController extends ControllerBase
             $fila['concatenado_nombre']= $unRemito->getConcatenado()->getConcatenadoNombre();
 
             /*================ Tarifa ================*/
-            $tarifa = Tarifa::findFirst();
             $fila['tarifa_hsServicio']= $unRemito->getTarifa()->getTarifaHsServicio();
             $fila['tarifa_hsKm']=  $unRemito->getTarifa()->getTarifaKm();
             $fila['tarifa_hsHidro']=  $unRemito->getTarifa()->getTarifaHsHidro();
@@ -220,10 +246,62 @@ class RemitoController extends ControllerBase
             $fila['remito_observaciones']=$unRemito->getRemitoObservacion();
             $fila['remito_conformidad']=($unRemito->getRemitoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoConformidad());
             $fila['remito_noConformidad']=($unRemito->getRemitoNoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoNoConformidad());
+            /*================ Extra ================*/
+            if($extra=="extra"){
+                $cabecera= Cabecera::findFirst(array('cabecera_id=:cabecera_id: AND cabecera_habilitado=1',
+                    array('bind'=>array('cabecera_id'=>$planilla->getPlanillaCabeceraid()))));
+                if($cabecera)
+                {
+                    $columnas= Columna::find(array('columna_cabeceraId = :cabecera_id: AND columna_extra=1 AND columna_habilitado=1',
+                        array('bind',array('cabecera_id'=>$cabecera->getCabeceraId()))));
+                    foreach($columnas as $col){
 
+                    }
+                }
+            }
             $tabla[] = $fila;
         }
         return $tabla;
+    }
+    /*==============================================================================================*/
+    public function searchRemitoSinPDFAction(){
+        $this->importarDataTables();
+        //Posiciones:
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_posicion')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
+            ->orderBy('columna_id ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        //Vistas
+        $this->view->columnas = $columnas;
+        $this->view->remitoForm = new RemitoForm();
+        $this->view->clienteForm = new ClienteNewForm();
+    }
+    public function buscarSinRemitoEscaneadoAction(){
+        $this->view->disable();
+        /*=================*/
+        $retorno = array();
+        foreach($_POST as $arreglo)
+        {
+            $retorno[$arreglo['name']]= $arreglo['value'];
+        }
+        /*====================*/
+        if (!empty($retorno)) {
+            $query = Criteria::fromInput($this->di, "Remito", $retorno);
+            $this->persistent->parameters = $query->getParams();
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+        $remito = Remito::find(array(' remito_pdf IS NULL'));
+        $tabla= $this->generarTablaDeRemitosNuevo($remito);
+        echo json_encode(array('data'=>$tabla));
     }
     /*==============================================================================================*/
 
@@ -237,12 +315,10 @@ class RemitoController extends ControllerBase
 
         $numberPage = 1;
         if ($this->request->isPost()) {
-            $paginador = $this->request->getPost('paginador');
             $query = Criteria::fromInput($this->di, "Remito", $_POST);
             $this->persistent->parameters = $query->getParams();
         } else {
             $numberPage = $this->request->getQuery("page", "int");
-            $paginador = 30;
         }
 
         $parameters = $this->persistent->parameters;
@@ -250,71 +326,20 @@ class RemitoController extends ControllerBase
             $parameters = array();
         }
         $parameters["order"] = "remito_id";
-        //BUSCAMOS LAS COLUMNAS NO EXTRA
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId','int'));
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_nombre,columna_clave')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_extra=0',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraId()))
-            ->orderBy('columna_posicion ASC')
-            ->getQuery()
-            ->execute();
-        $cad ="";
-        for($i=0;$i<count($columnas);$i++){
-            if($i!=0)
-                $cad .=",";
-            $cad .= $columnas[$i]->columna_clave;
-        }
-        $this->view->columnas= $columnas;
-
-        //BUSCAMOS TODOS LOS REMITOS
-        $remito = $this->modelsManager
-            ->createBuilder($parameters)
-            ->columns($cad)
-            ->from('Remito')
-            ->join('Tipoequipo')
-            ->join('Transporte')
-            ->join('Tipocarga')
-            ->join('Chofer')
-            ->join('Cliente')
-            ->join('Equipopozo')
-            ->join('Yacimiento','Yacimiento.yacimiento_id=Equipopozo.equipoPozo_yacimientoId','Yacimiento')
-            ->join('Concatenado')
-            ->join('Operadora')
-            ->join('Viaje')
-            ->join('Centrocosto')
-            ->join('Linea','Linea.linea_id=Centrocosto.centroCosto_lineaId','Linea')
-            ->join('Tarifa')
-            ->getQuery()
-            ->execute()->toArray();
-        //BUSCAMOS LAS COLUMNAS EXTRAS Y  CONTENIDOS EXTRA
-        $extra = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_nombre,Contenidoextra.contenidoExtra_descripcion')
-            ->from('Columna')
-            ->join('Contenidoextra')
-            ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_extra=1',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraId()))
-            ->orderBy('columna_posicion ASC')
-            ->getQuery()
-            ->execute()->toArray();
-        $this->view->extra=$extra;
-        $total = array_merge($remito,$extra);
-        echo "Total  ".count($remito);
+        $remito = Remito::find($parameters);
         if (count($remito) == 0) {
-            $this->flash->notice("No se han encontrado resultados");
+            $this->flash->notice("The search did not find any remito");
 
             return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
+                "controller" => "index",
+                "action" => "dashboard"
             ));
         }
-        $paginator = new Paginator(array(
-            "data" => $total,
-            "limit"=> $paginador,
+        $paginator = new PaginatorModelo(array(
+            "data" => $remito,
+            "limit"=> 10,
             "page" => $numberPage
         ));
-        $this->view->pick('remito/search');
 
         $this->view->page = $paginator->getPaginate();
     }
@@ -556,11 +581,10 @@ class RemitoController extends ControllerBase
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
      * @param $remito
      * @return array
-     * X
+     * X NO SIRVE
      */
     private function generarTablaDeRemitos($remito){
         $tabla = null;
-        $remito = Remito::find();
         foreach ($remito as $unRemito) {
             $fila = array();
             $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
@@ -570,6 +594,7 @@ class RemitoController extends ControllerBase
 
             /*================ Remito ================*/
             $fila['remito_nro']=$unRemito->getRemitoNro();
+            $fila['remito_nroOrden']=$unRemito->getRemitoNroOrden();
             $fila['remito_fecha']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
             $fila['remito_periodo']=$unRemito->getRemitoPeriodo();
 
