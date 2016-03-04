@@ -17,7 +17,47 @@
 </div>
 {#=============================================================================================================#}
 <section id="seccion-busqueda">
-    {{ partial("remito/parcial/searchPlanilla") }}
+
+
+    <!-- /.Titulo -->
+    <!-- Formulario -->
+    {{ content() }}
+    {# =================================== PLANILLA ================================== #}
+    {#Campos Ocultos#}
+    {#Fin Campos Ocultos#}
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Seleccionar Planilla <br>
+                <small> Obtener todos los remitos de una planilla</small>
+            </h3>
+
+        </div>
+        <fieldset id="fielset-buscar-planilla" class="panel-border">
+            <br>
+            <br>
+            <div class="container" align="center">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-2">
+                        {{ formulario.render() }}
+
+                    </div>
+                    <div class="col-md-2">
+                    <span class="input-group-btn"><br>
+                        <a id="confirmarPlanilla"
+                           class="btn btn-flat btn-info pull-left"><i class="fa fa-2x fa-check-circle-o"></i>.
+                        </a>
+                    </span>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </fieldset>
+    </div>
+    {{ form('id':'form-buscarRemitos' ,"method":"post") }}
+    {{ submit_button(" BUSCAR REMITOS",'id':'submit','class':'btn btn-lg btn-flat btn-primary', 'disabled':'') }}
+
+    {{ end_form() }}
+
 </section>
 
 {#=============================================================================================================#}
@@ -53,6 +93,7 @@
             <th>KM</th>
             <th>HS HIDRO</th>
 
+            <th>HS SERVICIO</th>
             <th>HS MALACATE</th>
             <th>HS STAND</th>
             <th>CONFORMIDAD RE</th>
@@ -62,14 +103,22 @@
         </thead>
 
     </table>
-    <div id="tableDiv"></div>
 
 </section>
 
 <script>
-    $(document).ready(function() {
+        var posiciones = null;
+        /**************** select autocomplete *******************/
+        $(function () {
+            $(".autocompletar").select2();
+        });
+        /**************** obtener un arreglo con todas las posiciones de las columans ordenadas *******************/
 
-        function recuperarColumnas(datos){
+        $( "#confirmarPlanilla" ).click(function()
+        {
+            var datos = {
+            'remito_planillaId': document.getElementById("remito_planillaId").value
+             };
             $.ajax({
                 type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
                 url: '/sya/columna/obtenerColumnas',
@@ -77,38 +126,37 @@
                 dataType: 'json', // what type of data do we expect back from the server
                 encode: true
             })
-            .done(function (data) {
-                if (!data.success)
-                {
-                    $('#mensajes').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> Hubo un problema, la planilla no tiene las columnas definidas.</div>'); // add the actual error message under our input
-                    return null;
-                }else{
-                    $('#mensajes').append('<div class="help-block  alert-success">&nbsp; Buscando datos...</div>'); // add the actual error message under our input
-                    return data.columnas;
-                }
+                    .done(function (data) {
+                        //console.log(data);
+                        if (!data.success)
+                        {
+                            $('#mensajes').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> Hubo un problema, la planilla no tiene las columnas definidas.</div>'); // add the actual error message under our input
+                        }else{
+                            $('#mensajes').append('<div class="help-block ">&nbsp; Por favor espere unos minutos para la carga de datos.</div>'); // add the actual error message under our input
+                            posiciones = data.columnas;
+                            $('#submit').prop('disabled', false);
 
-            })
-            .fail(function (data) {
-                console.log("recuperarColumnas");
-                console.log(data);
-            });
 
-        }
+                        }
+
+                    })
+                    .fail(function (data) {
+                        console.log("recuperarColumnas");
+                        console.log(data);
+                    });
+
+        });
         // ************************************************************************************
         $("#form-buscarRemitos").submit(function(e) {
+            var datos = {
+                'remito_planillaId': document.getElementById("remito_planillaId").value
+            };
 
             $('#seccion-busqueda').hide();
             $('#seccion-tabla').show();
-            //Preparando los datos para enviar por POST
-            var form = $("#form-buscarRemitos").serializeArray();
-            var arregloPost = {
-                'planilla_id':form[0]['value']
-            };
+
             /**======================= DATATABLE ===========================*/
-            var posiciones = [];
-            {% for col in columnas %}
-            posiciones.push({{ col['columna_posicion']}}) ;
-            {% endfor %}
+            //console.log(datos);
             var table = $('#example').DataTable({
                 "processing": true,
                 dom: 'Bfrtip',
@@ -163,6 +211,7 @@
                     { "data": "tarifa_hsKm" },
                     { "data": "tarifa_hsHidro" },
 
+                    { "data": "tarifa_hsServicio" },
                     { "data": "tarifa_hsMalacate" },
                     { "data": "tarifa_hsStand" },
                     { "data": "remito_conformidad" },
@@ -172,10 +221,8 @@
                 ajax:{
                     'url':'buscarRemitosPorPlanillaIdAjax',
                     'type':'POST',
-                    'data': arregloPost,
-                    dataType: 'json',
-                    'success': posiciones =  recuperarColumnas(arregloPost)
-
+                    'data': datos,
+                    dataType: 'json'
                 },
                 colReorder: {
 
@@ -221,5 +268,5 @@
 
 
 
-    } );
+
 </script>

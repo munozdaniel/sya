@@ -95,7 +95,8 @@ class RemitoController extends ControllerBase
                 'emptyValue' => '',
                 'class'=>'form-control autocompletar',
                 'style'=>'width:100%',
-                'required'=>''
+                'required'=>'',
+                'onchange'=>'var x = document.getElementById("remito_planillaId").value;alert(x);'
             ));
 
     }
@@ -108,11 +109,24 @@ class RemitoController extends ControllerBase
     {
         $this->view->disable();
         $remito=null;
-        if($this->request->getPost()!=null)
-            $remito = Remito::find(array('remito_habilitado = 1 AND remito_planillaId =:planilla_id:',
-        'bind'=>array('planilla_id'=>$this->request->getPost('planilla_id')),'order by'=>'remito_nroOrden ASC'));
-        $tabla= $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data'=>$tabla,'id'=>count($remito)));
+        $error = array();
+        $data = array();
+        $tabla=array();
+        if($this->request->getPost('remito_planillaId')==null)
+            $error[] = "No se encontró la planilla";
+
+        $remito = Remito::find(array('remito_habilitado = 1 AND remito_planillaId =:planilla_id:',
+        'bind'=>array('planilla_id'=>$this->request->getPost('remito_planillaId')),
+            'order by'=>'remito_nroOrden ASC'));
+        if(count($remito) != 0)
+            $tabla= $this->generarTablaDeRemitosNuevo($remito);
+        else
+        {
+            $error [] = "NO SE ENCONTRARON REMITOS";
+
+        }
+        $data['problemas']=$error;
+        echo json_encode(array('data'=>$tabla));
     }
     /**
      * =================================================================================================

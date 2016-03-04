@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -46,7 +46,7 @@ class ColumnaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $columna,
-            "limit"=> 10,
+            "limit" => 10,
             "page" => $numberPage
         ));
 
@@ -90,7 +90,7 @@ class ColumnaController extends ControllerBase
             $this->tag->setDefault("columna_extra", $columna->getColumnaExtra());
             $this->tag->setDefault("columna_cabeceraId", $columna->getColumnaCabeceraid());
             $this->tag->setDefault("columna_habilitado", $columna->getColumnaHabilitado());
-            
+
         }
     }
 
@@ -115,7 +115,7 @@ class ColumnaController extends ControllerBase
         $columna->setColumnaExtra($this->request->getPost("columna_extra"));
         $columna->setColumnaCabeceraid($this->request->getPost("columna_cabeceraId"));
         $columna->setColumnaHabilitado($this->request->getPost("columna_habilitado"));
-        
+
 
         if (!$columna->save()) {
             foreach ($columna->getMessages() as $message) {
@@ -169,7 +169,7 @@ class ColumnaController extends ControllerBase
         $columna->setColumnaExtra($this->request->getPost("columna_extra"));
         $columna->setColumnaCabeceraid($this->request->getPost("columna_cabeceraId"));
         $columna->setColumnaHabilitado($this->request->getPost("columna_habilitado"));
-        
+
 
         if (!$columna->save()) {
 
@@ -234,26 +234,39 @@ class ColumnaController extends ControllerBase
     /**************************************************************************************************/
     public function obtenerColumnasAction()
     {
+        $data['success'] = false;
         $this->view->disable();
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_posicion')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraid()))
-            ->orderBy('columna_id ASC')
-            ->getQuery()
-            ->execute()->toArray();
-        $data['holo']=$this->request->getPost('planilla_id');
-        if($columnas)
-        {
-            $data['success']=true;
-            $data['columnas']=$columnas;
+        if ($this->request->getPost('remito_planillaId') != null) {
+            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId'));
+            if ($planilla && $planilla->getPlanillaCabeceraid()!=null) {
+                $columnas = $this->modelsManager
+                    ->createBuilder()
+                    ->columns('columna_posicion')
+                    ->from('Columna')
+                    ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_extra=0 ', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
+                    ->orderBy('columna_id ASC')
+                    ->getQuery()
+                    ->execute()->toArray();
 
-        }
-        else
-        {
-            $data['success']=false;
+                if ($columnas) {
+                    $data['success'] = true;
+                    $retorno = array();
+                    foreach($columnas as $col)
+                    {
+                        $item = array();
+                        $item = $col['columna_posicion'];
+                        $retorno[] = $item;
+                    }
+                    $data['columnas'] = $retorno;
+
+                } else {
+                    $data['success'] = false;
+                }
+            }else{
+                $data['error']="La planilla no se encontró, o no contiene una cabecera apropiada.";
+            }
+        }else{
+            $data['error']="Es necesario que seleccione una planilla ";
         }
         echo json_encode($data);
     }
