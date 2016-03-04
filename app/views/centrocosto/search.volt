@@ -8,7 +8,7 @@
                 {{ link_to("centrocosto/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("centrocosto/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("centrocosto/new", "CREAR CENTRO DE COSTO ",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -35,7 +35,7 @@
                 <tr>
                     <td>{{ centrocosto.getCentrocostoId() }}</td>
                     <td>{{ centrocosto.getCentrocostoCodigo() }}</td>
-                    <td>{{ centrocosto.getNombreLinea(centrocosto.getCentrocostoLineaId()) }}</td>
+                    <td>{{ link_to('linea/buscarPorNombre/?nombre='~centrocosto.getLinea().getLineaNombre(),""~centrocosto.getLinea().getLineaNombre())}}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("centrocosto/edit/"~centrocosto.getCentrocostoId(), "Editar") }}</td>
                         <td>
