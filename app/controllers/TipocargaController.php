@@ -168,7 +168,7 @@ class TipocargaController extends ControllerBase
         }
 
         $tipocarga->setTipocargaNombre($this->request->getPost("tipoCarga_nombre"));
-        $tipocarga->setTipocargaHabilitado($this->request->getPost("tipoCarga_habilitado"));
+        $tipocarga->setTipocargaHabilitado(1);
         
 
         if (!$tipocarga->save()) {
