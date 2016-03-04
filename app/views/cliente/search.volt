@@ -1,14 +1,14 @@
 <!-- Titulo -->
 <div class="box-header">
-    <h3 class="box-title">Listado de Clientes</h3>
+    <h3 class="box-title">Listado de Clientes <br> <small> click sobre los botones para ver sus dependientes</small></h3>
 
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("cliente/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("cliente/index", " VOLVER",'class':'btn btn-flat btn-large bg-olive') }}
             </td>
             <td align="right">
-                {{ link_to("cliente/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("cliente/new", "AGREGAR CLIENTE ",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -16,6 +16,7 @@
 <!-- ./ Titulo -->
 {{ content() }}
 
+<div class="box">
 <div class="box-body">
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
@@ -23,12 +24,7 @@
         <tr>
             <th>#</th>
             <th>Nombre</th>
-            <th>Operadora</th>
-            <th>FRS</th>
-            <th>Yacimiento</th>
-            <th>Equipo/Pozo</th>
-            <th>Linea</th>
-            <th>CentroCosto</th>
+            <th>Lineas</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -40,12 +36,7 @@
 
                     <td>{{ cliente.getClienteId() }}</td>
                     <td>{{ cliente.getClienteNombre() }}</td>
-                    <td>{{ cliente.getClienteOperadoraid() }}</td>
-                    <td>{{ cliente.getClienteFrsid() }}</td>
-                    <td>{{ cliente.getClienteEquipopozoid() }}</td>
-                    <td>{{ cliente.getClienteEquipopozoid() }}</td>
-                    <td>{{ cliente.getClienteCentrocostoid() }}</td>
-                    <td>{{ cliente.getClienteCentrocostoid() }}</td>
+                    <td>{{ link_to("linea/buscarLineasPorCliente/"~cliente.getClienteId(), "Lineas",'class':'btn btn-flat  bg-light-blue-gradient') }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("cliente/edit/"~cliente.getClienteId(), "Editar") }}</td>
                         <td>
@@ -69,6 +60,7 @@
         {% endif %}
         </tbody>
     </table>
+</div>
 </div>
 
 

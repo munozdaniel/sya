@@ -66,6 +66,36 @@ class CentrocostoController extends ControllerBase
 
         $this->view->page = $paginator->getPaginate();
     }
+    /**
+     * Searches for centrocosto
+     */
+    public function buscarCCPorLineaAction($linea_id)
+    {
+        parent::importarJsSearch();
+
+        $numberPage = 1;
+        $numberPage = $this->request->getQuery("page", "int");
+
+        $centrocosto = Centrocosto::find(array("centroCosto_lineaId=:linea_id: AND centroCosto_habilitado=1",
+            'bind'=>array('linea_id'=>$linea_id)));
+        if (count($centrocosto) == 0) {
+            $this->flash->notice("No se encontraron resultados en la busqueda");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "centrocosto",
+                "action" => "index"
+            ));
+        }
+
+        $paginator = new Paginator(array(
+            "data" => $centrocosto,
+            "limit"=> 10000,
+            "page" => $numberPage
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+        $this->view->pick('centrocosto/search');
+    }
 
     /**
      * Displays the creation form

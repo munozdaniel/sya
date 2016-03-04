@@ -64,7 +64,34 @@ class LineaController extends ControllerBase
 
         $this->view->page = $paginator->getPaginate();
     }
+    /**
+     * Busca todas las lineas de un cliente especifico. Se utiliza en las tablas.
+     */
+    public function buscarLineasPorClienteAction($cliente_id)
+    {
+        parent::importarJsSearch();
 
+        $numberPage = 1;
+        $numberPage = $this->request->getQuery("page", "int");
+        $linea = Linea::find(array('linea_clienteId=:cliente_id: AND linea_habilitado=1',
+            'bind'=>array('cliente_id'=>$cliente_id),'order by'=>'linea_nombre ASC'));
+        if (count($linea) == 0) {
+            $this->flash->notice("No se encontraron resultados en la busqueda");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "linea",
+                "action" => "index"
+            ));
+        }
+        $paginator = new Paginator(array(
+            "data" => $linea,
+            "limit"=> 10000,
+            "page" => $numberPage
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+        $this->view->pick('linea/search');
+    }
     /**
      * Displays the creation form
      */

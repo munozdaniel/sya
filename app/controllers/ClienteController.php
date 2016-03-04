@@ -23,7 +23,18 @@ class ClienteController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->view->clienteForm = new ClienteNewForm();
+        $this->importarSelect2();
+        $elemento =  new \Phalcon\Forms\Element\Select('cliente_id',
+            Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre ASC')),
+            array(
+                'using'      => array('cliente_id', 'cliente_nombre'),
+                'useEmpty'   => true,
+                'emptyText'  => 'BUSCAR TODOS LOS CLIENTES',
+                'emptyValue' => '',
+                'class'=>'form-control autocompletar',
+                'style'=>'height:40px !important;'
+            ));
+        $this->view->formulario = $elemento;
         $this->persistent->parameters = null;
     }
 
@@ -72,7 +83,18 @@ class ClienteController extends ControllerBase
      */
     public function newAction()
     {
-        $this->view->clienteForm = new ClienteNewForm(null, array('edit' => true));
+        $this->importarSelect2();
+        $elemento =  new \Phalcon\Forms\Element\Select('cliente_id',
+            Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre ASC')),
+            array(
+                'using'      => array('cliente_id', 'cliente_nombre'),
+                'useEmpty'   => true,
+                'emptyText'  => 'BUSCAR TODOS LOS CLIENTES',
+                'emptyValue' => '',
+                'class'=>'form-control autocompletar',
+                'style'=>'height:40px !important;'
+            ));
+        $this->view->formulario = $elemento;
     }
 
 
@@ -101,11 +123,6 @@ class ClienteController extends ControllerBase
 
             $this->tag->setDefault("cliente_id", $cliente->getClienteId());
             $this->tag->setDefault("cliente_nombre", $cliente->getClienteNombre());
-            $this->tag->setDefault("cliente_operadora", $cliente->getClienteOperadora());
-            $this->tag->setDefault("cliente_frs", $cliente->getClienteFrs());
-            $this->tag->setDefault("cliente_habilitado", $cliente->getClienteHabilitado());
-            $this->tag->setDefault("cliente_equipoPozoId", $cliente->getClienteEquipopozoid());
-            $this->tag->setDefault("cliente_centroCostoId", $cliente->getClienteCentrocostoid());
 
         }
     }
@@ -126,11 +143,7 @@ class ClienteController extends ControllerBase
         $cliente = new Cliente();
 
         $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
-        $cliente->setClienteOperadoraId($this->request->getPost("operadora_id"));
-        $cliente->setClienteFrsId($this->request->getPost("frs_id"));
         $cliente->setClienteHabilitado(1);
-        $cliente->setClienteEquipopozoid($this->request->getPost("equipoPozo_id"));
-        $cliente->setClienteCentrocostoid($this->request->getPost("centroCosto_id"));
 
 
         if (!$cliente->save()) {
@@ -144,7 +157,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("cliente was created successfully");
+        $this->flash->success("El cliente se ha creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
@@ -180,12 +193,6 @@ class ClienteController extends ControllerBase
         }
 
         $cliente->setClienteNombre($this->request->getPost("cliente_nombre"));
-        $cliente->setClienteOperadora($this->request->getPost("cliente_operadora"));
-        $cliente->setClienteFrs($this->request->getPost("cliente_frs"));
-        $cliente->setClienteHabilitado($this->request->getPost("cliente_habilitado"));
-        $cliente->setClienteEquipopozoid($this->request->getPost("cliente_equipoPozoId"));
-        $cliente->setClienteCentrocostoid($this->request->getPost("cliente_centroCostoId"));
-
 
         if (!$cliente->save()) {
 
@@ -200,7 +207,7 @@ class ClienteController extends ControllerBase
             ));
         }
 
-        $this->flash->success("cliente was updated successfully");
+        $this->flash->success("El nombre del cliente se ha actualizado.");
 
         return $this->dispatcher->forward(array(
             "controller" => "cliente",
@@ -246,5 +253,71 @@ class ClienteController extends ControllerBase
             "action" => "index"
         ));
     }
+    /**
+     * Eliminar manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $cliente = Cliente::findFirstByCliente_id($id);
+            if (!$cliente) {
+                $this->flash->error("El Cliente no ha sido encontrado");
 
+                return $this->dispatcher->forward(array(
+                    "controller" => "cliente",
+                    "action" => "index"
+                ));
+            }
+            $cliente->cliente_habilitado = 0;
+            if (!$cliente->update()) {
+
+                foreach ($cliente->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "cliente",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El Cliente ha sido eliminado correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "cliente",
+                "action" => "search"
+            ));
+        }
+    }
+
+    /**
+     * Habilitar.
+     * @return bool
+     */
+    public function habilitarAction($id)
+    {
+        $cliente = Cliente::findFirstByCliente_id($id);
+        $cliente->cliente_habilitado = 1;
+        if (!$cliente->update()) {
+
+            foreach ($cliente->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "cliente",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El Cliente ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "cliente",
+            "action" => "search"
+        ));
+    }
 }

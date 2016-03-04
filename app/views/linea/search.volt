@@ -16,12 +16,13 @@
 <!-- ./ Titulo -->
 {{ content() }}
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <table id="tabla_id" class="table table-condensed table-bordered table-striped">
         <thead>
         <tr>
         <tr>
             <th>#</th>
             <th>Linea</th>
+            <th>Centro Costo</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -33,6 +34,7 @@
                 <tr>
                     <td>{{ linea.getLineaId() }}</td>
                     <td>{{ linea.getLineaNombre() }}</td>
+                    <td>{{ link_to('centrocosto/buscarCCPorLinea/'~linea.getLineaId(),'Ver Centro Costo','class':'btn btn-primary btn-flat') }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("linea/edit/"~linea.getLineaId(), "Editar") }}</td>
                         <td>
