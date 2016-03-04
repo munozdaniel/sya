@@ -15,20 +15,22 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <div class="col-md-6">
-        <label for="operadora_nombre">Operadora</label>
 
-        <div class="form-group">
-            {{ text_field("operadora_nombre", "size" : 50,'placeholder':'INGRESE LA OPERADORA','class':'form-control') }}
-        </div>
-    </div>
     {#==================================================#}
-    <div class="col-md-6">
-        <label for="operadora_nombre">Operadora</label>
+    <div class="col-md-6 col-md-offset-3">
+        {#======================================================#}
+        {% for element in operadoraForm %}
+            {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+                {{ element }}
+            {% else %}
+                <div class="form-group">
+                    {{ element.label() }}
+                    {{ element.render() }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {#======================================================#}
 
-        <div class="form-group">
-            {{ cliente_nombre }}
-        </div>
     </div>
 </div><!-- /. Cuerpo -->
 

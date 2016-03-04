@@ -70,14 +70,9 @@ class OperadoraController extends ControllerBase
      */
     public function newAction()
     {
-        $nombre= new DataListElement('cliente_nombre',
-            array(
-                array('placeholder' => 'SELECCIONE EL CLIENTE','required'=>'', 'class'=>'form-control', 'maxlength' => 60),
-                Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
-                array('cliente_id', 'cliente_nombre'),
-                'cliente_id'
-            ));
-        $this->view->cliente_nombre = $nombre;
+
+        $this->view->operadoraForm = new OperadoraForm(null, array('edit' => true));
+
 
     }
 
@@ -105,7 +100,20 @@ class OperadoraController extends ControllerBase
 
             $this->tag->setDefault("operadora_id", $operadora->getOperadoraId());
             $this->tag->setDefault("operadora_nombre", $operadora->getOperadoraNombre());
-            $this->tag->setDefault("operadora_habilitado", $operadora->getOperadoraHabilitado());
+            $this->view->operadoraForm = new OperadoraForm($operadora, array('edit' => true));
+            $this->view->operadora_id = $operadora->getOperadoraId();
+
+            //Default Yacimiento
+            $yacimiento = Yacimiento::findFirstByYacimiento_id($operadora->getOperadoraYacimientoId());
+            if ($yacimiento) {
+                $destino = $yacimiento->yacimiento_destino;
+                $this->assets->collection('footerInline')->addInlineJs("
+                                            function cargarCombo() {
+                                                document.getElementById('operadora_yacimiento').value='$destino';
+                                            }
+                                            window.onload = cargarCombo;
+                                        ");
+            }
             
         }
     }
@@ -126,7 +134,7 @@ class OperadoraController extends ControllerBase
         $operadora = new Operadora();
 
         $operadora->setOperadoraNombre($this->request->getPost("operadora_nombre"));
-        $operadora->setOperadoraClienteId($this->request->getPost("cliente_id"));
+        $operadora->setOperadoraYacimientoId($this->request->getPost('operadora_yacimientoId'));
         $operadora->setOperadoraHabilitado(1);
         
 
@@ -214,8 +222,8 @@ class OperadoraController extends ControllerBase
         }
 
         $operadora->setOperadoraNombre($this->request->getPost("operadora_nombre"));
-        $operadora->setOperadoraHabilitado($this->request->getPost("operadora_habilitado"));
-        
+        $operadora->setOperadoraYacimientoId($this->request->getPost("operadora_yacimientoId"));
+
 
         if (!$operadora->save()) {
 

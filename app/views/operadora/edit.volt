@@ -9,15 +9,22 @@
 
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("operadora", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
+        <td align="left">{{ link_to("equipopozo", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
     </tr>
 </table>
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="operadora_nombre">Nombre de la Operadora</label>
-    <div class="form-group">
-        {{ text_field("operadora_nombre", "size" : 30) }}
-    </div>
+    {% for element in operadoraForm %}
+        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+            {{ element }}
+        {% else %}
+            {{ element.label() }}
+            <div class="form-group">
+                {{ element.render(['class': '']) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+
 </div><!-- /.Cuerpo -->
 
 <!-- Inicio Footer -->

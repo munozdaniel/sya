@@ -23,6 +23,7 @@
         <tr>
             <th>#</th>
             <th>Operadora</th>
+            <th>Yacimiento</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -34,6 +35,7 @@
                 <tr>
                     <td>{{ operadora.getOperadoraId() }}</td>
                     <td>{{ operadora.getOperadoraNombre() }}</td>
+                    <td>{{ operadora.getYacimiento().getYacimientoDestino() }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("operadora/edit/"~ operadora.getOperadoraId(), "Editar") }}</td>
                         <td>
