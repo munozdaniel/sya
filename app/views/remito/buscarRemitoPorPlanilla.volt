@@ -5,7 +5,10 @@
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Busqueda de Remitos",'class':'btn btn-flat btn-large bg-olive') }}
+                    {{ link_to("index/dashboard", "<i class='fa fa-home'></i> Pagina Principal",'class':'btn btn-flat  bg-olive') }}
+                </td>
+                <td align="right">
+                    {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Realizar nueva búsqueda",'class':'btn btn-flat btn-google') }}
                 </td>
 
             </tr>
@@ -21,7 +24,7 @@
 <!-- /.box-header -->
 {{ content() }}
 <section id="seccion-tabla" class="box box-body ocultar">
-
+    <div id="mensajes"></div>
 
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
@@ -59,27 +62,55 @@
         </thead>
 
     </table>
+    <div id="tableDiv"></div>
+
 </section>
 
 <script>
     $(document).ready(function() {
-        // this is the id of the form
+
+        function recuperarColumnas(datos){
+            $.ajax({
+                type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                url: '/sya/columna/obtenerColumnas',
+                data: datos, // our data object
+                dataType: 'json', // what type of data do we expect back from the server
+                encode: true
+            })
+            .done(function (data) {
+                if (!data.success)
+                {
+                    $('#mensajes').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> Hubo un problema, la planilla no tiene las columnas definidas.</div>'); // add the actual error message under our input
+                    return null;
+                }else{
+                    $('#mensajes').append('<div class="help-block  alert-success">&nbsp; Buscando datos...</div>'); // add the actual error message under our input
+                    return data.columnas;
+                }
+
+            })
+            .fail(function (data) {
+                console.log("recuperarColumnas");
+                console.log(data);
+            });
+
+        }
+        // ************************************************************************************
         $("#form-buscarRemitos").submit(function(e) {
 
             $('#seccion-busqueda').hide();
             $('#seccion-tabla').show();
-            var Data = $("#form-buscarRemitos").serializeArray();
-
-
+            //Preparando los datos para enviar por POST
+            var form = $("#form-buscarRemitos").serializeArray();
+            var arregloPost = {
+                'planilla_id':form[0]['value']
+            };
             /**======================= DATATABLE ===========================*/
             var posiciones = [];
             {% for col in columnas %}
             posiciones.push({{ col['columna_posicion']}}) ;
             {% endfor %}
-             console.log( $( this ).serialize());
             var table = $('#example').DataTable({
                 "processing": true,
-
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -137,15 +168,18 @@
                     { "data": "remito_conformidad" },
                     { "data": "remito_noConformidad" }
                 ],
+
+                ajax:{
+                    'url':'buscarRemitosPorPlanillaIdAjax',
+                    'type':'POST',
+                    'data': arregloPost,
+                    dataType: 'json',
+                    'success': posiciones =  recuperarColumnas(arregloPost)
+
+                },
                 colReorder: {
 
                     order: posiciones
-                },
-                ajax:{
-                    'url':'busquedaAjax',
-                    'type':'POST',
-                    'data': Data,
-                    dataType: 'json'
                 },
                 "language": {
                     "sProcessing":     "Procesando...",

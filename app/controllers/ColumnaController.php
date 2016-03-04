@@ -230,5 +230,32 @@ class ColumnaController extends ControllerBase
             "action" => "index"
         ));
     }
+    /**************************************************************************************************/
+    /**************************************************************************************************/
+    public function obtenerColumnasAction()
+    {
+        $this->view->disable();
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_posicion')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>$planilla->getPlanillaCabeceraid()))
+            ->orderBy('columna_id ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        $data['holo']=$this->request->getPost('planilla_id');
+        if($columnas)
+        {
+            $data['success']=true;
+            $data['columnas']=$columnas;
+
+        }
+        else
+        {
+            $data['success']=false;
+        }
+        echo json_encode($data);
+    }
 
 }

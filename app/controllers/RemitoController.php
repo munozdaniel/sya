@@ -19,6 +19,20 @@ class RemitoController extends ControllerBase
         parent::initialize();
 
     }
+    private  function recuperarPosiciones($cabeceraId){
+        $columnas = $this->modelsManager
+            ->createBuilder()
+            ->columns('columna_posicion')
+            ->from('Columna')
+            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
+            ->orderBy('columna_id ASC')
+            ->getQuery()
+            ->execute()->toArray();
+        if($columnas)
+            return $columnas;
+        else
+            return null;
+    }
     /**
      * =================================================================================================
      *                          BUSQUEDA DE REMITOS POR PLANILLA
@@ -28,25 +42,37 @@ class RemitoController extends ControllerBase
      * Arma un formulario con un datalist de planillas. Seleccionando la planilla se obtendrán todas sus columnas
      * para que sean reordenadas.
      * Index action
+     *
+     * XXXX
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $this->importarDataTables();
+        $this->importarSelect2();
+
+        $this->persistent->parameters = null;
         //Posiciones:
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_posicion')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
-            ->orderBy('columna_id ASC')
-            ->getQuery()
-            ->execute()->toArray();
+        $columnas= $this->recuperarPosiciones(9);
         //Vistas
         $this->view->columnas = $columnas;
         $this->view->clienteForm = new ClienteNewForm();
-        $this->view->formulario = new RemitoBuscarPlanillaForm(null, array('required'=>'true'));
+        $this->view->formulario =  new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1','order'=>'planilla_nombreCliente DESC')),
+            array(
+                'using'      => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty'   => false,
+                'emptyText'  => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class'=>'form-control autocompletar',
+                'style'=>'width:100%',
+                'required'=>''
+            ));
     }
+    /**
+     * =================================================================================================
+     *                          BUSQUEDA DE REMITOS POR PLANILLA
+     * =================================================================================================
+     */
     /**
      * @return bool
      */
@@ -56,16 +82,9 @@ class RemitoController extends ControllerBase
         //DATATABLES
         $this->importarDataTables();
         //Posiciones:
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_posicion')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
-            ->orderBy('columna_id ASC')
-            ->getQuery()
-            ->execute()->toArray();
+        $columnas = $this->recuperarPosiciones(27);
         //Vistas
-        $this->view->columnas = $columnas;
+       $this->view->columnas = $columnas;
         //Select Autocomplete Planilla
         $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
             Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1','order'=>'planilla_nombreCliente DESC')),
@@ -85,30 +104,15 @@ class RemitoController extends ControllerBase
      * Se encarga de buscar todos los remitos segun la planilla_id enviada por post.
      * Muestra las columnas extras.
      */
-    public function busquedaPorPlanillaAjaxAction()
+    public function buscarRemitosPorPlanillaIdAjaxAction()
     {
         $this->view->disable();
-        /*=================*/
-        $retorno = array();
-        foreach($_POST as $arreglo)
-        {
-            $retorno[$arreglo['name']]= $arreglo['value'];
-        }
-        /*====================*/
-
-        if (!empty($retorno)) {
-            $query = Criteria::fromInput($this->di, "Remito", $retorno);
-            $this->persistent->parameters = $query->getParams();
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        $remito = Remito::find($parameters);
+        $remito=null;
+        if($this->request->getPost()!=null)
+            $remito = Remito::find(array('remito_habilitado = 1 AND remito_planillaId =:planilla_id:',
+        'bind'=>array('planilla_id'=>$this->request->getPost('planilla_id')),'order by'=>'remito_nroOrden ASC'));
         $tabla= $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data'=>$tabla,'retorno'=>$retorno,'param'=>$parameters));
+        echo json_encode(array('data'=>$tabla,'id'=>count($remito)));
     }
     /**
      * =================================================================================================
@@ -866,7 +870,7 @@ class RemitoController extends ControllerBase
 
         $tabla = $this->generarTablaDeRemitosNuevo($remito);
         $planilla = Planilla::findFirstByPlanilla_id($tabla[0]['remito_planillaId']);
-        $cabeceraTh = Columna::columnasOrdenadasByPlanilla($planilla->getPlanillaCabeceraid());
+        $cabeceraTh = Columna::verColumnasOrdenadasByCabeceraId($planilla->getPlanillaCabeceraid());
 
         if($cabeceraTh)
             $this->view->cabeceraTh = $cabeceraTh;
