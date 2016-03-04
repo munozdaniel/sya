@@ -41,10 +41,7 @@
             <div class="col-xs-12 col-md-12">
                {{ partial('planilla/parcial/extra') }}
             </div>
-            <!-- ================================================================================= -->
-            <div class="col-xs-12 col-md-12">
-             {{ partial('planilla/parcial/ordenar') }}
-            </div>
+
         </div>
         <!-- ================================================================================= -->
         <div id="id_cabeceraExistente" class="col-xs-12 col-md-12 ocultar">

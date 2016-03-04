@@ -66,12 +66,14 @@
                             $('#planilla').prop('disabled', true);
                             $('#cabecera').prop('disabled', true);
                             $('#extra').prop('disabled', false);
-                            $('#ordenar').prop('disabled', false);
+                            $('#pnl_cabecera').prop('disabled', true);
+                            $('#btn_generar_columnas').prop('disabled', true);
+                            //$('#ordenar').prop('disabled', false);
                             $('#pnl_extra').show();
-                            $('#pnl_ordenar').show();
+                            //$('#pnl_ordenar').show();
                             document.getElementById('id_cabecera_input').value = data.cabecera_id;
 
-                            cargarTablaReordenable(data.columnas);
+                           // cargarTablaReordenable(data.columnas);
                         }
                     })
                     .fail(function (data) {
