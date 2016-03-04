@@ -32,7 +32,11 @@ class Planilla extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $planilla_cabeceraId;
-
+    /**
+     *
+     * @var integer
+     */
+    protected $planilla_descripcion;
 
     /**
      *
@@ -177,7 +181,19 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         return $this->planilla_habilitado;
     }
-
+    /**
+     * Returns the value of field planilla_descripcion
+     *
+     * @return integer
+     */
+    public function getPlanillaDescripcion()
+    {
+        return $this->planilla_descripcion;
+    }
+    public function setPlanillaDescripcion($planilla_descripcion)
+    {
+        $this->planilla_descripcion=$planilla_descripcion;
+    }
     /**
      * Initialize method for model.
      */
