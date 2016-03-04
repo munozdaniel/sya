@@ -84,8 +84,9 @@
             function generarColumnas() {
                 $('.help-block').remove(); // remove the error text
                 var datos = {
-                    'planilla_id': $('#planilla_id').val()
+                    'planilla_id': $('#remito_planillaId').val()
                 };
+                console.log(datos);
                 $.ajax({
                     type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
                     url: '/sya/cabecera/buscarColumnasPorPlanilla', // the url where we want to POST
