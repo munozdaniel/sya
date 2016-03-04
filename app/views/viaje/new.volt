@@ -20,12 +20,7 @@
     <div class="form-group">
         {{ text_field("viaje_origen", "size" : 30) }}
     </div>
-    {#==================================================#}
-    <label for="viaje_concatenado">Concatenado</label>
 
-    <div class="form-group">
-        {{ text_field("viaje_concatenado", "size" : 30) }}
-    </div>
     {#==================================================#}
 </div><!-- /. Cuerpo -->
 

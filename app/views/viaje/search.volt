@@ -24,7 +24,6 @@
         <tr>
             <th>N° Viaje</th>
             <th>Origen</th>
-            <th>Concatenado</th>
             <th>Editar</th>
             <th>Eliminar</th>
             <th style="width: 10px;">EST</th>
@@ -36,7 +35,6 @@
                 <tr>
                     <td>{{ viaje.getViajeId() }}</td>
                     <td>{{ viaje.getViajeOrigen() }}</td>
-                    <td>{{ viaje.getViajeConcatenado() }}</td>
                     {% if admin == 1 %}
                     <td>{{ link_to("viaje/edit/"~viaje.getViajeId(), "Editar") }}</td>
                     <td>

@@ -15,11 +15,6 @@ class Viaje extends \Phalcon\Mvc\Model
      */
     protected $viaje_origen;
 
-    /**
-     *
-     * @var string
-     */
-    protected $viaje_concatenado;
 
     /**
      *
@@ -53,18 +48,7 @@ class Viaje extends \Phalcon\Mvc\Model
         return $this;
     }
 
-    /**
-     * Method to set the value of field viaje_concatenado
-     *
-     * @param string $viaje_concatenado
-     * @return $this
-     */
-    public function setViajeConcatenado($viaje_concatenado)
-    {
-        $this->viaje_concatenado = $viaje_concatenado;
 
-        return $this;
-    }
 
     /**
      * Method to set the value of field viaje_habilitado
@@ -99,15 +83,7 @@ class Viaje extends \Phalcon\Mvc\Model
         return $this->viaje_origen;
     }
 
-    /**
-     * Returns the value of field viaje_concatenado
-     *
-     * @return string
-     */
-    public function getViajeConcatenado()
-    {
-        return $this->viaje_concatenado;
-    }
+
 
     /**
      * Returns the value of field viaje_habilitado

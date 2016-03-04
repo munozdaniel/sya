@@ -97,7 +97,6 @@ class ViajeController extends ControllerBase
 
             $this->tag->setDefault("viaje_id", $viaje->getViajeId());
             $this->tag->setDefault("viaje_origen", $viaje->getViajeOrigen());
-            $this->tag->setDefault("viaje_concatenado", $viaje->getViajeConcatenado());
             $this->tag->setDefault("viaje_habilitado", $viaje->getViajeHabilitado());
             
         }
@@ -119,8 +118,7 @@ class ViajeController extends ControllerBase
         $viaje = new Viaje();
 
         $viaje->setViajeOrigen($this->request->getPost("viaje_origen"));
-        $viaje->setViajeConcatenado($this->request->getPost("viaje_concatenado"));
-        $viaje->setViajeHabilitado($this->request->getPost("viaje_habilitado"));
+        $viaje->setViajeHabilitado(1);
         
 
         if (!$viaje->save()) {
@@ -170,7 +168,6 @@ class ViajeController extends ControllerBase
         }
 
         $viaje->setViajeOrigen($this->request->getPost("viaje_origen"));
-        $viaje->setViajeConcatenado($this->request->getPost("viaje_concatenado"));
         $viaje->setViajeHabilitado(1);
         
 
