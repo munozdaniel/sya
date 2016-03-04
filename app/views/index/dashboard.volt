@@ -23,7 +23,7 @@
 
                 <!-- /.box-header -->
                 <div class="box-body">
-                    {{ link_to('planilla','
+                    {{ link_to('planilla/search','
                     <div class="info-box">
                         <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-list"></i></span>
 
@@ -74,12 +74,38 @@
             <div class="box box-primary">
                 <!-- /.box-header -->
                 <div class="box-body">
-                    {{ link_to('planilla/search','
+                    {{ link_to('planilla','
                     <div class="info-box">
                         <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text text-black"><strong>BUSCAR PLANILLA</strong></span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description  text-black">
+                                Filtro personalizado.
+                            </span>
+                        </div>
+                    </div>
+                    ') }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    {{ link_to('cabecera/reordenar','
+                    <div class="info-box">
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-hand-paper-o"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text text-black"><strong>REORDENAR COLUMNAS</strong></span>
 
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
@@ -106,12 +132,12 @@
             <div class="box box-primary">
                 <!-- /.box-header -->
                 <div class="box-body">
-                    {{ link_to('orden/search','
+                    {{ link_to('remito/searchDataTable','
                     <div class="info-box">
                         <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>VER TODOS LOS REMITOS</strong></span>
+                            <span class="info-box-text text-black"><strong>BUSQUEDA DE REMITOS</strong></span>
 
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
@@ -127,57 +153,6 @@
             </div>
             <!-- /.box -->
         </div>
-        <!-- ./col -->
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('orden/new','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-square"></i></span>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>NUEVO REMITO</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Agregar remito a la planilla.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <!-- ./col -->
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('orden','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-square"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>BUSCAR REMITO</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Filtro personalizado.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
     </div>
 </section>
