@@ -70,6 +70,59 @@ class RemitoController extends ControllerBase
     }
     /**
      * =================================================================================================
+     *                          BUSQUEDA DE REMITOS SIN PDF
+     *
+     * =================================================================================================
+     */
+    public function searchRemitoSinPDFAction(){
+//SELECT2
+        $this->importarSelect2();
+        //DATATABLES
+        $this->importarDataTables();
+        //Posiciones:
+        $columnas = $this->recuperarPosiciones(27);
+        //Vistas
+        $this->view->columnas = $columnas;
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1','order'=>'planilla_nombreCliente DESC')),
+            array(
+                'using'      => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty'   => false,
+                'emptyText'  => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class'=>'form-control autocompletar',
+                'style'=>'width:100%',
+                'required'=>'',
+                'onchange'=>'var x = document.getElementById("remito_planillaId").value;alert(x);'
+            ));
+
+    }
+    public function buscarSinRemitoEscaneadoAction(){
+        $this->view->disable();
+        /*=================*/
+        if($this->request->getPost('remito_planillaId')==null)
+            $error[] = "No se encontró la planilla";
+
+        /*====================*/
+        if (!empty($retorno)) {
+            $query = Criteria::fromInput($this->di, "Remito", $retorno);
+            $this->persistent->parameters = $query->getParams();
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }
+        $parameters["order"] = "remito_id";
+        $remito = Remito::find(array('remito_planillaId = :planilla_id: AND remito_pdf IS NULL',
+            'bind'=>array('planilla_id'=>$this->request->getPost('remito_planillaId'))));
+        $tabla= $this->generarTablaDeRemitosNuevo($remito);
+        echo json_encode(array('data'=>$tabla));
+    }
+    /*==============================================================================================*/
+    /**
+     * =================================================================================================
      *                          BUSQUEDA DE REMITOS POR PLANILLA
      * =================================================================================================
      */
@@ -281,47 +334,7 @@ class RemitoController extends ControllerBase
         }
         return $tabla;
     }
-    /*==============================================================================================*/
-    public function searchRemitoSinPDFAction(){
-        $this->importarDataTables();
-        //Posiciones:
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_posicion')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ',array('columna_cabeceraId'=>75))
-            ->orderBy('columna_id ASC')
-            ->getQuery()
-            ->execute()->toArray();
-        //Vistas
-        $this->view->columnas = $columnas;
-        $this->view->remitoForm = new RemitoForm();
-        $this->view->clienteForm = new ClienteNewForm();
-    }
-    public function buscarSinRemitoEscaneadoAction(){
-        $this->view->disable();
-        /*=================*/
-        $retorno = array();
-        foreach($_POST as $arreglo)
-        {
-            $retorno[$arreglo['name']]= $arreglo['value'];
-        }
-        /*====================*/
-        if (!empty($retorno)) {
-            $query = Criteria::fromInput($this->di, "Remito", $retorno);
-            $this->persistent->parameters = $query->getParams();
-        }
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        $remito = Remito::find(array(' remito_pdf IS NULL'));
-        $tabla= $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data'=>$tabla));
-    }
-    /*==============================================================================================*/
 
 
     /**
