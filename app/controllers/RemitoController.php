@@ -45,7 +45,7 @@ class RemitoController extends ControllerBase
      * para que sean reordenadas.
      * Index action
      *
-     * XXXX
+     * XXXX NO LO USO?
      */
     public function indexAction()
     {
@@ -126,7 +126,6 @@ class RemitoController extends ControllerBase
         $tabla = $this->generarTablaDeRemitosNuevo($remito);
         echo json_encode(array('data' => $tabla));
     }
-    /*==============================================================================================*/
     /**
      * =================================================================================================
      *                          BUSQUEDA DE REMITOS POR PLANILLA
@@ -345,52 +344,6 @@ class RemitoController extends ControllerBase
         return $tabla;
     }
 
-
-    /**
-     * Searches for remito, suponiendo que siempre va a elegir una planilla
-     */
-    public function searchAction()
-    {
-        parent::importarJsTable();
-
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Remito", $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        $remito = Remito::find($parameters);
-        if (count($remito) == 0) {
-            $this->flash->notice("The search did not find any remito");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "index",
-                "action" => "dashboard"
-            ));
-        }
-        $paginator = new PaginatorModelo(array(
-            "data" => $remito,
-            "limit" => 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
-    }
-
-    /**
-     * Displays the creation form
-     */
-    public function newAction()
-    {
-
-    }
 
     /**
      * Edits a remito
@@ -615,95 +568,6 @@ class RemitoController extends ControllerBase
             "controller" => "remito",
             "action" => "index"
         ));
-    }
-
-    /**
-     * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
-     * @param $remito
-     * @return array
-     * X NO SIRVE
-     */
-    private function generarTablaDeRemitos($remito)
-    {
-        $tabla = null;
-        foreach ($remito as $unRemito) {
-            $fila = array();
-            $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
-            /*================ Planilla ================*/
-            $fila['planilla_nombreCliente'] = $planilla->getPlanillaNombreCliente();
-            $fila['remito_planillaId'] = $unRemito->getRemitoPlanillaId();
-
-            /*================ Remito ================*/
-            $fila['remito_nro'] = $unRemito->getRemitoNro();
-            $fila['remito_nroOrden'] = $unRemito->getRemitoNroOrden();
-            $fila['remito_fecha'] = date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
-            $fila['remito_periodo'] = $unRemito->getRemitoPeriodo();
-
-            /*================ Transporte ================*/
-            $transporte = Transporte::findFirstByTransporte_id($unRemito->getRemitoTransporteId());
-            $fila['transporte_dominio'] = $transporte->getTransporteDominio();
-            $fila['transporte_nroInterno'] = $transporte->getTransporteNroInterno();
-
-            /*================ TipoEquipo ================*/
-            $tipoEquipo = Tipoequipo::findFirstByTipoEquipo_id($unRemito->getRemitoTipoEquipoId());
-            $fila['tipoEquipo_nombre'] = $tipoEquipo->getTipoEquipoNombre();
-
-            /*================ TipoCarga ================*/
-            $tipoCarga = Tipocarga::findFirstByTipoCarga_id($unRemito->getRemitoTipoCargaId());
-            $fila['tipoCarga_nombre'] = $tipoCarga->getTipoCargaNombre();
-
-            /*================ Chofer ================*/
-            $chofer = Chofer::findFirstByChofer_id($unRemito->getRemitoChoferId());
-            $fila['chofer_dni'] = $chofer->getChoferDni();
-            $fila['chofer_nombreCompleto'] = $chofer->getChoferNombreCompleto();
-            $fila['chofer_esFletero'] = ($chofer->getChoferEsFletero() == 1 ? 'SI' : 'NO');
-
-            /*================ Cliente ================*/
-            $cliente = Cliente::findFirstByCliente_id($unRemito->getRemitoClienteId());
-            $fila['cliente_nombre'] = $cliente->getClienteNombre();
-
-            /*================ Operadora ================*/
-            $operadora = Operadora::findFirstByOperadora_id($unRemito->getRemitoOperadoraId());
-            $fila['operadora_nombre'] = $operadora->getOperadoraNombre();
-
-            /*================ EquipoPozo ================*/
-            $equipoPozo = Equipopozo::findFirstByEquipoPozo_id($unRemito->getRemitoEquipoPozoId());
-            $fila['equipoPozo_nombre'] = $equipoPozo->getEquipoPozoNombre();
-
-            /*================ Yacimiento ================*/
-            $yacimiento = Yacimiento::findFirstByYacimiento_id($equipoPozo->getEquipoPozoYacimientoId());
-            $fila['yacimiento_destino'] = $yacimiento->getYacimientoDestino();
-
-
-            /*================ CentroCosto ================*/
-            $centroCosto = Centrocosto::findFirstByCentroCosto_id($unRemito->getRemitoCentroCostoId());
-            $fila['centroCosto_codigo'] = $centroCosto->getCentroCostoCodigo();
-
-            /*================ Linea ================*/
-            $linea = Linea::findFirstByLinea_id($centroCosto->getCentroCostoLineaId());
-            $fila['linea_nombre'] = $linea->getLineaNombre();
-
-            /*================ Viaje ================*/
-            $viaje = Viaje::findFirstByViajeId($unRemito->getRemitoViajeId());
-            $fila['viaje_origen'] = $viaje->getViajeOrigen();
-            $fila['viaje_concatenado'] = $viaje->getViajeConcatenado();
-
-            /*================ Tarifa ================*/
-            $tarifa = Tarifa::findFirst();
-            $fila['tarifa_hsServicio'] = $tarifa->getTarifaHsServicio();
-            $fila['tarifa_hsKm'] = $tarifa->getTarifaKm();
-            $fila['tarifa_hsHidro'] = $tarifa->getTarifaHsHidro();
-            $fila['tarifa_hsMalacate'] = $tarifa->getTarifaHsMalacate();
-            $fila['tarifa_hsStand'] = $tarifa->getTarifaHsStand();
-
-            /*================ Remito ================*/
-            $fila['remito_observaciones'] = $unRemito->getRemitoObservacion();
-            $fila['remito_conformidad'] = ($unRemito->getRemitoConformidad() == NULL ? "SIN ESPECIFICAR" : $unRemito->getRemitoConformidad());
-            $fila['remito_noConformidad'] = ($unRemito->getRemitoNoConformidad() == NULL ? "SIN ESPECIFICAR" : $unRemito->getRemitoNoConformidad());
-
-            $tabla[] = $fila;
-        }
-        return $tabla;
     }
 
     /**
