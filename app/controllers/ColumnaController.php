@@ -5,6 +5,13 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class ColumnaController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Columnas');
+        parent::initialize();
+
+    }
 
     /**
      * Index action
@@ -236,15 +243,15 @@ class ColumnaController extends ControllerBase
     {
         $data['success'] = false;
         $this->view->disable();
-        if ($this->request->getPost('remito_planillaId') != null) {
-            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId'));
-            if ($planilla && $planilla->getPlanillaCabeceraid()!=null) {
+        if ($this->request->getPost('planilla_id') != null) {
+            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
+            if ($planilla && $planilla->getPlanillaCabeceraid() != null) {
                 $columnas = $this->modelsManager
                     ->createBuilder()
                     ->columns('columna_nombre,columna_posicion')
                     ->from('Columna')
                     ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_habilitado=1', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
-                    ->orderBy('columna_id ASC')
+                    ->orderBy('columna_posicion ASC')
                     ->getQuery()
                     ->execute()->toArray();
 
@@ -252,12 +259,11 @@ class ColumnaController extends ControllerBase
                     $data['success'] = true;
                     $retorno = array();
                     $claves = array();
-                    foreach($columnas as $col)
-                    {
-                        $item = array();
-                        $item = $col['columna_posicion']-1;
-                        $retorno[] = $item;
-                        $claves[] = array("data"=>$col['columna_nombre']);
+                    $i=0;
+                    foreach ($columnas as $col) {
+                        $retorno[] = $i;
+                        $claves[] = array("data" => $col['columna_nombre']);
+                        $i++;
                     }
                     $data['columnas'] = $retorno;
                     $data['claves'] = $claves;
@@ -265,13 +271,110 @@ class ColumnaController extends ControllerBase
                 } else {
                     $data['success'] = false;
                 }
-            }else{
-                $data['error']="La planilla no se encontró, o no contiene una cabecera apropiada.";
+            } else {
+                $data['error'] = "La planilla no se encontró, o no contiene una cabecera apropiada.";
             }
-        }else{
-            $data['error']="Es necesario que seleccione una planilla ";
+        } else {
+            $data['error'] = "Es necesario que seleccione una planilla ";
         }
         echo json_encode($data);
     }
 
+    /***************************************************************************************************/
+    public function obtenerIdColumnasAction()
+    {
+        $data['success'] = false;
+        $this->view->disable();
+        if ($this->request->getPost('planilla_id') != null) {
+            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
+            if ($planilla && $planilla->getPlanillaCabeceraid() != null) {
+                $columnas = $this->modelsManager
+                    ->createBuilder()
+                    ->columns('columna_nombre,columna_id')
+                    ->from('Columna')
+                    ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_habilitado=1', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
+                    ->orderBy('columna_posicion ASC')
+                    ->getQuery()
+                    ->execute()->toArray();
+
+                if ($columnas) {
+                    $data['success'] = true;
+                    $retorno = array();
+                    foreach ($columnas as $col) {
+                        $item = array();
+                        $item['columna_id'] =  $col['columna_id'];
+                        $item['columna_nombre'] = $col['columna_nombre'];
+                        $retorno[] = $item;
+                    }
+                    $data['columnas'] = $retorno;
+
+                } else {
+                    $data['success'] = false;
+                }
+            } else {
+                $data['error'] = "La planilla no se encontró, o no contiene una cabecera apropiada.";
+            }
+        } else {
+            $data['error'] = "Es necesario que seleccione una planilla ";
+        }
+        echo json_encode($data);
+    }
+    /***************************************************************************************************/
+    public function eliminarAction()
+    {
+        $this->assets->collection("headerCss")
+            ->addCss('plugins/iCheck/all.css');
+        $this->assets->collection('headerJs')
+            ->addJs('plugins/iCheck/icheck.min.js');
+
+        //SELECT2
+        $this->importarSelect2();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('planilla_id',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => true,
+                'emptyText' => 'SELECCIONAR PLANILLA',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => '',
+                'onchange' => 'cargarColumnas()'
+            ));
+    }
+    public function eliminarSeleccionadosAction()
+    {
+        $band=true;
+        if(!$this->request->isPost()){
+            return $this->redireccionar('columna/eliminar');
+        }
+        $columnas = $this->request->getPost('columnas');
+        if($columnas==null)
+        {
+            $this->flash->error("Seleccione por lo menos una columna");
+            return $this->redireccionar('columna/eliminar');
+        }
+        foreach ($columnas as $col) {
+            $unaColumna = Columna::findFirst(array('columna_id = :id: AND columna_habilitado=1 ',
+                'bind'=>array('id'=>$col)));
+            if($unaColumna){
+                $unaColumna->setColumnaHabilitado(0);
+                if(!$unaColumna->update())
+                {
+                    $band=false;
+                    $this->flash->error("La columna > $col < no se pudo eliminar");
+                }
+            }
+            else
+            {
+                $band=false;
+                $this->flash->error("No se pudo encontrar la columna > $col <");
+            }
+
+        }
+        if($band)
+            $this->flash->success("Operación exitosa: Las columnas se eliminaron.");
+        return $this->redireccionar('columna/eliminar');
+    }
 }
