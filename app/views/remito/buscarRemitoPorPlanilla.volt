@@ -86,8 +86,10 @@
         /**************** obtener un arreglo con todas las posiciones de las columans ordenadas *******************/
         $( "#confirmarPlanilla" ).click(function()
         {
+            $('#mensajes').empty();
+            $('#tr-cabecera').empty();
             var datos = {
-            'remito_planillaId': document.getElementById("remito_planillaId").value
+            'planilla_id': document.getElementById("remito_planillaId").value
              };
             $.ajax({
                 type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
@@ -97,7 +99,7 @@
                 encode: true
             })
                     .done(function (data) {
-                        //console.log(data);
+                        console.log(data);
                         if (!data.success)
                         {
                             $('#mensajes').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> Hubo un problema, la planilla no tiene las columnas definidas.</div>'); // add the actual error message under our input
