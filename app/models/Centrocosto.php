@@ -159,18 +159,5 @@ class Centrocosto extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-    public function validation()
-    {
 
-        $this->validate(
-            new \Phalcon\Mvc\Model\Validator\Uniqueness(
-                array(
-                    "field"   => "centroCosto_codigo",
-                    "message" => "El codigo ya existe"
-                )
-            )
-        );
-
-        return $this->validationHasFailed() != true;
-    }
 }

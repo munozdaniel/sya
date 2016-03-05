@@ -162,9 +162,9 @@ class PlanillaController extends ControllerBase
                 $data['mensaje'] = $errors;
                 $this->db->rollback();
             } else {
-                    $data['planilla_id'] = $planilla->getPlanillaId();
-                    $data['success']=true;
-                    $this->db->commit();
+                $data['planilla_id'] = $planilla->getPlanillaId();
+                $data['success'] = true;
+                $this->db->commit();
             }
         }// return all our data to an AJAX call
         echo json_encode($data);
@@ -240,7 +240,6 @@ class PlanillaController extends ControllerBase
     }
 
 
-
     /**
      * Permite crear las columnas extras que contendrá la planilla, que dependerán del cliente.
      */
@@ -268,16 +267,16 @@ class PlanillaController extends ControllerBase
     {
         $this->view->disable();
         foreach ($_GET['listItem'] as $position => $item) {
-           //echo "Posicion: ".$position." - Item: ".$item ."<br>";
+            //echo "Posicion: ".$position." - Item: ".$item ."<br>";
             $columna = Columna::findFirstByColumna_id($item);
-            if($columna){
+            if ($columna) {
                 $columna->setColumnaPosicion($position);
                 if (!$columna->update()) {
                     echo "Hubo un problema al cargar el nuevo orden.";
                     return;
                 }
-            }else
-            echo "NO SE HA ENCONTRADO LA COLUMNA <br>";
+            } else
+                echo "NO SE HA ENCONTRADO LA COLUMNA <br>";
         }
         echo "Reordenamiento exitoso!";
     }
@@ -288,38 +287,32 @@ class PlanillaController extends ControllerBase
         $this->view->disable();
         $data = array();
         $retorno = array();
-        if($this->request->isPost())
-        {
-            $data['success']= false;
-            $retorno[]= "Ocurrio un problema, la URL solicitada no existe.";
+        if ($this->request->isPost()) {
+            $data['success'] = false;
+            $retorno[] = "Ocurrio un problema, la URL solicitada no existe.";
 
         }
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id','int'));
-        if (!$planilla)
-        {
-            $data['success']=false;
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id', 'int'));
+        if (!$planilla) {
+            $data['success'] = false;
             $retorno[] = "La planilla no ha sido encontrada.";
-        }
-        else {
+        } else {
             $planilla->setPlanillaCabeceraid($this->request->getPost('cabecera_id'));
             $planilla->setPlanillaArmada(1);
             if (!$planilla->update()) {
-                $data['success']=false;
-                foreach($planilla->getMessages() as $mje){
+                $data['success'] = false;
+                foreach ($planilla->getMessages() as $mje) {
                     $retorno[] = $mje;
                 }
             } else {
-                $data['success']=true;
+                $data['success'] = true;
             }
         }
-        $data['mensaje']=$retorno;
+        $data['mensaje'] = $retorno;
         echo json_encode($data);
 
 
-
-
     }
-
 
 
     /**
@@ -451,59 +444,136 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * NO SE USA!
-     * Eliminar una planilla de manera LOGICA.
-     * Al Eliminar una planilla se eliminan todas las ordenes relacionadas (Eliminacion Logica).
-     *
-     * @param string $planilla_id
-     * @return null
+     * Agregar columnas extras a la planilla
      */
-    public function deleteAction($planilla_id)
+    public function agregarExtraAction()
     {
+        $planilla = Planilla::findFirstByPlanilla_id(1);
 
-        $planilla = Planilla::findFirstByplanilla_id($planilla_id);
-        if (!$planilla) {
-            $this->flash->error("La planilla no ha sido encontrada");
 
-            return $this->dispatcher->forward(array(
-                "controller" => "planilla",
-                "action" => "index"
+        //SELECT2
+        $this->importarSelect2();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('planilla_id',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => false,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => ''
             ));
-        }
-        try {
-            $this->db->begin();
-            $eliminados = Orden::eliminarByPlanilla_id($planilla_id);
-            if (!$eliminados) {
-                $this->flash->error("Hubo un problema al eliminar las ordenes relacionadas a la planilla N° $planilla_id");
-                $this->db->rollback();
-                return $this->dispatcher->forward(array(
-                    "controller" => "planilla",
-                    "action" => "index"
-                ));
-            }
-            $planilla->planilla_habilitado = 0;
-            if (!$planilla->update()) {
-
-                foreach ($planilla->getMessages() as $message) {
-                    $this->flash->error($message);
-                }
-                $this->db->rollback();
-                return $this->dispatcher->forward(array(
-                    "controller" => "planilla",
-                    "action" => "search"
-                ));
-            }
-            $this->db->commit();
-            $this->flash->success("La planilla ha sido eliminada correctamente");
-        } catch (Phalcon\Mvc\Model\Transaction\Failed $e) {
-            $this->flash->error('Transaccion Fallida: ', $e->getMessage());
-        }
-
-        return $this->dispatcher->forward(array(
-            "controller" => "planilla",
-            "action" => "index"
-        ));
     }
 
+    public function guardarExtraAction()
+    {
+        if ($this->request->isPost()) {
+            if ($this->request->getPost('planilla_id') == null || $this->request->getPost('columna') == null) {
+                $this->flash->error("Por favor verifique que la planilla y las columnas no esten vacías.");
+                return $this->redireccionar('planilla/agregarExtra');
+            }
+            //Con el planilla_id recuperamos la planilla y su cabecera para guardar las nuevas columnas.
+            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
+            if (!$planilla) {
+                $this->flash->error("La planilla no se encontró.");
+                return $this->redireccionar('planilla/agregarExtra');
+            }
+            $max = count(Columna::find(array('columna_cabeceraId=:cabeceraId: AND columna_habilitado=1',
+                'bind' => array('cabeceraId' => $planilla->getCabecera()->getCabeceraId()))));
+            $arregloColumnas = $this->request->getPost('columna');
+            foreach ($arregloColumnas AS $columna) {
+                if (!empty($columna)) {
+                    $max = $max + 1;
+                    $nuevaColumna = new Columna();
+                    $nuevaColumna->setColumnaNombre(strtoupper($columna));
+                    $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
+                    $nuevaColumna->setColumnaExtra(1);
+                    $nuevaColumna->setColumnaPosicion($max);
+                    $nuevaColumna->setColumnaCabeceraId($planilla->getCabecera()->getCabeceraId());
+                    $nuevaColumna->setColumnaHabilitado(1);
+                    if (!$nuevaColumna->save()) {
+                        foreach ($nuevaColumna->getMessages() as $message) {
+                            $error[] = $message . " <br>";
+                        }
+                    }
+                }
+            }
+            $this->flash->success("Operación Exitosa: Las columnas extras se agregaron correctamente.");
+        }
+        return $this->redireccionar('planilla/agregarExtra');
+
+    }
+
+    /**
+     * Guarda todas las columnas extras que se agregaron en la interfaz.
+     * Si la cabecera ya existe, agrega mas columnas extras.
+     * Si la cabecera no existe, la crea y agrega sus columnas
+     */
+    public function agregarExtraAsction()
+    {
+        $this->view->disable();
+        $error = array();      // array to hold validation errors
+        $data = array();
+        $data['success'] = false;
+        $data['mensaje'] = "Ups, ha ocurrido un problema.";
+        if ($this->request->isPost()) {
+            $this->db->begin();
+
+            //si existe el token del formulario y es correcto(evita csrf)
+            //if ($this->security->checkToken('token',$this->request->getPost('token'))) {
+            if (!$this->request->hasPost('columna')) {
+                $error[] = "No puede guardar columnas vacias.";
+            } else {
+                //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
+                $cabecera_id = $this->request->getPost('cabecera_id', 'int');
+                $cabecera = Cabecera::findFirstByCabecera_id($cabecera_id);
+                if (!$cabecera) {
+                    $error[] = "Hubo un problema, no se encontro la cabecera.";
+                } else {
+                    $arregloColumnas = $this->request->getPost('columna');
+                    $posicion = 26;
+                    foreach ($arregloColumnas AS $columna) {
+                        if (!empty($columna)) {
+                            $nuevaColumna = new Columna();
+                            $nuevaColumna->setColumnaNombre(strtoupper($columna));
+                            $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
+                            $nuevaColumna->setColumnaExtra(1);
+                            $nuevaColumna->setColumnaPosicion($posicion++);
+                            $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
+                            $nuevaColumna->setColumnaHabilitado(1);
+                            if (!$nuevaColumna->save()) {
+                                foreach ($nuevaColumna->getMessages() as $message) {
+                                    $error[] = $message . " <br>";
+                                }
+                            }
+                        } else {
+                            $error[] = "Debe ingresar el nombre de la columna";
+                        }
+                    }
+                }
+            }
+            if (empty($error)) {
+                $this->db->commit();
+                $todasLasColumnas = $this->modelsManager->createBuilder()
+                    ->columns('columna_id, columna_nombre')
+                    ->from('Columna')
+                    ->where('columna_cabeceraId = :cabecera_id:', array('cabecera_id' => $cabecera->getCabeceraId()))
+                    ->orderBy('columna_posicion ASC')
+                    ->getQuery()
+                    ->execute()
+                    ->toArray();
+                $data['columnas'] = $todasLasColumnas;
+                $data['success'] = true;
+                $data['mensaje'] = "Operacion Exitosa, las columnas han sido guardadas correctamente";
+            } else {
+                $this->db->rollback();
+                $data['success'] = false;
+                $data['mensaje'] = $error;
+            }
+        }
+        echo json_encode($data);
+    }
 
 }

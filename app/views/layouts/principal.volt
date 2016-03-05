@@ -3,7 +3,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="../../index2.html" class="logo">
+        <a  class="logo" style="text-decoration: none;">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>S</b>&A</span>
             <!-- logo for regular state and mobile devices -->
@@ -84,6 +84,8 @@
                         <li>{{ link_to('planilla/search','<i class="fa fa-circle-o"></i>  Ver todas las Planillas') }}</li>
                         <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Nueva Planilla') }}</li>
                         <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
+                        <li>{{ link_to('cabecera/reordenar','<i class="fa fa-circle-o"></i>  Reordenar Planilla') }}</li>
+                        <li>{{ link_to('planilla/agregarExtra','<i class="fa fa-circle-o"></i>  Agregar columna extra') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM ARBOL =======#}
@@ -93,9 +95,10 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li>{{ link_to('orden/search','<i class="fa fa-circle-o"></i>  Ver todos los Remitos') }}</li>
-                        <li>{{ link_to('orden/new','<i class="fa fa-circle-o"></i>  Nuevo Remito') }}</li>
-                        <li>{{ link_to('orden','<i class="fa fa-circle-o"></i>  Buscar Remitos') }}</li>
+                        <li>{{ link_to('remito/buscarRemitoPorPlanilla','<i class="fa fa-circle-o"></i>  Buscar Remito por Planilla') }}</li>
+                        <li>{{ link_to('remito/searchDataTable','<i class="fa fa-circle-o"></i>  Busqueda Personalizada') }}</li>
+                        <li>{{ link_to('remito/searchRemitoSinPDF','<i class="fa fa-circle-o"></i>  Ver Remitos sin PDF') }}</li>
+                        <li>{{ link_to('remito/search','<i class="fa fa-circle-o"></i>  Ver Todos los Remitos') }}</li>
                     </ul>
                 </li>
 
@@ -113,7 +116,6 @@
                     </a>
                     <ul class="treeview-menu">
                         <li>{{ link_to('cliente','<i class="fa fa-circle-o"></i>  Cliente') }}</li>
-                        <li>{{ link_to('frs','<i class="fa fa-circle-o"></i>  FRS') }}</li>
                         <li>{{ link_to('operadora','<i class="fa fa-circle-o"></i>  Operadora') }}</li>
                         <li>{{ link_to('centrocosto','<i class="fa fa-circle-o"></i>  Centro Costo') }}</li>
                         <li>{{ link_to('linea','<i class="fa fa-circle-o"></i>  Linea') }}</li>

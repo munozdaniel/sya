@@ -1,7 +1,7 @@
 <div id="pnl_extra">
     {{ form("cabecera/crear","id":"form_columnas", "method":"post") }}
         <fieldset id="extra" class="panel-border" disabled>
-            <legend>Agregar Columnas Extras <small>(opcional)</small></legend>
+            <legend>Agregar Columnas Extras</legend>
             <div id="grupo_extra" class="form-group col-md-6">
                 <div id="contenedor">
                     <div class="added">
