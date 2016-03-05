@@ -69,36 +69,7 @@
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr id="tr-cabecera">
-            <th>ORDEN</th>
-            <th>REMITO</th>
-            <th>PATENTE</th>
-            <th>NRO INTERNO</th>
-            <th>TIPO EQUIPO</th>
-
-            <th>TIPO CARGA</th>
-            <th>DNI</th>
-            <th>CHOFER</th>
-            <th>FECHA</th>
-            <th>CLIENTE</th>
-
-            <th>ORIGEN</th>
-            <th>DESTINO</th>
-            <th>EQUIPO/POZO</th>
-            <th>CONCATENADO</th>
-            <th>OPERADORA</th>
-
-            <th>LINEA</th>
-            <th>CENTRO DE COSTO</th>
-            <th>OBSERVACIONES</th>
-            <th>KM</th>
-            <th>HS HIDRO</th>
-
-            <th>HS SERVICIO</th>
-            <th>HS MALACATE</th>
-            <th>HS STAND</th>
-            <th>CONFORMIDAD RE</th>
-            <th>MOT NO CONFORM RE</th>
-
+            {# Se agregan al seleccionar la planilla #}
         </tr>
         </thead>
 
@@ -134,6 +105,15 @@
                             $('#mensajes').append('<div class="help-block ">&nbsp; Por favor espere unos minutos para la carga de datos.</div>'); // add the actual error message under our input
                             posiciones = data.columnas;
                             claves = data.claves;//Recupera las claves que van armar las columnas.
+                            //Creamos la cabecera de la tabla.
+                            var tr = document.getElementById("tr-cabecera");
+                            for(var item in data.claves)
+                            {
+                                var col = data.claves[item]['data'];
+                                var th = document.createElement("th");
+                                th.appendChild(document.createTextNode(col));
+                                tr.appendChild(th);
+                            }
                             $('#submit').prop('disabled', false);
 
                         }
