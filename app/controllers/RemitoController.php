@@ -134,10 +134,6 @@ class RemitoController extends ControllerBase
         $this->importarSelect2();
         //DATATABLES
         $this->importarDataTables();
-        //Posiciones:
-        $columnas = $this->recuperarPosiciones(27);
-        //Vistas
-       $this->view->columnas = $columnas;
         //Select Autocomplete Planilla
         $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
             Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1','order'=>'planilla_nombreCliente DESC')),
@@ -241,97 +237,101 @@ class RemitoController extends ControllerBase
     }
     /**
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
-     * @param $remito
+     * @param $remitos
      * @return array
      */
-    private function generarTablaDeRemitosNuevo($remito,$extra=''){
+    private function generarTablaDeRemitosNuevo($remitos,$extra=''){
         $tabla = array();
-        foreach ($remito as $unRemito) {
+        $planilla = "";
+        foreach ($remitos as $unRemito) {
             $fila = array();
             $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
 
             /*================ Planilla ================*/
+
             $fila['planilla_nombreCliente']=$planilla->getPlanillaNombreCliente();
             $fila['remito_planillaId']=$unRemito->getRemitoPlanillaId();
 
             /*================ Remito ================*/
-            $fila['remito_nroOrden']=$unRemito->getRemitoNroOrden();
-            $fila['remito_fecha']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
-            $fila['remito_nro']=$unRemito->getRemitoNro();//remito Sya
+            $fila['ORDEN']=$unRemito->getRemitoNroOrden();
+            $fila['FECHA']= date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
+            $fila['REMITO']=$unRemito->getRemitoNro();//remito Sya
             $fila['remito_pdf']=$unRemito->getRemitoPdf();//remito Sya
 
 
             /*================ Transporte ================*/
-            $fila['transporte_dominio']=$unRemito->getTransporte()->getTransporteDominio();
-            $fila['transporte_nroInterno']=$unRemito->getTransporte()->getTransporteNroInterno();
+            $fila['PATENTE']=$unRemito->getTransporte()->getTransporteDominio();
+            $fila['INTERNO']=$unRemito->getTransporte()->getTransporteNroInterno();
 
             /*================ TipoEquipo ================*/
-            $fila['tipoEquipo_nombre']=$unRemito->getTipoequipo()->getTipoEquipoNombre();
+            $fila['TIPO EQUIPO']=$unRemito->getTipoequipo()->getTipoEquipoNombre();
 
             /*================ TipoCarga ================*/
-            $fila['tipoCarga_nombre']=$unRemito->getTipocarga()->getTipoCargaNombre();
+            $fila['TIPO CARGA']=$unRemito->getTipocarga()->getTipoCargaNombre();
 
             /*================ Chofer ================*/
-            $fila['chofer_dni']=$unRemito->getChofer()->getChoferDni();
-            $fila['chofer_nombreCompleto']=$unRemito->getChofer()->getChoferNombreCompleto();
+            $fila['DNI']=$unRemito->getChofer()->getChoferDni();
+            $fila['CHOFER']=$unRemito->getChofer()->getChoferNombreCompleto();
             $fila['chofer_esFletero']=($unRemito->getChofer()->getChoferEsFletero()==1?'SI':'NO');
 
             /*================ Cliente ================*/
-            $fila['cliente_nombre']=$unRemito->getCliente()->getClienteNombre();
+            $fila['CLIENTE']=$unRemito->getCliente()->getClienteNombre();
 
             /*================ Operadora ================*/
             //FIXME: NO puedo mostrar el nombre de la operadora!! Porque no tiene operadora cargada!
             if($unRemito->getOperadora() != null)
-                $fila['operadora_nombre'] = $unRemito->getOperadora()->getOperadoraNombre();
+                $fila['OPERADORA'] = $unRemito->getOperadora()->getOperadoraNombre();
             else
-                $fila['operadora_nombre'] = "NO ESTA CARGADO";
+                $fila['OPERADORA'] = "NO ESTA CARGADO";
 
             /*================ EquipoPozo ================*/
-            $fila['equipoPozo_nombre']= $unRemito->getEquipopozo()->getEquipoPozoNombre();
+            $fila['EQUIPO/POZO']= $unRemito->getEquipopozo()->getEquipoPozoNombre();
 
             /*================ Yacimiento ================*/
             $yacimiento = Yacimiento::findFirstByYacimiento_id($unRemito->getEquipopozo()->getEquipopozoYacimientoid());
-            $fila['yacimiento_destino'] = $yacimiento->getYacimientoDestino();
+            $fila['DESTINO'] = $yacimiento->getYacimientoDestino();
 
 
             /*================ CentroCosto ================*/
-            $fila['centroCosto_codigo'] = $unRemito->getCentrocosto()->getCentroCostoCodigo();
+            $fila['CENTRO COSTO'] = $unRemito->getCentrocosto()->getCentroCostoCodigo();
 
             /*================ Linea ================*/
             $linea = Linea::findFirstByLinea_id($unRemito->getCentrocosto()->getCentroCostoLineaId());
-            $fila['linea_nombre']= $linea->getLineaNombre();
+            $fila['LINEA']= $linea->getLineaNombre();
 
             /*================ Viaje ================*/
-            $fila['viaje_origen']= $unRemito->getViaje()->getViajeOrigen();
+            $fila['ORIGEN']= $unRemito->getViaje()->getViajeOrigen();
             /*================ Concatenado ================*/
-            $fila['concatenado_nombre']= $unRemito->getConcatenado()->getConcatenadoNombre();
+            $fila['CONCATENADO']= $unRemito->getConcatenado()->getConcatenadoNombre();
 
             /*================ Tarifa ================*/
-            $fila['tarifa_hsServicio']= $unRemito->getTarifa()->getTarifaHsServicio();
-            $fila['tarifa_hsKm']=  $unRemito->getTarifa()->getTarifaKm();
-            $fila['tarifa_hsHidro']=  $unRemito->getTarifa()->getTarifaHsHidro();
-            $fila['tarifa_hsMalacate']=  $unRemito->getTarifa()->getTarifaHsMalacate();
-            $fila['tarifa_hsStand']=  $unRemito->getTarifa()->getTarifaHsStand();
+            $fila['HS TOTAL SERVICIO']= $unRemito->getTarifa()->getTarifaHsServicio();
+            $fila['KM']=  $unRemito->getTarifa()->getTarifaKm();
+            $fila['HS HIDRO']=  $unRemito->getTarifa()->getTarifaHsHidro();
+            $fila['HS MALACATE']=  $unRemito->getTarifa()->getTarifaHsMalacate();
+            $fila['HS DE ESPERA']=  $unRemito->getTarifa()->getTarifaHsStand();
 
             /*================ Orden ================*/
-            $fila['remito_observaciones']=$unRemito->getRemitoObservacion();
-            $fila['remito_conformidad']=($unRemito->getRemitoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoConformidad());
-            $fila['remito_noConformidad']=($unRemito->getRemitoNoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoNoConformidad());
+            $fila['OBSERVACIONES']=$unRemito->getRemitoObservacion();
+            $fila['CONFORMIDAD RE']=($unRemito->getRemitoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoConformidad());
+            $fila['MOT NO CONFORM RE']=($unRemito->getRemitoNoConformidad()==NULL?"SIN ESPECIFICAR":$unRemito->getRemitoNoConformidad());
             /*================ Extra ================*/
-            if($extra=="extra"){
-                $cabecera= Cabecera::findFirst(array('cabecera_id=:cabecera_id: AND cabecera_habilitado=1',
-                    array('bind'=>array('cabecera_id'=>$planilla->getPlanillaCabeceraid()))));
-                if($cabecera)
-                {
-                    $columnas= Columna::find(array('columna_cabeceraId = :cabecera_id: AND columna_extra=1 AND columna_habilitado=1',
-                        array('bind',array('cabecera_id'=>$cabecera->getCabeceraId()))));
-                    foreach($columnas as $col){
-
+               if($extra=="extra"){
+                    $contenidoExtra= Contenidoextra::find(
+                        array('contenidoExtra_remitoId = :remito_id: AND contenidoExtra_habilitado = 1',
+                            'bind'=>array('remito_id'=>$unRemito->getRemitoId())));
+                    if($contenidoExtra)
+                    {
+                        $columna = Columna::findFirstByColumna_id($contenidoExtra->getContenidoExtraColumnaId());
+                        $fila[$contenidoExtra->getContenidoExtraDescripcion()]=$columna->getColumnaNombre;
                     }
-                }
-            }
+
+               }
+
             $tabla[] = $fila;
         }
+
+
         return $tabla;
     }
 

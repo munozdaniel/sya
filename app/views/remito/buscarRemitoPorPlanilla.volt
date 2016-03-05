@@ -68,7 +68,7 @@
 
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
-        <tr>
+        <tr id="tr-cabecera">
             <th>ORDEN</th>
             <th>REMITO</th>
             <th>PATENTE</th>
@@ -107,13 +107,12 @@
 </section>
 
 <script>
-        var posiciones = null;
+        var posiciones = null, claves = null;
         /**************** select autocomplete *******************/
         $(function () {
             $(".autocompletar").select2();
         });
         /**************** obtener un arreglo con todas las posiciones de las columans ordenadas *******************/
-
         $( "#confirmarPlanilla" ).click(function()
         {
             var datos = {
@@ -134,8 +133,8 @@
                         }else{
                             $('#mensajes').append('<div class="help-block ">&nbsp; Por favor espere unos minutos para la carga de datos.</div>'); // add the actual error message under our input
                             posiciones = data.columnas;
+                            claves = data.claves;//Recupera las claves que van armar las columnas.
                             $('#submit').prop('disabled', false);
-
 
                         }
 
@@ -156,7 +155,10 @@
             $('#seccion-tabla').show();
 
             /**======================= DATATABLE ===========================*/
-            //console.log(datos);
+            console.log(claves);
+
+            var prueba = {'data':'remito_conformidad'};
+
             var table = $('#example').DataTable({
                 "processing": true,
                 dom: 'Bfrtip',
@@ -186,37 +188,7 @@
                 scrollY:        '80vh',
                 scrollX:        'true',
                 scrollCollapse: true,
-                "columns": [
-                    { "data": "remito_nroOrden" },
-                    { "data": "remito_nro" },
-                    { "data": "transporte_dominio" },
-                    { "data": "transporte_nroInterno" },
-                    { "data": "tipoEquipo_nombre" },
-
-                    { "data": "tipoCarga_nombre" },
-                    { "data": "chofer_dni" },
-                    { "data": "chofer_nombreCompleto" },
-                    { "data": "remito_fecha" },
-                    { "data": "cliente_nombre" },
-
-                    { "data": "viaje_origen" },
-                    { "data": "yacimiento_destino" },
-                    { "data": "equipoPozo_nombre" },
-                    { "data": "concatenado_nombre" },
-                    { "data": "operadora_nombre" },
-
-                    { "data": "linea_nombre" },
-                    { "data": "centroCosto_codigo" },
-                    { "data": "remito_observaciones" },
-                    { "data": "tarifa_hsKm" },
-                    { "data": "tarifa_hsHidro" },
-
-                    { "data": "tarifa_hsServicio" },
-                    { "data": "tarifa_hsMalacate" },
-                    { "data": "tarifa_hsStand" },
-                    { "data": "remito_conformidad" },
-                    { "data": "remito_noConformidad" }
-                ],
+                "columns": claves,
 
                 ajax:{
                     'url':'buscarRemitosPorPlanillaIdAjax',

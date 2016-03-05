@@ -86,7 +86,7 @@ class ContenidoextraController extends ControllerBase
             $this->tag->setDefault("contenidoExtra_id", $contenidoextra->getContenidoextraId());
             $this->tag->setDefault("contenidoExtra_descripcion", $contenidoextra->getContenidoextraDescripcion());
             $this->tag->setDefault("contenidoExtra_habilitado", $contenidoextra->getContenidoextraHabilitado());
-            $this->tag->setDefault("contenidoExtra_columnaExtraId", $contenidoextra->getContenidoextraColumnaextraid());
+            $this->tag->setDefault("contenidoExtra_columnaId", $contenidoextra->getContenidoextraColumnaid());
             
         }
     }
@@ -108,7 +108,7 @@ class ContenidoextraController extends ControllerBase
 
         $contenidoextra->setContenidoextraDescripcion($this->request->getPost("contenidoExtra_descripcion"));
         $contenidoextra->setContenidoextraHabilitado($this->request->getPost("contenidoExtra_habilitado"));
-        $contenidoextra->setContenidoextraColumnaextraid($this->request->getPost("contenidoExtra_columnaExtraId"));
+        $contenidoextra->setContenidoextraColumnaid($this->request->getPost("contenidoExtra_columnaId"));
         
 
         if (!$contenidoextra->save()) {
@@ -159,7 +159,7 @@ class ContenidoextraController extends ControllerBase
 
         $contenidoextra->setContenidoextraDescripcion($this->request->getPost("contenidoExtra_descripcion"));
         $contenidoextra->setContenidoextraHabilitado($this->request->getPost("contenidoExtra_habilitado"));
-        $contenidoextra->setContenidoextraColumnaextraid($this->request->getPost("contenidoExtra_columnaExtraId"));
+        $contenidoextra->setContenidoextraColumnaid($this->request->getPost("contenidoExtra_columnaId"));
         
 
         if (!$contenidoextra->save()) {

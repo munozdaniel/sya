@@ -241,9 +241,9 @@ class ColumnaController extends ControllerBase
             if ($planilla && $planilla->getPlanillaCabeceraid()!=null) {
                 $columnas = $this->modelsManager
                     ->createBuilder()
-                    ->columns('columna_posicion')
+                    ->columns('columna_nombre,columna_posicion')
                     ->from('Columna')
-                    ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_extra=0 ', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
+                    ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_habilitado=1', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
                     ->orderBy('columna_id ASC')
                     ->getQuery()
                     ->execute()->toArray();
@@ -251,13 +251,16 @@ class ColumnaController extends ControllerBase
                 if ($columnas) {
                     $data['success'] = true;
                     $retorno = array();
+                    $claves = array();
                     foreach($columnas as $col)
                     {
                         $item = array();
-                        $item = $col['columna_posicion'];
+                        $item = $col['columna_posicion']-1;
                         $retorno[] = $item;
+                        $claves[] = array("data"=>$col['columna_nombre']);
                     }
                     $data['columnas'] = $retorno;
+                    $data['claves'] = $claves;
 
                 } else {
                     $data['success'] = false;

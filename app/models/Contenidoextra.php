@@ -28,6 +28,12 @@ class Contenidoextra extends \Phalcon\Mvc\Model
     protected $contenidoExtra_columnaId;
 
     /**
+     *
+     * @var integer
+     */
+    protected $contenidoExtra_remitoId;
+
+    /**
      * Method to set the value of field contenidoExtra_id
      *
      * @param integer $contenidoExtra_id
@@ -80,6 +86,19 @@ class Contenidoextra extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field contenidoExtra_remitoId
+     *
+     * @param integer $contenidoExtra_remitoId
+     * @return $this
+     */
+    public function setContenidoExtraRemitoId($contenidoExtra_remitoId)
+    {
+        $this->contenidoExtra_remitoId = $contenidoExtra_remitoId;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field contenidoExtra_id
      *
      * @return integer
@@ -120,12 +139,22 @@ class Contenidoextra extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field contenidoExtra_remitoId
+     *
+     * @return integer
+     */
+    public function getContenidoExtraRemitoId()
+    {
+        return $this->contenidoExtra_remitoId;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
-        $this->hasMany('contenidoExtra_id', 'Remito', 'remito_contenidoExtraId', array('alias' => 'Remito'));
         $this->belongsTo('contenidoExtra_columnaId', 'Columna', 'columna_id', array('alias' => 'Columna'));
+        $this->belongsTo('contenidoExtra_remitoId', 'Remito', 'remito_id', array('alias' => 'Remito'));
     }
 
     /**
