@@ -102,7 +102,7 @@
                 <div class="box-body">
                     {{ link_to('cabecera/reordenar','
                     <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-hand-paper-o"></i></span>
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-hand-pointer-o"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text text-black"><strong>REORDENAR COLUMNAS</strong></span>
