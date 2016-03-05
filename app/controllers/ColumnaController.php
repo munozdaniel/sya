@@ -259,7 +259,7 @@ class ColumnaController extends ControllerBase
                     $data['success'] = true;
                     $retorno = array();
                     $claves = array();
-                    $i=0;
+                    $i = 0;
                     foreach ($columnas as $col) {
                         $retorno[] = $i;
                         $claves[] = array("data" => $col['columna_nombre']);
@@ -281,7 +281,7 @@ class ColumnaController extends ControllerBase
     }
 
     /***************************************************************************************************/
-    public function obtenerIdColumnasAction()
+    public function obtenerColumnasNombreIdAction()
     {
         $data['success'] = false;
         $this->view->disable();
@@ -290,20 +290,22 @@ class ColumnaController extends ControllerBase
             if ($planilla && $planilla->getPlanillaCabeceraid() != null) {
                 $columnas = $this->modelsManager
                     ->createBuilder()
-                    ->columns('columna_nombre,columna_id')
+                    ->columns('columna_nombre,columna_id,columna_habilitado')
                     ->from('Columna')
-                    ->where('columna_cabeceraId=:columna_cabeceraId: AND columna_habilitado=1', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
+                    ->where('columna_cabeceraId=:columna_cabeceraId:', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
                     ->orderBy('columna_posicion ASC')
                     ->getQuery()
                     ->execute()->toArray();
+                $data['cabecera_id'] = $planilla->getPlanillaCabeceraid();
 
                 if ($columnas) {
                     $data['success'] = true;
                     $retorno = array();
                     foreach ($columnas as $col) {
                         $item = array();
-                        $item['columna_id'] =  $col['columna_id'];
+                        $item['columna_id'] = $col['columna_id'];
                         $item['columna_nombre'] = $col['columna_nombre'];
+                        $item['columna_habilitado'] = $col['columna_habilitado'];
                         $retorno[] = $item;
                     }
                     $data['columnas'] = $retorno;
@@ -319,8 +321,9 @@ class ColumnaController extends ControllerBase
         }
         echo json_encode($data);
     }
+
     /***************************************************************************************************/
-    public function eliminarAction()
+    public function editarAction()
     {
         $this->assets->collection("headerCss")
             ->addCss('plugins/iCheck/all.css');
@@ -331,7 +334,7 @@ class ColumnaController extends ControllerBase
         $this->importarSelect2();
         //Select Autocomplete Planilla
         $this->view->formulario = new \Phalcon\Forms\Element\Select('planilla_id',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            Planilla::find(array('planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
             array(
                 'using' => array('planilla_id', 'planilla_nombreCliente'),
                 'useEmpty' => true,
@@ -343,38 +346,45 @@ class ColumnaController extends ControllerBase
                 'onchange' => 'cargarColumnas()'
             ));
     }
-    public function eliminarSeleccionadosAction()
+
+    public function guardarEditarAction()
     {
-        $band=true;
-        if(!$this->request->isPost()){
-            return $this->redireccionar('columna/eliminar');
+        $band = true;
+        if (!$this->request->isPost()) {
+            return $this->redireccionar('columna/editar');
         }
         $columnas = $this->request->getPost('columnas');
-        if($columnas==null)
-        {
+        if ($columnas == null) {
             $this->flash->error("Seleccione por lo menos una columna");
-            return $this->redireccionar('columna/eliminar');
+            return $this->redireccionar('columna/editar');
         }
-        foreach ($columnas as $col) {
-            $unaColumna = Columna::findFirst(array('columna_id = :id: AND columna_habilitado=1 ',
-                'bind'=>array('id'=>$col)));
-            if($unaColumna){
-                $unaColumna->setColumnaHabilitado(0);
-                if(!$unaColumna->update())
+        if ($this->request->getPost('cabecera_id') == null) {
+            $this->flash->error("Hubo un problema al encontrar la cabecera");
+            return $this->redireccionar('columna/editar');
+        }
+        $encontro=false;
+        $allColumns = Columna::find(array("columna_cabeceraId = :cabecera_id:", 'bind' => array("cabecera_id" => $this->request->getPost("cabecera_id"))));
+        foreach ($allColumns as $colBD) {
+
+            foreach ($columnas as $col) {
+                if ($colBD->getColumnaId() == $col)//Si son iguales, es porque esta chequeado => Habilitar
                 {
-                    $band=false;
-                    $this->flash->error("La columna > $col < no se pudo eliminar");
+                    $colBD->setColumnaHabilitado(1);
+                    $encontro = true;
                 }
             }
-            else
-            {
-                $band=false;
-                $this->flash->error("No se pudo encontrar la columna > $col <");
+            if(!$encontro)
+                $colBD->setColumnaHabilitado(0);
+            if (!$colBD->update()) {
+                $band = false;
+                $this->flash->error("La columna > $col < no se pudo eliminar");
             }
-
         }
-        if($band)
-            $this->flash->success("Operación exitosa: Las columnas se eliminaron.");
-        return $this->redireccionar('columna/eliminar');
+        if ($band)
+            $this->flash->success("La Edición se efectúo correctamente.");
+        $this->persistent->parameters = null;
+
+        return $this->redireccionar('columna/editar');
     }
+
 }

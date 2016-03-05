@@ -85,7 +85,8 @@
                         <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Nueva Planilla') }}</li>
                         <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
                         <li>{{ link_to('cabecera/reordenar','<i class="fa fa-circle-o"></i>  Reordenar Planilla') }}</li>
-                        <li>{{ link_to('planilla/agregarExtra','<i class="fa fa-circle-o"></i>  Agregar columna extra') }}</li>
+                        <li>{{ link_to('planilla/agregarExtra','<i class="fa fa-circle-o"></i>  Agregar Columna Extra') }}</li>
+                        <li>{{ link_to('columna/editar','<i class="fa fa-circle-o"></i>  Habilitar/Eliminar Columnas') }}</li>
                     </ul>
                 </li>
                 {#====== ITEM ARBOL =======#}
