@@ -448,9 +448,6 @@ class PlanillaController extends ControllerBase
      */
     public function agregarExtraAction()
     {
-        $planilla = Planilla::findFirstByPlanilla_id(1);
-
-
         //SELECT2
         $this->importarSelect2();
         //Select Autocomplete Planilla
@@ -506,74 +503,6 @@ class PlanillaController extends ControllerBase
 
     }
 
-    /**
-     * Guarda todas las columnas extras que se agregaron en la interfaz.
-     * Si la cabecera ya existe, agrega mas columnas extras.
-     * Si la cabecera no existe, la crea y agrega sus columnas
-     */
-    public function agregarExtraAsction()
-    {
-        $this->view->disable();
-        $error = array();      // array to hold validation errors
-        $data = array();
-        $data['success'] = false;
-        $data['mensaje'] = "Ups, ha ocurrido un problema.";
-        if ($this->request->isPost()) {
-            $this->db->begin();
 
-            //si existe el token del formulario y es correcto(evita csrf)
-            //if ($this->security->checkToken('token',$this->request->getPost('token'))) {
-            if (!$this->request->hasPost('columna')) {
-                $error[] = "No puede guardar columnas vacias.";
-            } else {
-                //$cabeceraId = Cabecera::guardar($this->request->getPost('planilla_nombreCliente'));
-                $cabecera_id = $this->request->getPost('cabecera_id', 'int');
-                $cabecera = Cabecera::findFirstByCabecera_id($cabecera_id);
-                if (!$cabecera) {
-                    $error[] = "Hubo un problema, no se encontro la cabecera.";
-                } else {
-                    $arregloColumnas = $this->request->getPost('columna');
-                    $posicion = 26;
-                    foreach ($arregloColumnas AS $columna) {
-                        if (!empty($columna)) {
-                            $nuevaColumna = new Columna();
-                            $nuevaColumna->setColumnaNombre(strtoupper($columna));
-                            $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
-                            $nuevaColumna->setColumnaExtra(1);
-                            $nuevaColumna->setColumnaPosicion($posicion++);
-                            $nuevaColumna->setColumnaCabeceraId($cabecera->getCabeceraId());
-                            $nuevaColumna->setColumnaHabilitado(1);
-                            if (!$nuevaColumna->save()) {
-                                foreach ($nuevaColumna->getMessages() as $message) {
-                                    $error[] = $message . " <br>";
-                                }
-                            }
-                        } else {
-                            $error[] = "Debe ingresar el nombre de la columna";
-                        }
-                    }
-                }
-            }
-            if (empty($error)) {
-                $this->db->commit();
-                $todasLasColumnas = $this->modelsManager->createBuilder()
-                    ->columns('columna_id, columna_nombre')
-                    ->from('Columna')
-                    ->where('columna_cabeceraId = :cabecera_id:', array('cabecera_id' => $cabecera->getCabeceraId()))
-                    ->orderBy('columna_posicion ASC')
-                    ->getQuery()
-                    ->execute()
-                    ->toArray();
-                $data['columnas'] = $todasLasColumnas;
-                $data['success'] = true;
-                $data['mensaje'] = "Operacion Exitosa, las columnas han sido guardadas correctamente";
-            } else {
-                $this->db->rollback();
-                $data['success'] = false;
-                $data['mensaje'] = $error;
-            }
-        }
-        echo json_encode($data);
-    }
 
 }
