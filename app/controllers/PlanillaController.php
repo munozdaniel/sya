@@ -149,7 +149,7 @@ class PlanillaController extends ControllerBase
             $this->db->begin();
             $planilla = new Planilla();
             date_default_timezone_set('America/Argentina/Mendoza');
-            $planilla->setPlanillaNombrecliente("PLANILLA_" . $this->request->getPost('tipo_planilla')[0] . "_" . strtoupper($this->request->getPost("cliente_nombre", 'string')) . "_" . $this->request->getPost('fechaActual') . "_" . date("h:i:s"));
+            $planilla->setPlanillaNombrecliente("PLANILLA " . $this->request->getPost('tipo_planilla')[0] . " " . strtoupper($this->request->getPost("cliente_nombre", 'string')) . " " . $this->request->getPost('fechaActual') . " " . date("h:i:s"));
             $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
             $planilla->setPlanillaArmada(0);
             $planilla->setPlanillaHabilitado(1);
@@ -463,7 +463,9 @@ class PlanillaController extends ControllerBase
                 'required' => ''
             ));
     }
-
+    /**
+     * Guarda las columnas extras a una planilla determinada
+     */
     public function guardarExtraAction()
     {
         if ($this->request->isPost()) {
