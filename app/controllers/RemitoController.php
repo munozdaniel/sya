@@ -37,38 +37,15 @@ class RemitoController extends ControllerBase
     }
     /**
      * =================================================================================================
-     *                          BUSQUEDA DE REMITOS POR PLANILLA
+     *
      * =================================================================================================
      */
     /**
-     * Arma un formulario con un datalist de planillas. Seleccionando la planilla se obtendrán todas sus columnas
-     * para que sean reordenadas.
-     * Index action
      *
-     * XXXX NO LO USO?
      */
     public function indexAction()
     {
-        $this->importarDataTables();
-        $this->importarSelect2();
 
-        $this->persistent->parameters = null;
-        //Posiciones:
-        $columnas = $this->recuperarPosiciones(9);
-        //Vistas
-        $this->view->columnas = $columnas;
-        $this->view->clienteForm = new ClienteNewForm();
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
-            array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
-                'useEmpty' => false,
-                'emptyText' => 'Seleccione una planilla',
-                'emptyValue' => '',
-                'class' => 'form-control autocompletar',
-                'style' => 'width:100%',
-                'required' => ''
-            ));
     }
 
     /**
@@ -238,7 +215,25 @@ class RemitoController extends ControllerBase
         $tabla = $this->generarTablaDeRemitosNuevo($remito);
         echo json_encode(array('data' => $tabla));
     }
-
+    /**
+     * =================================================================================================
+     *                  BUSCAR LOS REMITOS DE UNA PLANILLA POR GET
+     * =================================================================================================
+     */
+    /**
+     *      Busca todos los remitos de una planilla. La diferencia con el anterior, es que se puede realizar desde
+     * la tabla planilla. Se envia el planilla_id por GET.
+     */
+    public function verRemitosPorTablaAction($planilla_id)
+    {
+        $this->importarDataTables();
+        $this->view->planilla_id = $planilla_id;
+    }
+    /**
+     * =================================================================================================
+     *                  METODO PRIVADO PARA PASAR DE UN MODELO A ARRAY CON FK
+     * =================================================================================================
+     */
     /**
      * A partir de una orden recuperar los datos importantes obtenidos con la clave foranea
      * @param $remitos

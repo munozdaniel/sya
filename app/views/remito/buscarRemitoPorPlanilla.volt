@@ -205,13 +205,6 @@
                         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
                         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                     }
-                },
-                "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                    var $nRow = $(nRow);
-                    if ( aData['remito_pdf'] == "" ||  aData['remito_pdf'] == null )
-                    {
-                        $nRow.css({"color":"red"});
-                    }
                 }
             });
 
