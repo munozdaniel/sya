@@ -102,7 +102,7 @@
                 <div class="box-body">
                     {{ link_to('cabecera/reordenar','
                     <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-hand-pointer-o"></i></span>
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-arrows-v"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text text-black"><strong>REORDENAR COLUMNAS</strong></span>
@@ -112,6 +112,57 @@
                             </div>
                             <span class="progress-description  text-black">
                                 Filtro personalizado.
+                            </span>
+                        </div>
+                    </div>
+                    ') }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    {{ link_to('planilla/agregarExtra','
+                    <div class="info-box">
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-circle"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text text-black"><strong>AGREGAR COLUMNAS EXTRAS</strong></span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description  text-black">
+                                Agregar a la planilla columnas.
+                            </span>
+                        </div>
+                    </div>
+                    ') }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- ./col -->
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    {{ link_to('columna/editar','
+                    <div class="info-box">
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-check-square"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text text-black"><strong>HABILITAR/DESHABILITAR COL</strong></span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description  text-black">
+                                Visualización de tablas personalizadas.
                             </span>
                         </div>
                     </div>
@@ -132,18 +183,18 @@
             <div class="box box-primary">
                 <!-- /.box-header -->
                 <div class="box-body">
-                    {{ link_to('remito/searchDataTable','
+                    {{ link_to('remito/nuevoRemitoPorPlanilla','
                     <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-circle"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>BUSQUEDA DE REMITOS</strong></span>
+                            <span class="info-box-text text-black"><strong>AGREGAR REMITO</strong></span>
 
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
                             <span class="progress-description  text-black">
-                                Todos los remitos sin filtro.
+                                Selecciona la planilla, luego agrega el remito.
                             </span>
                         </div>
                     </div>
@@ -153,6 +204,80 @@
             </div>
             <!-- /.box -->
         </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    {{ link_to('remito/buscarRemitoPorPlanilla','
+                    <div class="info-box">
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
 
+                        <div class="info-box-content">
+                            <span class="info-box-text text-black"><strong>BUSCAR POR PLANILLA</strong></span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description  text-black">
+                                Búsqueda de remitos.
+                            </span>
+                        </div>
+                    </div>
+                    ') }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    {{ link_to('remito/searchDataTablePlanilla','
+                    <div class="info-box">
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text text-black"><strong>BUSQUEDA PERSONALIZADA</strong></span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description  text-black">
+                                Búsqueda de remitos.
+                            </span>
+                        </div>
+                    </div>
+                    ') }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    {{ link_to('remito/searchRemitoSinPdf','
+                    <div class="info-box">
+                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text text-black"><strong>REMITOS SIN PDF</strong></span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description  text-black">
+                                Remitoso escaneados.
+                            </span>
+                        </div>
+                    </div>
+                    ') }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
     </div>
 </section>

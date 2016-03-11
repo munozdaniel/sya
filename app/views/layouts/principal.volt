@@ -96,8 +96,9 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
+                        <li>{{ link_to('remito/nuevoRemitoPorPlanilla','<i class="fa fa-circle-o"></i>  Nuevo Remito por Planilla') }}</li>
                         <li>{{ link_to('remito/buscarRemitoPorPlanilla','<i class="fa fa-circle-o"></i>  Buscar Remito por Planilla') }}</li>
-                        <li>{{ link_to('remito/searchDataTable','<i class="fa fa-circle-o"></i>  Busqueda Personalizada') }}</li>
+                        <li>{{ link_to('remito/searchDataTablePlanilla','<i class="fa fa-circle-o"></i>  Busqueda Personalizada') }}</li>
                         <li>{{ link_to('remito/searchRemitoSinPDF','<i class="fa fa-circle-o"></i>  Ver Remitos sin PDF') }}</li>
                         <li>{{ link_to('remito/search','<i class="fa fa-circle-o"></i>  Ver Todos los Remitos') }}</li>
                     </ul>
