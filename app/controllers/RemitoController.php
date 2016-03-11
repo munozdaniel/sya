@@ -171,17 +171,20 @@ class RemitoController extends ControllerBase
     public function searchDataTableAction()
     {
         $this->importarDataTables();
-        //Posiciones:
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_posicion')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ', array('columna_cabeceraId' => 75))
-            ->orderBy('columna_id ASC')
-            ->getQuery()
-            ->execute()->toArray();
+        $this->importarSelect2();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => true,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => ''
+            ));
         //Vistas
-        $this->view->columnas = $columnas;
         $this->view->remitoForm = new RemitoForm();
         $this->view->clienteForm = new ClienteNewForm();
     }
@@ -600,6 +603,17 @@ class RemitoController extends ControllerBase
 
         $nuevoRemito = new Remito();
         $planilla_id = $this->request->getPost("remito_planillaId");
+        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
+        if(!$planilla)
+        {
+            $this->flash->error('Hubo un problema, la planilla no existe.');
+            $this->db->rollback();
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "nuevoRemito",
+                "params" => $planilla_id
+            ));
+        }
         /*==================== Generar Ultimo Nro de Remito ===============================*/
         $ultimoRemito = Remito::findFirst(array(
             "remito_ultima = 1 AND remito_habilitado=1 AND remito_planillaId = :planilla_id:",
@@ -630,6 +644,19 @@ class RemitoController extends ControllerBase
         $nuevoRemito->setRemitoFecha($this->request->getPost('remito_fecha'));
         $nuevoRemito->setRemitoNro($this->request->getPost('remito_nro'));
         $nuevoRemito->setRemitoPeriodo(date('m', date(strtotime(date($this->request->getPost("remito_fecha"))))));
+        $tipo =$this->request->getPost('remito_tipo');
+
+        if($tipo !=  $planilla->getPlanillaTipo())
+        {
+            $this->flash->error("El remito no coincide con el tipo de planilla, verifique que sean del mismo tipo");
+            $this->db->rollback();
+            return $this->dispatcher->forward(array(
+                "controller" => "remito",
+                "action" => "nuevoRemito",
+                "params" => $planilla_id
+            ));
+        }
+        $nuevoRemito->setRemitoTipo($tipo);
         $nuevoRemito->setRemitoObservacion($this->request->getPost('remito_observacion'));
         $nuevoRemito->setRemitoConformidad($this->request->getPost('remito_conformidad'));
         $nuevoRemito->setRemitoNoConformidad($this->request->getPost('remito_noConformidad'));

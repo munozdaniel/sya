@@ -8,7 +8,7 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("planilla/index", "<i class='fa fa-search'></i> Busqueda Personalizada",'class':'btn btn-flat btn-large bg-olive') }}
+                {{ link_to("remito/searchDataTable", "<i class='fa fa-search'></i> Busqueda Personalizada",'class':'btn btn-flat btn-large bg-olive') }}
             </td>
 
             <td align="right">
@@ -247,9 +247,23 @@
         </div>
         <div class="row">
             <div class="col-md-6 form-group">
-                {{ remitoForm.label('remito_observacion') }}
-                {{ remitoForm.render('remito_observacion') }}
+                <label>Tipo de Planilla</label><br>
+                <table style="width:100%; border:1px solid #ebebeb;" >
+                    <tr>
+                        <td align="center">
+                            <label>
+                                <input type="radio" name="remito_tipo" value="0" checked>
+                                Planilla Mensual
+                            </label>
+                        </td>
+                        <td align="center"><label>
+                                <input type="radio" name="remito_tipo" value="1"> Planilla OnCall
+                            </label></td>
+                    </tr>
+                </table>
+
             </div>
+
             <div class="col-md-3 form-group">
                 {{ remitoForm.label('remito_conformidad') }}
                 {{ remitoForm.render('remito_conformidad') }}
@@ -257,6 +271,10 @@
             <div class="col-md-3 form-group">
                 {{ remitoForm.label('remito_noConformidad') }}
                 {{ remitoForm.render('remito_noConformidad') }}
+            </div>
+            <div class="col-md-6 form-group">
+                {{ remitoForm.label('remito_observacion') }}
+                {{ remitoForm.render('remito_observacion') }}
             </div>
             <div class="col-md-12">
                 <hr>
