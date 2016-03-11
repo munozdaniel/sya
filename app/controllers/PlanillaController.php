@@ -153,6 +153,10 @@ class PlanillaController extends ControllerBase
             $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
             $planilla->setPlanillaArmada(0);
             $planilla->setPlanillaHabilitado(1);
+            if($this->request->getPost('tipo_planilla')[0]=="ONCALL")
+                $planilla->setPlanillaTipo(1);
+            else
+                $planilla->setPlanillaTipo(0);
 
             if (!$planilla->save()) {
                 foreach ($planilla->getMessages() as $message) {
