@@ -1,16 +1,12 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3>BUSQEUDA PERSONALIZADA
-            <small>
-                <br> - Falta Guardar el orden de las columnas.
-                <br> - Tarda en cargar, se mostrará un mje "CARGANDO..."
-                <br> - Hay qeu mejorar la busqueda por diferentes campos.
-            </small>
+        <h3>BUSQUEDA PERSONALIZADA
+            <br><small>Para obtener todos los remitos solo haga click en buscar sin ingresar datos en el formulario</small>
         </h3>
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("remito/searchDataTable", "<i class='fa fa-search'></i> Busqueda de Remitos",'class':'btn btn-flat btn-large bg-olive') }}
+                    {{ link_to("remito/searchDataTable", "<i class='fa fa-search'></i> Nueva Busqueda",'class':'btn btn-flat btn-large bg-olive') }}
                 </td>
 
             </tr>
@@ -68,22 +64,22 @@
 
 <script>
     $(document).ready(function() {
-        // this is the id of the form
+        // ************************************************************************************
         $("#form-buscarRemitos").submit(function(e) {
+            var datos = {
+                'remito_planillaId': document.getElementById("remito_planillaId").value
+            };
+
             $('#seccion-busqueda').hide();
             $('#seccion-tabla').show();
-            var Data = $("#form-buscarRemitos").serializeArray();
-
 
             /**======================= DATATABLE ===========================*/
-            var posiciones = [];
-            {% for col in columnas %}
-                posiciones.push({{ col['columna_posicion']}}) ;
-            {% endfor %}
-           // console.log( $( this ).serialize());
+            console.log(claves);
+
+            var prueba = {'data':'remito_conformidad'};
+
             var table = $('#example').DataTable({
                 "processing": true,
-
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -111,45 +107,17 @@
                 scrollY:        '80vh',
                 scrollX:        'true',
                 scrollCollapse: true,
-                "columns": [
-                    { "data": "remito_nroOrden" },
-                    { "data": "remito_nro" },
-                    { "data": "transporte_dominio" },
-                    { "data": "transporte_nroInterno" },
-                    { "data": "tipoEquipo_nombre" },
+                "columns": claves,
 
-                    { "data": "tipoCarga_nombre" },
-                    { "data": "chofer_dni" },
-                    { "data": "chofer_nombreCompleto" },
-                    { "data": "remito_fecha" },
-                    { "data": "cliente_nombre" },
-
-                    { "data": "viaje_origen" },
-                    { "data": "yacimiento_destino" },
-                    { "data": "equipoPozo_nombre" },
-                    { "data": "concatenado_nombre" },
-                    { "data": "operadora_nombre" },
-
-                    { "data": "linea_nombre" },
-                    { "data": "centroCosto_codigo" },
-                    { "data": "remito_observaciones" },
-                    { "data": "tarifa_hsKm" },
-                    { "data": "tarifa_hsHidro" },
-
-                    { "data": "tarifa_hsMalacate" },
-                    { "data": "tarifa_hsStand" },
-                    { "data": "remito_conformidad" },
-                    { "data": "remito_noConformidad" }
-                ],
+                ajax:{
+                    'url':'buscarRemitosPorPlanillaIdAjax',
+                    'type':'POST',
+                    'data': datos,
+                    dataType: 'json'
+                },
                 colReorder: {
 
                     order: posiciones
-                },
-                ajax:{
-                    'url':'busquedaAjax',
-                    'type':'POST',
-                    'data': Data,
-                    dataType: 'json'
                 },
                 "language": {
                     "sProcessing":     "Procesando...",
@@ -173,13 +141,6 @@
                     "oAria": {
                         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
                         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                },
-                "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                    var $nRow = $(nRow);
-                    if ( aData['remito_pdf'] == "" ||  aData['remito_pdf'] == null )
-                    {
-                        $nRow.css({"color":"red"});
                     }
                 }
             });

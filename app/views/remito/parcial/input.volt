@@ -1,8 +1,3 @@
-<div class="box-header">
-    <h3 class="box-title">Criterio de Busqueda <br> <small> Para obtener todos los remitos solo haga click en buscar sin ingresar datos en los campos</small></h3>
-
-</div>
-
 <!-- /.Titulo -->
 <!-- Formulario -->
 {{ content() }}
@@ -12,7 +7,8 @@
 {# =================================== PLANILLA ================================== #}
 {#Campos Ocultos#}
 {#Fin Campos Ocultos#}
-<div class="box box-primary">    {{ submit_button(" BUSCAR REMITOS",'id':'submit','class':'btn btn-flat btn-lg btn-primary ') }}
+<div class="box box-primary">
+    {{ submit_button(" BUSCAR REMITOS",'id':'submit','class':'btn btn-flat btn-lg btn-primary ') }}
 
 
     <div class=" box-body">
