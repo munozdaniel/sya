@@ -5,10 +5,11 @@
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("index/dashboard", "<i class='fa fa-home'></i> Pagina Principal",'class':'btn btn-flat  bg-olive') }}
-                </td>
-                <td align="right">
                     {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Realizar nueva búsqueda",'class':'btn btn-flat btn-google') }}
+                </td>
+
+                <td align="right">
+                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-search'></i> Agregar Remito",'class':'btn btn-flat btn-primary') }}
                 </td>
 
             </tr>
@@ -44,7 +45,7 @@
                     <div class="col-md-2">
                     <span class="input-group-btn"><br>
                         <a id="confirmarPlanilla"
-                           class="btn btn-flat btn-info pull-left"><i class="fa fa-2x fa-check-circle-o"></i>.
+                           class="btn btn-flat btn-info pull-left" title="CARGA CABECERA"><i class="fa fa-2x fa-check-circle-o"></i>.
                         </a>
                     </span>
                     </div>
