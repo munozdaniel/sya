@@ -37,6 +37,11 @@ class Planilla extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $planilla_descripcion;
+    /**
+     *
+     * @var integer
+     */
+    protected $planilla_tipo;
 
     /**
      *
@@ -121,7 +126,18 @@ class Planilla extends \Phalcon\Mvc\Model
 
         return $this;
     }
+    /**
+     * Method to set the value of field planilla_tipo
+     *
+     * @param integer planilla_tipo
+     * @return $this
+     */
+    public function setPlanillaTipo($planilla_tipo)
+    {
+        $this->planilla_tipo = $planilla_tipo;
 
+        return $this;
+    }
     /**
      * Returns the value of field planilla_id
      *
@@ -189,6 +205,15 @@ class Planilla extends \Phalcon\Mvc\Model
     public function getPlanillaDescripcion()
     {
         return $this->planilla_descripcion;
+    }
+    /**
+     * Returns the value of field planilla_tipo
+     *
+     * @return integer
+     */
+    public function getPlanillaTipo()
+    {
+        return $this->planilla_tipo;
     }
     public function setPlanillaDescripcion($planilla_descripcion)
     {
