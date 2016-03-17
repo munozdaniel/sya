@@ -24,7 +24,7 @@
             </h3>
 
         </div>
-        {{ form('remito/generarFormularioNuevo','id':'form-buscarRemitos' ,"method":"POST") }}
+        {{ form('remito/nuevo','id':'form-buscarRemitos' ,"method":"POST") }}
 
         <fieldset id="fielset-buscar-planilla" class="panel-border">
             <br>

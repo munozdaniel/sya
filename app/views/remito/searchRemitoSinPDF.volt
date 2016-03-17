@@ -115,7 +115,8 @@
     /**************** obtener un arreglo con todas las posiciones de las columans ordenadas *******************/
 
     $( "#confirmarPlanilla" ).click(function()
-    {
+    {alert("");
+        
         var datos = {
             'remito_planillaId': document.getElementById("remito_planillaId").value
         };

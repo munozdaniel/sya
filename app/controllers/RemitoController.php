@@ -56,7 +56,7 @@ class RemitoController extends ControllerBase
      */
     public function searchRemitoSinPDFAction()
     {
-//SELECT2
+        //SELECT2
         $this->importarSelect2();
         //DATATABLES
         $this->importarDataTables();
@@ -163,7 +163,25 @@ class RemitoController extends ControllerBase
      *                          BUSQUEDA DE REMITOS GRAL AJAX
      * =================================================================================================
      */
-
+    public function searchDataTablePlanillaAction(){
+        //SELECT2
+        $this->importarSelect2();
+        //DATATABLES
+        $this->importarDataTables();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => false,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => '',
+                'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
+            ));
+    }
     /**
      * OK.
      * Se encarga de mostrar el formulario de busqueda de remitos, y de preparar la tabla a generar por la busqueda.
@@ -171,19 +189,6 @@ class RemitoController extends ControllerBase
     public function searchDataTableAction()
     {
         $this->importarDataTables();
-        $this->importarSelect2();
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
-            array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
-                'useEmpty' => true,
-                'emptyText' => 'Seleccione una planilla',
-                'emptyValue' => '',
-                'class' => 'form-control autocompletar',
-                'style' => 'width:100%',
-                'required' => ''
-            ));
         //Vistas
         $this->view->remitoForm = new RemitoForm();
         $this->view->clienteForm = new ClienteNewForm();
@@ -766,6 +771,7 @@ class RemitoController extends ControllerBase
     }
     public function generarFormularioNuevoAction()
     {
+
         if(!$this->request->hasPost('remito_planillaId') || $this->request->getPost('remito_planillaId')==null){
             $this->flash->error("Es necesario que seleccione una planilla");
             $this->redireccionar('remito/nuevoRemitoPorPlanilla');
@@ -849,4 +855,28 @@ class RemitoController extends ControllerBase
     }
 
 
+    /**
+     * Proviene de << nuevoRemitoPorPlanillaAction >>
+     * Selecciona la planilla a la cual se le agregará el nuevo remito.
+     * Utiliza Select2
+     */
+    public function nuevoAction()
+    {
+        $this->importarSelect2();
+        if(!$this->request->hasPost('remito_planillaId') || $this->request->getPost('remito_planillaId')==null){
+            $this->flash->error("Es necesario que seleccione una planilla");
+            $this->redireccionar('remito/nuevoRemitoPorPlanilla');
+        }
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId'));
+        $columnas = Columna::find(array(
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
+            'bind' => array('cabecera_id' => $planilla->getPlanillaCabeceraid())
+        ));
+
+        if (count($columnas) != 0) {
+            $this->view->columnaExtraForm = new ColumnaExtraForm(null, array('extra' => $columnas));
+        }
+        $this->view->remitoForm = new RemitoNuevoForm(null, array('required' => ''));
+        $this->view->clienteForm = new ClienteNewForm(null, array('required' => ''));
+        $this->view->planilla = $planilla;    }
 }

@@ -80,7 +80,8 @@ class ControllerBase extends Controller
     protected function importarSelect2()
     {
         $this->assets->collection('headerCss')
-            ->addCss('plugins/select2/select2.min.css');
+            ->addCss('plugins/select2/select2.min.css')
+            ->addCss('plugins/select2/select2-bootstrap.min.css');
         $this->assets->collection('footer')
             ->addJs('plugins/select2/select2.full.min.js');
     }

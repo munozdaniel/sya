@@ -8,6 +8,9 @@
     {{ content() }}
     <table width="100%">
         <tr>
+            <td align="left">
+                {{ link_to("planilla/new", "<i class='fa fa-search'></i> Nueva Planilla",'class':'btn btn-flat btn-large bg-olive') }}
+            </td>
             <td align="right">
                 {{ link_to("planilla/index", "<i class='fa fa-search'></i> Busqueda Personalizada",'class':'btn btn-flat btn-large bg-olive') }}
             </td>

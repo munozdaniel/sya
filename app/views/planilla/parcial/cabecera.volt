@@ -72,7 +72,7 @@
                             $('#pnl_extra').show();
                             //$('#pnl_ordenar').show();
                             document.getElementById('id_cabecera_input').value = data.cabecera_id;
-
+                            alert("OPERACION EXITOSA");
                            // cargarTablaReordenable(data.columnas);
                         }
                     })

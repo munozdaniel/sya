@@ -176,7 +176,7 @@ class OrdenController extends ControllerBase
      */
     public function searchAction()
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
         $numberPage = 1;
 
 

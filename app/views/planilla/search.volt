@@ -1,6 +1,6 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Listado de Planillas</h3>
+        <h3 class="box-title">Listado de Planillas <br> Agregar los remitos por planilla <br></h3>
 
         <table width="100%">
             <tr>
@@ -68,9 +68,7 @@
                         <td>{{ planilla.getPlanillaNombrecliente() }}</td>
                         <td>{{ planilla.getPlanillaFecha() }}</td>
                         <td>
-                            {{ link_to("remito/verRemitos/"~planilla.getPlanillaId(), "Ver Remitos",'class':'btn btn-flat  bg-light-blue-gradient','title':'VER TODOS LOS REMITOS') }}
                             {{ link_to("remito/nuevoRemito/"~planilla.getPlanillaId(), "Agregar Remito",'class':'btn btn-flat  bg-light-blue-gradient','title':'AGREGAR UN REMITO NUEVO') }}
-
                         </td>
 
                         {% if admin == 1 %}
