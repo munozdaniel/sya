@@ -20,26 +20,7 @@ class RemitoController extends ControllerBase
 
     }
 
-    private function recuperarPosiciones($cabeceraId)
-    {
-        $columnas = $this->modelsManager
-            ->createBuilder()
-            ->columns('columna_posicion')
-            ->from('Columna')
-            ->where('columna_cabeceraId=:columna_cabeceraId: ', array('columna_cabeceraId' => 75))
-            ->orderBy('columna_id ASC')
-            ->getQuery()
-            ->execute()->toArray();
-        if ($columnas)
-            return $columnas;
-        else
-            return null;
-    }
-    /**
-     * =================================================================================================
-     *
-     * =================================================================================================
-     */
+
     /**
      *
      */
@@ -48,13 +29,8 @@ class RemitoController extends ControllerBase
 
     }
 
-
     /**
-     * =================================================================================================
-     *                          BUSQUEDA DE REMITOS POR PLANILLA
-     * =================================================================================================
-     */
-    /**
+     * OK: Permite buscar una planilla.
      * @return bool
      */
     public function buscarRemitoPorPlanillaAction()
@@ -79,7 +55,7 @@ class RemitoController extends ControllerBase
     }
 
     /**
-     * Se encarga de buscar todos los remitos segun la planilla_id enviada por post.
+     * OK Se encarga de buscar todos los remitos segun la planilla_id enviada por post.
      * Muestra las columnas extras.
      */
     public function buscarRemitosPorPlanillaIdAjaxAction()
@@ -104,12 +80,9 @@ class RemitoController extends ControllerBase
         $data['problemas'] = $error;
         echo json_encode(array('data' => $tabla,'errores'=>$data));
     }
+
     /**
-     * =================================================================================================
-     *                          BUSQUEDA DE REMITOS POR PLANILLA
-     * =================================================================================================
-     */
-    /**
+     * OK: Permite seleccionar la planilla a buscar.
      * @return bool
      */
     public function buscarRemitoPorPlanillaSinPDFAction()
@@ -133,8 +106,8 @@ class RemitoController extends ControllerBase
             ));
     }
     /**
-     * Se encarga de buscar todos los remitos segun la planilla_id enviada por post.
-     * Muestra las columnas extras.
+     * OK: Busca todas las planillas que no tengan los remitos escaneados
+     * usado en buscarRemitoPorPlanillaSinPDFAction
      */
     public function buscarRemitosPorPlanillaIdAjaxSinRemitoAction()
     {
@@ -157,71 +130,6 @@ class RemitoController extends ControllerBase
         }
         $data['problemas'] = $error;
         echo json_encode(array('data' => $tabla,'errores'=>$data));
-    }
-    /**
-     * =================================================================================================
-     *                          BUSQUEDA DE REMITOS GRAL AJAX
-     * =================================================================================================
-     */
-    public function searchDataTablePlanillaAction(){
-        //SELECT2
-        $this->importarSelect2();
-        //DATATABLES
-        $this->importarDataTables();
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
-            array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
-                'useEmpty' => false,
-                'emptyText' => 'Seleccione una planilla',
-                'emptyValue' => '',
-                'class' => 'form-control autocompletar',
-                'style' => 'width:100%',
-                'required' => '',
-                'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
-            ));
-    }
-    /**
-     * OK.
-     * Se encarga de mostrar el formulario de busqueda de remitos, y de preparar la tabla a generar por la busqueda.
-     */
-    public function searchDataTableAction()
-    {
-        $this->importarDataTables();
-        //Vistas
-        $this->view->remitoForm = new RemitoForm();
-        $this->view->clienteForm = new ClienteNewForm();
-    }
-
-    /**
-     * Llamada ajax por el submit de searchDataTable. Se encarga de realizar un criteria con los datos enviado por POST
-     * (form serializable) y luego busca los datos que se van a mostrar en la datatable.
-     * Devuelve un arreglo.
-     */
-    public function busquedaAjaxAction()
-    {
-        $this->view->disable();
-        /*=================*/
-        $retorno = array();
-        foreach ($_POST as $arreglo) {
-            $retorno[$arreglo['name']] = $arreglo['value'];
-        }
-        /*====================*/
-
-        if (!empty($retorno)) {
-            $query = Criteria::fromInput($this->di, "Remito", $retorno);
-            $this->persistent->parameters = $query->getParams();
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        $remito = Remito::find($parameters);
-        $tabla = $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data' => $tabla));
     }
 
     /**
@@ -498,292 +406,9 @@ class RemitoController extends ControllerBase
         ));
     }
 
-    /***************************************************************************************************
-     * Nuevo remito, arma un formulario para cargar todos los datos correspondientes a un remito.
-     */
-    public function nuevoRemitoAction($planilla_id)
-    {
-        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
-        $columnas = Columna::find(array(
-            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
-            'bind' => array('cabecera_id' => $planilla->getPlanillaCabeceraid())
-        ));
-
-        if (count($columnas) != 0) {
-            $this->view->columnaExtraForm = new ColumnaExtraForm(null, array('extra' => $columnas));
-        }
-        $this->view->remitoForm = new RemitoForm(null, array('required' => ''));
-        $this->view->clienteForm = new ClienteNewForm(null, array('required' => ''));
-        $this->view->planilla = $planilla;
-    }
 
     /**
-     * Guarda todos los campos correspondiente a un remito y sus dependientes.
-     */
-    public function guardarRemitoAction()
-    {
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-        $this->db->begin();
-
-
-        $nuevoRemito = new Remito();
-        $planilla_id = $this->request->getPost("remito_planillaId");
-        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
-        if(!$planilla)
-        {
-            $this->flash->error('Hubo un problema, la planilla no existe.');
-            $this->db->rollback();
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "nuevoRemito",
-                "params" => $planilla_id
-            ));
-        }
-        /*==================== Generar Ultimo Nro de Remito ===============================*/
-        $ultimoRemito = Remito::findFirst(array(
-            "remito_ultima = 1 AND remito_habilitado=1 AND remito_planillaId = :planilla_id:",
-            'bind' => array('planilla_id' => $planilla_id)
-        ));
-        if (!$ultimoRemito) {
-            $nuevoRemito->setRemitoUltima(1);
-            $nuevoRemito->setRemitoNroOrden(1);
-        } else {
-            $nuevoRemito->setRemitoUltima(1);
-            $ultimoRemito->setRemitoUltima(0);
-            $nuevoRemito->setRemitoNroOrden($ultimoRemito->getRemitoNroOrden() + 1);
-            if (!$ultimoRemito->update()) {
-                $this->flash->error('Hubo un problema con la conexion, intenteló nuevamente');
-                $this->db->rollback();
-                return $this->dispatcher->forward(array(
-                    "controller" => "remito",
-                    "action" => "nuevoRemito",
-                    "params" => $planilla_id
-                ));
-            }
-        }
-        /*==================== Guardando Datos del Remito ===============================*/
-        $nuevoRemito->setRemitoPlanillaId($planilla_id);
-        $nuevoRemito->setRemitoFechaCreacion(date('Y-m-d'));
-        $nuevoRemito->setRemitoCreadoPor($this->session->get('auth')['usuario_nick']);
-        $nuevoRemito->setRemitoHabilitado(1);
-        $nuevoRemito->setRemitoFecha($this->request->getPost('remito_fecha'));
-        $nuevoRemito->setRemitoNro($this->request->getPost('remito_nro'));
-        $nuevoRemito->setRemitoPeriodo(date('m', date(strtotime(date($this->request->getPost("remito_fecha"))))));
-        $tipo =$this->request->getPost('remito_tipo');
-
-        if($tipo !=  $planilla->getPlanillaTipo())
-        {
-            $this->flash->error("El remito no coincide con el tipo de planilla, verifique que sean del mismo tipo");
-            $this->db->rollback();
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "nuevoRemito",
-                "params" => $planilla_id
-            ));
-        }
-        $nuevoRemito->setRemitoTipo($tipo);
-        $nuevoRemito->setRemitoObservacion($this->request->getPost('remito_observacion'));
-        $nuevoRemito->setRemitoConformidad($this->request->getPost('remito_conformidad'));
-        $nuevoRemito->setRemitoNoConformidad($this->request->getPost('remito_noConformidad'));
-        /* ==================== ==================== ==================== ==================== */
-        $nuevoRemito->setRemitoTransporteId($this->request->getPost('remito_transporteId'));
-        $nuevoRemito->setRemitoTipoEquipoId($this->request->getPost('remito_tipoEquipoId'));
-        $nuevoRemito->setRemitoTipoCargaId($this->request->getPost('remito_tipoCargaId'));
-        $nuevoRemito->setRemitoChoferId($this->request->getPost('remito_choferId'));
-        /* ==================== ==================== ==================== ==================== */
-        $nuevoRemito->setRemitoClienteId($this->request->getPost('cliente_id'));
-        $nuevoRemito->setRemitoCentroCostoId($this->request->getPost('centroCosto_id'));
-        $nuevoRemito->setRemitoEquipoPozoId($this->request->getPost('equipoPozo_id'));
-        $nuevoRemito->setRemitoOperadoraId($this->request->getPost('operadora_id'));
-        /* ==================== ==================== ==================== ==================== */
-        $nuevoRemito->setRemitoViajeId($this->request->getPost('remito_viajeId'));
-        $nuevoRemito->setRemitoConcatenadoId($this->request->getPost('remito_concatenadoId'));
-        /* ==================== ==================== ==================== ==================== */
-        $tarifa = new Tarifa();
-        $tarifa->setTarifaHoraInicial($this->request->getPost("tarifa_horaInicial"));
-        $tarifa->setTarifaHoraFinal($this->request->getPost("tarifa_horaFinal"));
-        $tarifa->setTarifaHsServicio($this->request->getPost("tarifa_hsServicio"));
-        $tarifa->setTarifaHsHidro($this->request->getPost("tarifa_hsHidro"));
-        $tarifa->setTarifaHsMalacate($this->request->getPost("tarifa_hsMalacate"));
-        $tarifa->setTarifaHsStand($this->request->getPost("tarifa_hsStand"));
-        $tarifa->setTarifaKm($this->request->getPost("tarifa_km"));
-        if (!$tarifa->save()) {
-            foreach ($tarifa->getMessages() as $mensaje) {
-                $this->flash->error($mensaje);
-            }
-            $this->db->rollback();
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "nuevoRemito",
-                "params" => $planilla_id
-            ));
-        }
-        $nuevoRemito->setRemitoTarifaId($tarifa->getTarifaId());
-        /* ==================== ==================== ==================== ==================== */
-        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
-        $columnas = Columna::find(array(
-            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
-            'bind' => array('cabecera_id' => $planilla->getPlanillaCabeceraid())
-        ));
-
-        if (count($columnas) != 0) {
-            foreach ($columnas as $col) {
-                $contenidoExtra = new Contenidoextra();
-                $contenidoExtra->setContenidoExtraHabilitado(1);
-                $contenidoExtra->setContenidoExtraColumnaId($col->getColumnaId());
-                $contenidoExtra->setContenidoExtraDescripcion($this->request->getPost($col->getColumnaNombre()));
-                if (!$contenidoExtra->save()) {
-                    foreach ($tarifa->getMessages() as $mensaje) {
-                        $this->flash->error($mensaje);
-                    }
-                    $this->db->rollback();
-                    return $this->dispatcher->forward(array(
-                        "controller" => "remito",
-                        "action" => "nuevoRemito",
-                        "params" => $planilla_id
-                    ));
-                }
-            }
-        }
-        /* ==================== ==================== ==================== ==================== */
-        if (!$nuevoRemito->save()) {
-            foreach ($nuevoRemito->getMessages() as $mensaje) {
-                $this->flash->error($mensaje);
-            }
-            $this->db->rollback();
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "nuevoRemito",
-                "params" => $planilla_id
-            ));
-        }
-        //Limpieza del formulario.
-        $remitoForm = new RemitoForm();
-        $remitoForm->bind($_POST, $nuevoRemito);
-        $remitoForm->clear();
-
-        $this->db->commit();
-        $this->flash->success('Remito creado satisfactoriamente');
-        return $this->dispatcher->forward(array(
-            "controller" => "remito",
-            "action" => "nuevoRemito",
-            "params" => array($planilla_id)
-        ));
-    }
-    /***************************************************************************************************
-     * Permite buscar la planilla a la cual se le va agregar el remito, y se lo redirecciona al nuevoRemito.
-     */
-    public function nuevoRemitoPorPlanillaAction()
-    {
-        $this->importarSelect2();
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
-            array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
-                'useEmpty' => false,
-                'emptyText' => 'Seleccione una planilla',
-                'emptyValue' => '',
-                'class' => 'form-control autocompletar',
-                'style' => 'width:100%',
-                'required' => ''
-            ));
-    }
-    public function generarFormularioNuevoAction()
-    {
-
-        if(!$this->request->hasPost('remito_planillaId') || $this->request->getPost('remito_planillaId')==null){
-            $this->flash->error("Es necesario que seleccione una planilla");
-            $this->redireccionar('remito/nuevoRemitoPorPlanilla');
-        }
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId'));
-        $columnas = Columna::find(array(
-            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
-            'bind' => array('cabecera_id' => $planilla->getPlanillaCabeceraid())
-        ));
-
-        if (count($columnas) != 0) {
-            $this->view->columnaExtraForm = new ColumnaExtraForm(null, array('extra' => $columnas));
-        }
-        $this->view->remitoForm = new RemitoForm(null, array('required' => ''));
-        $this->view->clienteForm = new ClienteNewForm(null, array('required' => ''));
-        $this->view->planilla = $planilla;
-        $this->view->pick('remito/nuevoRemito');
-    }
-    /**
-     * Formulario de busqueda de remitos.
-     */
-    public function busquedaPersonalizadaAction()
-    {
-        $this->persistent->parameters = null;
-        //Las columnas extras se deberian generar cuando elige una planilla (ajax)
-        $this->view->remitoForm = new RemitoForm(null, array('required' => ''));
-        $this->view->clienteForm = new ClienteNewForm(null, array('required' => ''));
-    }
-
-
-
-    /**
-     * Encargado de recuperar los datos por post para generar un arreglo que pueda ser usado por Criteria.
-     * @param $datos
-     * @return array
-     */
-    private function generarCriterioBusqueda($datos)
-    {
-        $buscarRemitos = array();
-        $buscarRemitos['remito_planillaId'] = $this->request->get('remito_planillaId');
-        $buscarRemitos['remito_fecha'] = $this->request->get('remito_fecha');
-        $buscarRemitos['remito_remito'] = $this->request->get('remito_remito');
-        $buscarRemitos['remito_transporteId'] = $this->request->get('remito_transporteId');
-        $buscarRemitos['remito_tipoEquipoId'] = $this->request->get('remito_tipoEquipoId');
-        $buscarRemitos['remito_tipoCargaId'] = $this->request->get('remito_tipoCargaId');
-        $buscarRemitos['remito_choferId'] = $this->request->get('remito_choferId');
-        $buscarRemitos['remito_clienteId'] = $this->request->get('cliente_id');
-        $buscarRemitos['remito_frsId'] = $this->request->get('frs_id');
-        $buscarRemitos['remito_equipoPozoId'] = $this->request->get('equipoPozo_id');
-        $buscarRemitos['remito_centroCostoId'] = $this->request->get('centroCosto_id');
-        $buscarRemitos['remito_viajeId'] = $this->request->get('remito_viajeId');
-        $buscarRemitos['remito_concatenadoId'] = $this->request->get('remito_concatenadoId');
-        //Recupero la operadora_id y busco al cliente, y con el cliente puedo buscar las ordenes
-        if ($this->request->has('operadora_id') && $this->request->getPost("operadora_id") != '') {
-            $operadora = Operadora::findFirst(array(
-                "operadora_habilitado=1 AND operadora_id = :operadora_id:",
-                'bind' => array('operadora_id' => $this->request->getPost("operadora_id"))
-            ));
-            $buscarRemitos['remito_clienteId'] = $operadora->getOperadoraClienteId();
-        }
-        if ($this->request->has('linea_id') && $this->request->getPost("linea_id") != '') {
-            $linea = Linea::findFirst(array(
-                "linea_habilitado=1 AND linea_id = :linea_id:",
-                'bind' => array('linea_id' => $this->request->getPost("linea_id"))
-            ));
-            $buscarRemitos['remito_clienteId'] = $linea->getLineaClienteid();
-        }
-        if ($this->request->has('yacimiento_id') && $this->request->getPost("yacimiento_id") != '') {
-            $yacimiento = Yacimiento::findFirst(array(
-                "yacimiento_habilitado=1 AND yacimiento_id = :yacimiento_id:",
-                'bind' => array('yacimiento_id' => $this->request->getPost("yacimiento_id"))
-            ));
-            $operadora = Operadora::findFirst(array(
-                "operadora_habilitado=1 AND operadora_id = :operadora_id:",
-                'bind' => array('operadora_id' => $yacimiento->getYacimientoOperadoraId())
-            ));
-            if ($operadora)
-                $buscarRemitos['remito_clienteId'] = $operadora->getOperadoraClienteId();
-        }
-        return $buscarRemitos;
-    }
-
-
-    /**
-     * Proviene de << nuevoRemitoPorPlanillaAction >>
-     * Selecciona la planilla a la cual se le agregará el nuevo remito.
-     * Utiliza Select2
+     * Genera un formulario para guardar un nuevo remito.
      */
     public function nuevoAction()
     {
@@ -812,6 +437,8 @@ class RemitoController extends ControllerBase
     }
 
     /**
+     * OK: Guarda los datos de un remito en la bd
+     * usado por nuevoAction
      * @return bool
      */
     public function guardarNuevoAction()
@@ -965,4 +592,26 @@ class RemitoController extends ControllerBase
             "params" => array($planilla_id)
         ));
     }
+
+
+    /***************************************************************************************************
+     * Permite buscar la planilla a la cual se le va agregar el remito, y se lo redirecciona al nuevoRemito.
+     */
+    public function nuevoRemitoPorPlanillaAction()
+    {
+        $this->importarSelect2();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => false,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => ''
+            ));
+    }
+
 }
