@@ -156,7 +156,7 @@ class RemitoController extends ControllerBase
 
         }
         $data['problemas'] = $error;
-        echo json_encode(array('data' => $tabla,'bajon'=>$data));
+        echo json_encode(array('data' => $tabla,'errores'=>$data));
     }
     /**
      * =================================================================================================
@@ -223,20 +223,7 @@ class RemitoController extends ControllerBase
         $tabla = $this->generarTablaDeRemitosNuevo($remito);
         echo json_encode(array('data' => $tabla));
     }
-    /**
-     * =================================================================================================
-     *                  BUSCAR LOS REMITOS DE UNA PLANILLA POR GET
-     * =================================================================================================
-     */
-    /**
-     *      Busca todos los remitos de una planilla. La diferencia con el anterior, es que se puede realizar desde
-     * la tabla planilla. Se envia el planilla_id por GET.
-     */
-    public function verRemitosPorTablaAction($planilla_id)
-    {
-        $this->importarDataTables();
-        $this->view->planilla_id = $planilla_id;
-    }
+
     /**
      * =================================================================================================
      *                  METODO PRIVADO PARA PASAR DE UN MODELO A ARRAY CON FK
@@ -254,7 +241,6 @@ class RemitoController extends ControllerBase
         foreach ($remitos as $unRemito) {
             $fila = array();
             $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
-
             /*================ Planilla ================*/
 
             $fila['planilla_nombreCliente'] = $planilla->getPlanillaNombreCliente();
@@ -399,67 +385,6 @@ class RemitoController extends ControllerBase
         }
     }
 
-    /**
-     * Creates a new remito
-     * X
-     */
-    public function createAction()
-    {
-
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "index"
-            ));
-        }
-
-        $remito = new Remito();
-
-        $remito->setRemitoNro($this->request->getPost("remito_nro"));
-        $remito->setRemitoPlanillaid($this->request->getPost("remito_planillaId"));
-        $remito->setRemitoPeriodo($this->request->getPost("remito_periodo"));
-        $remito->setRemitoTransporteid($this->request->getPost("remito_transporteId"));
-        $remito->setRemitoTipoequipoid($this->request->getPost("remito_tipoEquipoId"));
-        $remito->setRemitoTipocargaid($this->request->getPost("remito_tipoCargaId"));
-        $remito->setRemitoChoferid($this->request->getPost("remito_choferId"));
-        $remito->setRemitoViajeid($this->request->getPost("remito_viajeId"));
-        $remito->setRemitoConcatenadoid($this->request->getPost("remito_concatenadoId"));
-        $remito->setRemitoTarifaid($this->request->getPost("remito_tarifaId"));
-        $remito->setRemitoContenidoextraid($this->request->getPost("remito_contenidoExtraId"));
-        $remito->setRemitoClienteid($this->request->getPost("remito_clienteId"));
-        $remito->setRemitoCentrocostoid($this->request->getPost("remito_centroCostoId"));
-        $remito->setRemitoEquipopozoid($this->request->getPost("remito_equipoPozoId"));
-        $remito->setRemitoOperadoraid($this->request->getPost("remito_operadoraId"));
-        $remito->setRemitoObservacion($this->request->getPost("remito_observacion"));
-        $remito->setRemitoPdf($this->request->getPost("remito_pdf"));
-        $remito->setRemitoFecha($this->request->getPost("remito_fecha"));
-        $remito->setRemitoFechacreacion($this->request->getPost("remito_fechaCreacion"));
-        $remito->setRemitoConformidad($this->request->getPost("remito_conformidad"));
-        $remito->setRemitoNoconformidad($this->request->getPost("remito_noConformidad"));
-        $remito->setRemitoCreadopor($this->request->getPost("remito_creadoPor"));
-        $remito->setRemitoHabilitado($this->request->getPost("remito_habilitado"));
-        $remito->setRemitoUltima($this->request->getPost("remito_ultima"));
-
-
-        if (!$remito->save()) {
-            foreach ($remito->getMessages() as $message) {
-                $this->flash->error($message);
-            }
-
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "new"
-            ));
-        }
-
-        $this->flash->success("remito was created successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "remito",
-            "action" => "index"
-        ));
-
-    }
 
     /**
      * Saves a remito edited
@@ -945,7 +870,6 @@ class RemitoController extends ControllerBase
         $nuevoRemito->setRemitoNro($this->request->getPost('remito_nro'));
         $nuevoRemito->setRemitoPeriodo(date('m', date(strtotime(date($this->request->getPost("remito_fecha"))))));
         $tipo =$this->request->getPost('remito_tipo');
-        echo "EL TIPO " . $tipo;
         if($tipo !=  $planilla->getPlanillaTipo())
         {
             $this->flash->error($tipo . " - ".$planilla->getPlanillaTipo()."El remito no coincide con el tipo de planilla, verifique que sean del mismo tipo");
@@ -966,7 +890,7 @@ class RemitoController extends ControllerBase
         $nuevoRemito->setRemitoTipoCargaId($this->request->getPost('remito_tipoCargaId'));
         $nuevoRemito->setRemitoChoferId($this->request->getPost('remito_choferId'));
         /* ==================== ==================== ==================== ==================== */
-        $nuevoRemito->setRemitoClienteId($this->request->getPost('cliente_id'));
+        $nuevoRemito->setRemitoClienteId($planilla->getPlanillaClienteId());
         $nuevoRemito->setRemitoCentroCostoId($this->request->getPost('centroCosto_id'));
         $nuevoRemito->setRemitoEquipoPozoId($this->request->getPost('equipoPozo_id'));
         $nuevoRemito->setRemitoOperadoraId($this->request->getPost('operadora_id'));
