@@ -27,17 +27,17 @@ class RemitoForm  extends Form
         /*======================= ID ==============================*/
         if (!isset($options['edit'])) {
             $element = new Text("remito_id");
-            $this->add($element->setLabel("ID Remito"));
+            $this->add($element->setLabel("ID"));
         } else {
             $this->add(new Hidden("remito_id"));
         }
         /*=========================== REMITO SYA =====================================*/
         $periodo = new Numeric("remito_nro",array(
             'class'=>'form-control',
-            'placeholder'=>'Ingrese un valor númerico',
+            'placeholder'=>'INGRESAR VALOR NÚMERICO',
             $required['clave']=>$required['valor']
         ));
-        $periodo->setLabel("Remito Sya");
+        $periodo->setLabel("REMITO SYA");
         $periodo->setFilters(array('int'));
         $periodo->addValidators(array(
             new PresenceOf(array(
@@ -48,68 +48,68 @@ class RemitoForm  extends Form
         /*=========================== TRANSPORTE =====================================*/
         $transporte = new DataListElement('transporte_dominio',
             array(
-                array('placeholder' => 'Seleccione el Dominio', 'class'=>'form-control', 'maxlength' => 11,$required['clave']=>$required['valor']),
+                array('placeholder' => 'SELECCIONAR LA PATENTE', 'class'=>'form-control', 'maxlength' => 11,$required['clave']=>$required['valor']),
                 Transporte::find(array('transporte_habilitado=1','order'=>'transporte_dominio')),
                 array('transporte_id', 'transporte_dominio'),
                 'remito_transporteId'
             ));
-        $transporte->setLabel('Dominio');
+        $transporte->setLabel('TRANSPORTE');
         $this->add($transporte);
         /*=========================== TIPO DE EQUIPO =====================================*/
         $elemento = new DataListElement('tipoEquipo_nombre',
             array(
-                array('placeholder' => 'Seleccione el Equipo', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
+                array('placeholder' => 'SELECCIONAR EL NOMBRE', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 Tipoequipo::find(array('tipoEquipo_habilitado=1','order'=>'tipoEquipo_nombre')),
                 array('tipoEquipo_id', 'tipoEquipo_nombre'),
                 'remito_tipoEquipoId'
             ));
-        $elemento->setLabel('Tipo de Equipo');
+        $elemento->setLabel('TIPO DE EQUIPO');
         $this->add($elemento);
         /*=========================== TIPO DE CARGA =====================================*/
         $elemento = new DataListElement('tipoCarga_nombre',
             array(
-                array('placeholder' => 'Seleccione el Tipo de Carga', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
+                array('placeholder' => 'SELECCIONAR EL NOMBRE', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 Tipocarga::find(array('tipoCarga_habilitado=1','order'=>'tipoCarga_nombre')),
                 array('tipoCarga_id', 'tipoCarga_nombre'),
                 'remito_tipoCargaId'
             ));
-        $elemento->setLabel('Tipo de Carga');
+        $elemento->setLabel('TIPO DE CARGA');
         $this->add($elemento);
         /*=========================== CHOFER =====================================*/
         $elemento = new DataListElement('chofer_dni',
             array(
-                array('placeholder' => 'Seleccione el Chofer', 'class'=>'form-control',
+                array('placeholder' => 'SELECCIONAR EL DNI', 'class'=>'form-control',
                     'maxlength' => 50,$required['clave']=>$required['valor']),
                 Chofer::find(array('chofer_habilitado=1','order'=>'chofer_nombreCompleto')),
                 array('chofer_id', 'chofer_dni'),
                 'remito_choferId'
             ));
-        $elemento->setLabel('Dni del Chofer');
+        $elemento->setLabel('CHOFER');
         $this->add($elemento);
         /*=========================== VIAJE =====================================*/
         $viaje=Viaje::find(array('viaje_habilitado=1','order'=>array('viaje_origen')));
         $elemento = new DataListElement('viaje_origen',
             array(
-                array('placeholder' => 'Seleccione el Origen', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
+                array('placeholder' => 'SELECCIONAR EL ORIGEN', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
                 $viaje,
                 array('viaje_id', 'viaje_origen'),
                 'remito_viajeId'
             ));
-        $elemento->setLabel('Origen');
+        $elemento->setLabel('VIAJE');
         $this->add($elemento);
         /*=========================== CONCATENADO =====================================*/
         $elemento = new DataListElement('concatenado_nombre',
             array(
-                array('placeholder' => 'Seleccione el Concatenado', 'class'=>'form-control', 'maxlength' => 60,$required['clave']=>$required['valor']),
+                array('placeholder' => 'SELECCIONAR EL NOMBRE', 'class'=>'form-control', 'maxlength' => 60,$required['clave']=>$required['valor']),
                 Concatenado::find(array('concatenado_habilitado=1','order'=>'concatenado_nombre')),
                 array('concatenado_id', 'concatenado_nombre'),
                 'remito_concatenadoId'
             ));
-        $elemento->setLabel('Concatenado');
+        $elemento->setLabel('CONCATENADO');
         $this->add($elemento);
         /*=========================== FECHA =====================================*/
         $fecha = new Date("remito_fecha",array( 'class'=>'form-control',$required['clave']=>$required['valor']));
-        $fecha->setLabel("Fecha");
+        $fecha->setLabel("FECHA");
         $fecha->addValidators(array(
             new PresenceOf(array(
                 'message' => 'La fecha es Requerida'
@@ -119,7 +119,7 @@ class RemitoForm  extends Form
         /*=========================== TARIFA =====================================*/
         $elemento = new TypeElement("tarifa_horaInicial",array('type'=>'time', 'class'=>'form-control',$required['clave']=>$required['valor']
         ));
-        $elemento->setLabel("Hora Inicial");
+        $elemento->setLabel("HORA INICIAL");
         $elemento->addValidators(array(
             new PresenceOf(array(
                 'message' => 'La Hora Inicial es requerida'
@@ -128,66 +128,48 @@ class RemitoForm  extends Form
         $this->add($elemento);
         $elemento = new TypeElement("tarifa_horaFinal",array('type'=>'time', 'class'=>'form-control',$required['clave']=>$required['valor']
         ));
-        $elemento->setLabel("Hora Final");
+        $elemento->setLabel("HORA FINAL");
         $elemento->addValidators(array(
             new PresenceOf(array(
                 'message' => 'La Hora Final es requerida'
             ))
         ));
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsServicio',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
+        $elemento = new Numeric('tarifa_hsServicio',array('placeholder'=>'INGRESAR VALOR NÚMERICO', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
-        $elemento->setLabel("Horas de Servicio");
+        $elemento->setLabel("HORAS DE SERVICIO");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsHidro',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
+        $elemento = new Numeric('tarifa_hsHidro',array('placeholder'=>'INGRESAR VALOR NÚMERICO', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
-        $elemento->setLabel("Horas de Hidro");
+        $elemento->setLabel("HORAS DE HIDRO");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsMalacate',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
+        $elemento = new Numeric('tarifa_hsMalacate',array('placeholder'=>'INGRESAR VALOR NÚMERICO', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
-        $elemento->setLabel("Horas de Malacate");
+        $elemento->setLabel("HORAS DE MALACATE");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_hsStand',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
+        $elemento = new Numeric('tarifa_hsStand',array('placeholder'=>'INGRESAR VALOR NÚMERICO', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
-        $elemento->setLabel("Horas Stand");
+        $elemento->setLabel("HORAS DE ESPERA");
         $this->add($elemento);
-        $elemento = new Numeric('tarifa_km',array('placeholder'=>'Ingresar valor númerico', 'class'=>'form-control','min'=>0));
+        $elemento = new Numeric('tarifa_km',array('placeholder'=>'INGRESAR VALOR NÚMERICO', 'class'=>'form-control','min'=>0));
         $elemento->setFilters(array('float'));
-        $elemento->setLabel("Kilometros");
-        $this->add($elemento);
-        /*=========================== COLUMNA EXTRA =====================================*/
-        //El id de este elemento se agrega a contenidoExtra
-        //Las Columnas Extras deberian ser agregadas despues de crear la orden, para poder agregar las columnas extras que se quieran.
-        /*
-        $elemento = new DataListElement('columnaExtra_nombre',
-            array(
-                array('placeholder' => 'Titulo de la Columna', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']),
-                Columnaextra::find(array('columnaExtra_habilitado=1','order'=>'columnaExtra_nombre')),
-                array('columnaExtra_id', 'columnaExtra_nombre'),
-                'columnaExtra_id'
-            ));
-        $elemento->setLabel('Titulo de la Columna Extra');
-        $this->add($elemento);
-        /*=========================== CONTENIDO EXTRA =====================================*/
-        //El id de este elemento se agrega a contenidoExtra
-        /*$elemento = new Text('contenidoExtra_descripcion',
-                array('placeholder' => 'Titulo de la Columna', 'class'=>'form-control', 'maxlength' => 50,$required['clave']=>$required['valor']));
-        $elemento->setLabel('Concatenado');
+        $elemento->setLabel("KILOMETROS");
         $this->add($elemento);
         /*=========================== OBSERVACION =====================================*/
         $elemento = new \Phalcon\Forms\Element\TextArea('remito_observacion',
-            array('placeholder' => 'Escribir ...', 'class'=>'form-control', 'maxlength' => 150));
-        $elemento->setLabel('Observación');
+            array('placeholder' => 'ESCRIBIR...', 'class'=>'form-control', 'maxlength' => 150));
+        $elemento->setLabel('OBSERVACIÓN');
         $this->add($elemento);
         /*=========================== ORDEN DE CONFORMIDAD =====================================*/
         $elemento = new Text('remito_conformidad',
             array('placeholder' => '', 'class'=>'form-control', 'maxlength' => 50));
-        $elemento->setLabel('Conformidad RE');
+        $elemento->setLabel('CONFORMIDAD RE');
         $this->add($elemento);
         /*=========================== ORDEN DE NO CONFORMIDAD =====================================*/
         $elemento = new Text('remito_noConformidad',
             array('placeholder' => '', 'class'=>'form-control', 'maxlength' => 50));
-        $elemento->setLabel('Mot no Conformidad RE');
+        $elemento->setLabel('MOT NO CONF RE');
         $this->add($elemento);
+
     }
 }

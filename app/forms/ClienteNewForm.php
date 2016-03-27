@@ -47,47 +47,28 @@ class ClienteNewForm  extends \Phalcon\Forms\Form
         } else {
             $this->add(new Hidden("cliente_id"));
         }
-        /*======================= Obtener todos los Clientes ==============================*/
 
-        $elemento = new DataListElement('cliente_nombre',
-            array(
-                array('placeholder' => 'SELECCIONE EL CLIENTE',$required['clave']=>$required['valor'], 'class'=>'form-control', 'maxlength' => 60),
-                Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre')),
-                array('cliente_id', 'cliente_nombre'),
-                'cliente_id'
-            ));
-        $elemento->setLabel('Nombre');
-        $this->add($elemento);
+        if($entity!=null)
+        {
+            /*=========================== LINEAS =====================================*/
+            $elemento = new DataListElement('linea_nombre',
+                array(
+                    array(
+                    'class' => 'form-control','placeholder'=>"SELECCIONE EL NOMBRE",'maxlength'=>50,
+                    $required['clave']=>$required['valor'],'tabindex'=>'7'
+                    ),
+                    Linea::find(array('linea_habilitado=1 AND linea_clienteId =:cliente_id:','bind'=>array('cliente_id'=>$entity->getClienteId()),'order'=>'linea_nombre')),
+                    array('linea_id', 'linea_nombre'),
+                    'linea_id'
+                )
+            );
+            $elemento->setLabel('Linea');
+            $this->add($elemento);
 
-        /*======================= Obtener todos las Lineas por Cliente ==============================*/
-
-        $listaLinea = new DataListElement('linea_nombre',
-            array(
-                array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control'),
-                NULL,
-                array('linea_id', 'linea_nombre'),
-                'linea_id'
-            ));
-        $listaLinea->setLabel('Linea');
-        $this->add($listaLinea);
-
-        /********************** Script Para unir el Cliente y sus Lineas. *********************/
-
-        $script = new DataListScript('script_cliente_linea',
-            array(
-                'url'               =>'/sya/linea/buscarLineas',
-                'id_principal'      =>'cliente_nombre',
-                'id_hidden_ppal'    =>'cliente_id',
-                'id_dependiente'    =>'linea_nombre',
-                'columnas'          =>  array('linea_id','linea_nombre')
-            )
-        );
-        $script->setLabel("Script Cliente Linea");
-        $this->add($script);
         /*======================= Obtener todos los CC por Linea ==============================*/
         $listaCentroCosto = new DataListElement('centroCosto_codigo',
             array(
-                array('placeholder' => 'SELECCIONE UNA LINEA', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
+                array('placeholder' => 'PRIMERO SELECCIONE LA LINEA', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('centroCosto_id', 'centroCosto_codigo'),
                 'centroCosto_id'
@@ -109,7 +90,7 @@ class ClienteNewForm  extends \Phalcon\Forms\Form
         /*======================= Obtener todos los Yacimientos==============================*/
         $elemento = new DataListElement('yacimiento_destino',
             array(
-                array('placeholder' => 'SELECCIONAR', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
+                array('placeholder' => 'SELECCIONAR EL DESTINO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 Yacimiento::find(array('yacimiento_habilitado=1','order'=>'yacimiento_destino')),
                 array('yacimiento_id', 'yacimiento_destino'),
                 'yacimiento_id'
@@ -119,7 +100,7 @@ class ClienteNewForm  extends \Phalcon\Forms\Form
         /*======================= Obtener todos las Operadoras por Yacimiento ==============================*/
         $listaOperadoras = new DataListElement('operadora_nombre',
             array(
-                array('placeholder' => 'SELECCIONE LA OPERADORA', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
+                array('placeholder' => 'PRIMERO SELECCIONE EL YACIMIENTO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('operadora_id', 'operadora_nombre'),
                 'operadora_id'
@@ -141,7 +122,7 @@ class ClienteNewForm  extends \Phalcon\Forms\Form
         /*======================= Obtener todos los EP por Yacimiento ==============================*/
         $listaEquipoPozo = new DataListElement('equipoPozo_nombre',
             array(
-                array('placeholder' => 'SELECCIONE UN YACIMENTO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
+                array('placeholder' => 'PRIMERO SELECCIONE EL YACIMIENTO', 'maxlength' => 50, 'class'=>'form-control',$required['clave']=>$required['valor']),
                 null,
                 array('equipoPozo_id', 'equipoPozo_nombre'),
                 'equipoPozo_id'
@@ -161,6 +142,7 @@ class ClienteNewForm  extends \Phalcon\Forms\Form
         $script->setLabel(" ");
         $this->add($script);
 
+    }
     }
 
 }
