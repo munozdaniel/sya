@@ -48,61 +48,7 @@ class RemitoController extends ControllerBase
 
     }
 
-    /**
-     * =================================================================================================
-     *                          BUSQUEDA DE REMITOS SIN PDF
-     *
-     * =================================================================================================
-     */
-    public function searchRemitoSinPDFAction()
-    {
-        //SELECT2
-        $this->importarSelect2();
-        //DATATABLES
-        $this->importarDataTables();
-        //Posiciones:
-        $columnas = $this->recuperarPosiciones(27);
-        //Vistas
-        $this->view->columnas = $columnas;
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
-            array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
-                'useEmpty' => false,
-                'emptyText' => 'Seleccione una planilla',
-                'emptyValue' => '',
-                'class' => 'form-control autocompletar',
-                'style' => 'width:100%',
-                'required' => '',
-                'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
-            ));
 
-    }
-
-    public function buscarSinRemitoEscaneadoAction()
-    {
-        $this->view->disable();
-        /*=================*/
-        if ($this->request->getPost('remito_planillaId') == null)
-            $error[] = "No se encontró la planilla";
-
-        /*====================*/
-        if (!empty($retorno)) {
-            $query = Criteria::fromInput($this->di, "Remito", $retorno);
-            $this->persistent->parameters = $query->getParams();
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "remito_id";
-        $remito = Remito::find(array('remito_planillaId = :planilla_id: AND remito_pdf IS NULL',
-            'bind' => array('planilla_id' => $this->request->getPost('remito_planillaId'))));
-        $tabla = $this->generarTablaDeRemitosNuevo($remito);
-        echo json_encode(array('data' => $tabla));
-    }
     /**
      * =================================================================================================
      *                          BUSQUEDA DE REMITOS POR PLANILLA
@@ -147,6 +93,60 @@ class RemitoController extends ControllerBase
             $error[] = "No se encontró la planilla";
 
         $remito = Remito::find(array('remito_habilitado = 1 AND remito_planillaId =:planilla_id:',
+            'bind' => array('planilla_id' => $this->request->getPost('remito_planillaId')),
+            'order by' => 'remito_nroOrden ASC'));
+        if (count($remito) != 0)
+            $tabla = $this->generarTablaDeRemitosNuevo($remito, 'extra');
+        else {
+            $error [] = "NO SE ENCONTRARON REMITOS";
+
+        }
+        $data['problemas'] = $error;
+        echo json_encode(array('data' => $tabla,'errores'=>$data));
+    }
+    /**
+     * =================================================================================================
+     *                          BUSQUEDA DE REMITOS POR PLANILLA
+     * =================================================================================================
+     */
+    /**
+     * @return bool
+     */
+    public function buscarRemitoPorPlanillaSinPDFAction()
+    {
+        //SELECT2
+        $this->importarSelect2();
+        //DATATABLES
+        $this->importarDataTables();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => false,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => '',
+                'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
+            ));
+    }
+    /**
+     * Se encarga de buscar todos los remitos segun la planilla_id enviada por post.
+     * Muestra las columnas extras.
+     */
+    public function buscarRemitosPorPlanillaIdAjaxSinRemitoAction()
+    {
+        $this->view->disable();
+        $remito = null;
+        $error = array();
+        $data = array();
+        $tabla = array();
+        if ($this->request->getPost('remito_planillaId') == null)
+            $error[] = "No se encontró la planilla";
+
+        $remito = Remito::find(array('remito_habilitado = 1 AND remito_planillaId =:planilla_id: AND remito_pdf IS NULL',
             'bind' => array('planilla_id' => $this->request->getPost('remito_planillaId')),
             'order by' => 'remito_nroOrden ASC'));
         if (count($remito) != 0)
