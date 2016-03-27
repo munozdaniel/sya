@@ -276,7 +276,7 @@
         });
         //Evento al finalizar la carga de la tabla
         $('#example').on( 'draw.dt', function () {
-           $("#load").toggle();
+           $("#load").hide();
         } );
         /** =========================== FIN: DATATABLE =================================*/
         e.preventDefault(); // avoid to execute the actual submit of the form.
