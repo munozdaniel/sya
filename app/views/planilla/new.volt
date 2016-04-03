@@ -28,19 +28,9 @@
         <div id="pnl_cabecera"  class="col-xs-12 col-md-12">
             {{ partial('planilla/parcial/cabecera') }}
         </div>
-        <!-- ================================================================================= -->
-        <div class="col-xs-12 col-md-12">
-            <hr>
-        </div>
-        <!-- ================================================================================= -->
-        <div id="id_nuevaCabecera">
-            <div id="pnl_extra" class="col-xs-12 col-md-12">
-               {{ partial('planilla/parcial/extra') }}
-            </div>
 
-        </div>
         <!-- ================================================================================= -->
-        <div id="id_cabeceraExistente" class="col-xs-12 col-md-12 ocultar">
+        <div id="pnl_seleccion" class="col-xs-12 col-md-12">
             {{ partial('planilla/parcial/seleccion') }}
         </div>
     </div>

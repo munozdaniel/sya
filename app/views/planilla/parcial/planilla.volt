@@ -60,8 +60,7 @@
     $(document).ready(function () {
         //Escondemos
         $('#pnl_cabecera').hide();
-        $('#pnl_extra').hide();
-        $('#pnl_ordenar').hide();
+        $('#pnl_seleccion').hide();
 
         // PROCESANDO el formulario
         $('#form_planilla').submit(function (event) {

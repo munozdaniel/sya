@@ -78,7 +78,7 @@ class PlanillaController extends ControllerBase
      */
     public function newAction()
     {
-
+        $this->importarSelect2();
         $this->assets->collection('headerJs')
             ->addJs('plugins/jQueryUI/jquery-ui.min.js');
         $this->assets->collection('headerCss')
@@ -293,37 +293,7 @@ class PlanillaController extends ControllerBase
     }
 
 
-    public function guardarCabeceraPredefinidaAction()
-    {
-        $this->view->disable();
-        $data = array();
-        $retorno = array();
-        if ($this->request->isPost()) {
-            $data['success'] = false;
-            $retorno[] = "Ocurrio un problema, la URL solicitada no existe.";
 
-        }
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id', 'int'));
-        if (!$planilla) {
-            $data['success'] = false;
-            $retorno[] = "La planilla no ha sido encontrada.";
-        } else {
-            $planilla->setPlanillaCabeceraid($this->request->getPost('cabecera_id'));
-            $planilla->setPlanillaArmada(1);
-            if (!$planilla->update()) {
-                $data['success'] = false;
-                foreach ($planilla->getMessages() as $mje) {
-                    $retorno[] = $mje;
-                }
-            } else {
-                $data['success'] = true;
-            }
-        }
-        $data['mensaje'] = $retorno;
-        echo json_encode($data);
-
-
-    }
 
 
     /**

@@ -176,6 +176,7 @@ class CabeceraController extends ControllerBase
     /**
      * COn el nombre del cliente obtenido del comboBox, recupero todos las planillas con un LIKE %%
      * A partir de todas las planillas obtengo todos las cabeceras_id
+     * Busco todas las cabeceras que contengan el nombre del cliente (LIKE % nombreCliente%)
      */
     public function todasLasCabecerasAction()
     {
@@ -184,37 +185,69 @@ class CabeceraController extends ControllerBase
         $data['success']=false;
 
         if($this->request->isPost()){
-            $planillas = Planilla::find(
-                array('conditions'=>"planilla_habilitado =1  AND planilla_nombreCliente LIKE :nombreCliente:",
-                    'bind'=>array('nombreCliente'=>"%".$this->request->getPost('cliente_nombre','string')."%")));
-            $data['planilla'] = count($planillas);
-            if(!$planillas)
+            $cabeceras = Cabecera::find(array('cabecera_habilitado=1 AND cabecera_nombre LIKE :cliente_nombre:',
+                'bind'=>array('cliente_nombre'=>"%".$this->request->getPost('cliente_nombre','string')."%")));
+            if(!$cabeceras)
             {
-                $data['mensaje'] = array("NO SE ENCONTRARON CABECERAS CARGADAS " );
-            }
-            $retorno = array();
-            foreach($planillas as $planilla)
-            {
-                if($planilla->getPlanillaCabeceraId()!=null){
-                    $item = array();
-                    $item['cabecera_id']=$planilla->getPlanillaCabeceraId();
-                    $item['nombreCliente']=$planilla->getPlanillaNombreCliente();
-                    $retorno[]=$item;
-                }
-            }
-            if(count($retorno)>0)
-            {
-                $data['success']=true;
-                $data['cabeceras']=$retorno;
+                $data['mensaje'] = array("No se encontraron cabeceras cargadas en el sistema para el cliente:  ".$this->request->getPost('cliente_nombre'));
             }else{
-                $data['mensaje'] = array("HUBO UN PROBLEMA, NO SE ENCONTRARON CABECERAS CARGADAS - ".$this->request->getPost('cliente_nombre'));
+                $lista = array();
+                foreach ($cabeceras as $cabecera) {
+                    $item = array();
+                    $item['cabecera_id']=$cabecera->getCabeceraId();
+                    $item['nombreCliente']=$cabecera->getCabeceraNombre();
+                    $lista[]=$item;
+                }
+                $data['success']=true;
+                $data['cabeceras']=$lista;
             }
-
             echo json_encode($data);
         }else{
             $data['mensaje']=array("PROBLEMAS CON LA URL");
-        echo json_encode($data);
+            echo json_encode($data);
         }
+    }
+
+    /**
+     * Guarda la cabecera que se elige en un combobox.
+     */
+    public function guardarCabeceraPredefinidaAction()
+    {
+        $this->view->disable();
+        $data = array();
+        $retorno = "";
+        if (!$this->request->isPost()) {
+            $data['success'] = false;
+            $data['mensaje'] = "Ocurrio un problema, la URL solicitada no existe.";
+            return json_encode($data);
+        }
+        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id', 'int'));
+        if (!$planilla) {
+            $data['success'] = false;
+            $data['mensaje'] = "Ocurrio un problema, la planilla no se encontró.";
+            return json_encode($data);
+        }
+        $planilla->setPlanillaCabeceraid($this->request->getPost('cabecera_id','int'));
+        $planilla->setPlanillaArmada(1);
+        if (!$planilla->update()) {
+            $data['success'] = false;
+            foreach ($planilla->getMessages() as $mje) {
+                $retorno  .= $mje ."<br>";
+            }
+            $data['mensaje']=$retorno;
+            return json_encode($data);
+        }
+        $data['success'] = true;
+        $data['mensaje'] = '<div class="help-block">'.
+            '<h4> Operación Exitosa, la planilla se encuentra configurada correctamente.</h4>' .
+            ' <br>' .
+            ' <ul class="list-unstyled ">Si desea personalizar la cabecera puede: ' .
+            '<li>'.$this->tag->linkTo('cabecera/reordenar','Reordenar las Columnas').'</li>' .
+            '<li>'.$this->tag->linkTo('cabecera/extra','Agregar Columnas Extras') .'</li>' .
+            '<li>'.$this->tag->linkTo('cabecera/extra','Habilitar/Eliminar Columnas') .'</li>' .
+            '</ul>' .
+            '<small>* Es necesario tener permisos de administrador.</small></div>';
+        echo json_encode($data);
     }
     /**
      * Crea una cabecera con las columnas basicas
