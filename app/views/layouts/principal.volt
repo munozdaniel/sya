@@ -84,11 +84,9 @@
                         <li>{{ link_to('planilla/search','<i class="fa fa-circle-o"></i>  Ver todas las Planillas') }}</li>
                         <li>{{ link_to('planilla/new','<i class="fa fa-circle-o"></i>  Nueva Planilla') }}</li>
                         <li>{{ link_to('planilla/index','<i class="fa fa-circle-o"></i>  Buscar Planilla') }}</li>
-                        <li>{{ link_to('cabecera/reordenar','<i class="fa fa-circle-o"></i>  Reordenar Planilla') }}</li>
-                        <li>{{ link_to('planilla/agregarExtra','<i class="fa fa-circle-o"></i>  Agregar Columna Extra') }}</li>
-                        <li>{{ link_to('columna/editar','<i class="fa fa-circle-o"></i>  Habilitar/Eliminar Columnas') }}</li>
                     </ul>
                 </li>
+
                 {#====== ITEM ARBOL =======#}
                 <li class="treeview">
                     <a href="#">
@@ -98,8 +96,7 @@
                     <ul class="treeview-menu">
                         <li>{{ link_to('remito/nuevoRemitoPorPlanilla','<i class="fa fa-circle-o"></i>  Nuevo Remito por Planilla') }}</li>
                         <li>{{ link_to('remito/buscarRemitoPorPlanilla','<i class="fa fa-circle-o"></i>  Buscar Remito por Planilla') }}</li>
-                        <li>{{ link_to('remito/searchDataTablePlanilla','<i class="fa fa-circle-o"></i>  Busqueda Personalizada') }}</li>
-                        <li>{{ link_to('remito/searchRemitoSinPDF','<i class="fa fa-circle-o"></i>  Ver Remitos sin PDF') }}</li>
+                        <li>{{ link_to('remito/buscarRemitoPorPlanillaSinPDF','<i class="fa fa-circle-o"></i>  Ver Remitos sin PDF') }}</li>
                         <li>{{ link_to('remito/search','<i class="fa fa-circle-o"></i>  Ver Todos los Remitos') }}</li>
                     </ul>
                 </li>
@@ -110,6 +107,18 @@
                 </li>
                 {#====== ITEM ARBOL =======#}
                 <li class="header">ADMINISTRADOR</li>
+                {#====== ITEM ARBOL =======#}
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-table"></i> <span>Columnas</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>{{ link_to('cabecera/reordenar','<i class="fa fa-circle-o"></i>  Reordenar Planilla') }}</li>
+                        <li>{{ link_to('columna/agregarExtra','<i class="fa fa-circle-o"></i>  Agregar Columna Extra') }}</li>
+                        <li>{{ link_to('columna/editar','<i class="fa fa-circle-o"></i>  Habilitar/Eliminar Columnas') }}</li>
+                    </ul>
+                </li>
                 <li class="treeview">
                     <a href="#">
                         <i class="fa  fa-user"></i>

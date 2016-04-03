@@ -20,7 +20,7 @@
                         {{ formulario.render() }}
                     </div>
                     <div class="form-group">
-                        {{ partial('planilla/parcial/extra') }}
+                        {{ partial('columna/parcial/extra') }}
                     </div>
                 </div>
             </div>
