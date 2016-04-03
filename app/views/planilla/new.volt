@@ -21,7 +21,8 @@
                     {# Genera alertas #}
                 </div>
             </div>
-        </div>        <div id="pnl_planilla" class="col-xs-12 col-md-12">
+        </div>
+        <div id="pnl_planilla" class="col-xs-12 col-md-12">
             {{ partial('planilla/parcial/planilla') }}
         </div>
         <div id="pnl_cabecera"  class="col-xs-12 col-md-12">
