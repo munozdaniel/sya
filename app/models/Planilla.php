@@ -32,11 +32,19 @@ class Planilla extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $planilla_cabeceraId;
+
+    /**
+     *
+     * @var string
+     */
+    protected $planilla_descripcion;
+
     /**
      *
      * @var integer
      */
-    protected $planilla_descripcion;
+    protected $planilla_habilitado;
+
     /**
      *
      * @var integer
@@ -47,8 +55,13 @@ class Planilla extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $planilla_habilitado;
+    protected $planilla_clienteId;
 
+    /**
+     *
+     * @var integer
+     */
+    protected $planilla_finalizada;
     /**
      * Method to set the value of field planilla_id
      *
@@ -115,6 +128,19 @@ class Planilla extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field planilla_descripcion
+     *
+     * @param string $planilla_descripcion
+     * @return $this
+     */
+    public function setPlanillaDescripcion($planilla_descripcion)
+    {
+        $this->planilla_descripcion = $planilla_descripcion;
+
+        return $this;
+    }
+
+    /**
      * Method to set the value of field planilla_habilitado
      *
      * @param integer $planilla_habilitado
@@ -126,15 +152,41 @@ class Planilla extends \Phalcon\Mvc\Model
 
         return $this;
     }
+
     /**
      * Method to set the value of field planilla_tipo
      *
-     * @param integer planilla_tipo
+     * @param integer $planilla_tipo
      * @return $this
      */
     public function setPlanillaTipo($planilla_tipo)
     {
         $this->planilla_tipo = $planilla_tipo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field planilla_clienteId
+     *
+     * @param integer $planilla_clienteId
+     * @return $this
+     */
+    public function setPlanillaClienteId($planilla_clienteId)
+    {
+        $this->planilla_clienteId = $planilla_clienteId;
+
+        return $this;
+    }
+    /**
+     * Method to set the value of field planilla_finalizada
+     *
+     * @param integer $planilla_clienteId
+     * @return $this
+     */
+    public function setPlanillaFinalizada($planilla_finalizada)
+    {
+        $this->planilla_finalizada = $planilla_finalizada;
 
         return $this;
     }
@@ -189,6 +241,16 @@ class Planilla extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field planilla_descripcion
+     *
+     * @return string
+     */
+    public function getPlanillaDescripcion()
+    {
+        return $this->planilla_descripcion;
+    }
+
+    /**
      * Returns the value of field planilla_habilitado
      *
      * @return integer
@@ -197,15 +259,7 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         return $this->planilla_habilitado;
     }
-    /**
-     * Returns the value of field planilla_descripcion
-     *
-     * @return integer
-     */
-    public function getPlanillaDescripcion()
-    {
-        return $this->planilla_descripcion;
-    }
+
     /**
      * Returns the value of field planilla_tipo
      *
@@ -215,9 +269,24 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         return $this->planilla_tipo;
     }
-    public function setPlanillaDescripcion($planilla_descripcion)
+
+    /**
+ * Returns the value of field planilla_clienteId
+ *
+ * @return integer
+ */
+    public function getPlanillaClienteId()
     {
-        $this->planilla_descripcion=$planilla_descripcion;
+        return $this->planilla_clienteId;
+    }
+    /**
+     * Returns the value of field planilla_clienteId
+     *
+     * @return integer
+     */
+    public function getPlanillaFinalizada()
+    {
+        return $this->planilla_finalizada;
     }
     /**
      * Initialize method for model.
@@ -226,6 +295,7 @@ class Planilla extends \Phalcon\Mvc\Model
     {
         $this->hasMany('planilla_id', 'Remito', 'remito_planillaId', array('alias' => 'Remito'));
         $this->belongsTo('planilla_cabeceraId', 'Cabecera', 'cabecera_id', array('alias' => 'Cabecera'));
+        $this->belongsTo('planilla_clienteId', 'Cliente', 'cliente_id', array('alias' => 'Cliente'));
     }
 
     /**
@@ -270,4 +340,5 @@ class Planilla extends \Phalcon\Mvc\Model
             return false;
         }
     }
+
 }

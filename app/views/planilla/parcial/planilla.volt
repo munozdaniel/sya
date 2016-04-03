@@ -1,59 +1,73 @@
-<div class="col-xs-12 col-md-6">
-    {{ form("planilla/crear","id":"form_planilla", "method":"post") }}
-        {{ hidden_field('planilla_id','value':'','form':'form_guardarCabeceraPredefinida') }}
-        <fieldset id="planilla" class="panel-border">
-            <legend>Generar Planilla</legend>
+{{ form("planilla/crear","id":"form_planilla", "method":"post",'class':'form-horizontal') }}
+    {{ hidden_field('planilla_id','value':'','form':'form_guardarCabeceraPredefinida') }}
+    <fieldset id="planilla" class="panel-border">
+        <legend>Generar Planilla</legend>
 
-            <div id="grupo_planilla" >
-                {# Genera alertas #}
-            </div>
 
-            <div class="form-group">
-                <strong>Fecha:</strong> {{ fechaActual }}
-                {{ hidden_field('fechaActual','value':fechaActual) }}
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="fechaActual">FECHA: </label>
+
+            <div class="col-sm-6">
+                {{ text_field('fechaActual','value':fechaActual,'readonly':'true','class':'form-control','style':'text-align: right !important; font-weight:bold;') }}
             </div>
-            <div class="form-group">
-                {#cliente_nombre#}
-                {{ selectCliente.label() }}
+        </div>
+        <div class="form-group">
+            {#cliente_nombre#}
+            {{ selectCliente.label({'class':'col-sm-2 control-label'}) }}
+            <div class="col-sm-6">
                 {{ selectCliente }}
             </div>
-            <!-- radio -->
-            <div class="form-group">
+        </div>
+        <!-- radio -->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
                 <div class="radio">
                     <label>
                         <input type="radio" name="tipo_planilla" id="id_planilla_registro"
-                               value="REGISTRO" checked>
-                        Planilla de Registro &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                               value="0" checked>
+                        Planilla de Registro Mensual
                     </label>
+                    <br>
                     <label>
-                        <input type="radio" name="tipo_planilla" id="id_planilla_oncall" value="ONCALL">
-                        Planilla On Call
+                        <input type="radio" name="tipo_planilla" id="id_planilla_oncall" value="1">
+                        Planilla On Call - 1er Quincena
+                    </label>
+                    <br>
+                    <label>
+                        <input type="radio" name="tipo_planilla" id="id_planilla_oncall" value="2">
+                        Planilla On Call - 2da Quincena
                     </label>
                 </div>
-                <hr>
-                <button id="btn_guardar_planilla" type="submit" class="btn btn-flat btn-lg btn-primary"><i
+            </div>
+            <hr>
+
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <button id="btn_guardar_planilla" type="submit" class="btn btn-flat btn-lg btn-primary btn-block"><i
                             class="fa fa-save"></i> Guardar Planilla
                 </button>
             </div>
-            {#======================================================================================#}
-        </fieldset>
-    {{ end_form() }}
-</div>
+        </div>
+        {#======================================================================================#}
+    </fieldset>
+{{ end_form() }}
 <script>
     /**
      * Realiza una llamada ajax para guardar los datos, luego, permite habilitar los botones para
      * seleccionar el el radio button para la cabecera.
      */
     $(document).ready(function () {
+        //Escondemos
         $('#pnl_cabecera').hide();
         $('#pnl_extra').hide();
         $('#pnl_ordenar').hide();
 
         // PROCESANDO el formulario
         $('#form_planilla').submit(function (event) {
-            $('.help-block').remove(); // remove the error text
+            $('.help-block').remove(); // Limpieza de los mensajes de alerta.
             var values = [];
-            $.each($("input[name='tipo_planilla']:checked"), function() {
+            $.each($("input[name='tipo_planilla']:checked"), function () {
                 values.push($(this).val());
             });
 
@@ -71,114 +85,28 @@
                 dataType: 'json', // what type of data do we expect back from the server
                 encode: true
             })
-                // using the done promise callback
                     .done(function (data) {
-
-                        // log data to the console so we can see
-                        console.log(data);
+                        //console.log(data);
                         if (!data.success) {
                             for (var item in data.mensaje) {
                                 var elemento = data.mensaje[item];
-                                $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + elemento + '</div>'); // add the actual error message under our input
+                                $('#mensajes-alertas').append('<div class="help-block  alert-danger"><h4><i class="fa fa-exclamation-triangle"></i> ' + elemento + '</h4></div>'); // add the actual error message under our input
                             }
                         } else {
                             // here we will handle errors and validation messages
                             $('#btn_guardar_planilla').prop('disabled', true);//Dehsabilitar boton guardar planilla
-                            //$('#pnl_seleccionar').prop('disabled', false);//Habilitar div para seleccionar radio buttons
-                            $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
+                            $('#mensajes-alertas').append('<div class="help-block  alert-success"><h4>Operación Exitosa, la planilla se ha generado correctamente. </h4><h4> Por favor seleccione la cabecera a utilizar.</h4></div>');
                             document.getElementById('planilla_id').value = data.planilla_id;
-                            $('#pnl_cabecera').show();//Habilitar boton editar planilla
-
+                            $('#pnl_planilla').hide(1000);
+                            $('#pnl_cabecera').show(1000);
                         }
                     })
-                // using the fail promise callback
                     .fail(function (data) {
-                        // show any errors
-                        // best to remove for production
                         console.log(data);
                     });
-
-            // stop the form from submitting the normal way and refreshing the page
             event.preventDefault();
         });
 
     });//Fin: ready
 </script>
-{{ partial('planilla/parcial/cabecera') }}
-<script>
 
-    /**
-     * Una vez guardado los datos, es posible editarlos.
-     */
-    function editarPlanilla() {
-        $('.help-block').remove(); // remove the error text
-
-        //PREPARANDO los datos para enviar
-        var datos = {
-            'planilla_nombreCliente': $('#planilla_nombreCliente').val(),
-            'planilla_id': $('#planilla_id').val()
-        };
-
-        $.ajax({
-            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-            url: '/sya/planilla/editar', // the url where we want to POST
-            data: datos, // our data object
-            dataType: 'json', // what type of data do we expect back from the server
-            encode: true
-        })
-            // using the done promise callback
-                .done(function (data) {
-
-                    // log data to the console so we can see
-                    console.log(data);
-                    if (!data.success) {
-                        if (data.errors.planilla_nombreCliente) {
-                            $('#grupo_planilla').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> ' + data.errors.planilla_nombreCliente + '</div>'); // add the actual error message under our input
-                        }
-                    } else {
-                        $('#grupo_planilla').append('<div class="help-block  alert-success">&nbsp; Operación Exitosa</div>');
-                    }
-                })
-            // using the fail promise callback
-                .fail(function (data) {
-                    // show any errors
-                    // best to remove for production
-                    console.log(data);
-                });
-
-        // stop the form from submitting the normal way and refreshing the page
-        event.preventDefault();
-    }
-
-    /*Cuando cambian los radio buttons, habilita un panel o el otro.*/
-    /*$('input[type=radio][name=opciones]').change(function() {
-        if(this.value == 0){
-            $("#id_cabeceraExistente").show();
-            $("#id_nuevaCabecera").hide();
-           *//* $.ajax({
-                type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                url: '/sya/cabecera/cargarCabecera', // the url where we want to POST
-                dataType: 'json', // what type of data do we expect back from the server
-                encode: true
-            })
-                    .done(function (data) {
-                        if (data.success)
-                            llenarComboBoxCabecera(data.mensaje);
-                        //FIXME: Que pasa si  no encuentra cabeceras ???
-                        console.log(data);
-                    })
-                    .fail(function (data) {
-                        // show any errors
-                        // best to remove for production
-                        console.log("FAIL");
-                        console.log(data);
-                    });*//*
-        }else{
-            $("#id_cabeceraExistente").hide();
-            $("#id_nuevaCabecera").show();
-
-        }
-    });
-
-    */
-</script>

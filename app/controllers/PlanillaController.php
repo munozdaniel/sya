@@ -74,7 +74,7 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Displays the creation form
+     * Muestra un formulario para crear una planilla.
      */
     public function newAction()
     {
@@ -87,7 +87,7 @@ class PlanillaController extends ControllerBase
         $this->view->fechaActual = date('m/Y');
         $elemento = new DataListElement('cliente_nombre',
             array(
-                array('placeholder' => 'Seleccionar Cliente', 'required' => '', 'class' => 'form-control', 'maxlength' => 60),
+                array('placeholder' => 'SELECCIONAR CLIENTE', 'required' => '', 'class' => 'form-control', 'maxlength' => 60),
                 Cliente::find(array('cliente_habilitado=1', 'order' => 'cliente_nombre')),
                 array('cliente_id', 'cliente_nombre'),
                 'cliente_id'
@@ -95,6 +95,63 @@ class PlanillaController extends ControllerBase
         $elemento->setLabel('Nombre del Cliente');
 
         $this->view->selectCliente = $elemento;
+    }
+
+    /**
+     * PASO 1_
+     * Permite guardar una nueva planilla utilizando ajax. [PLANILLA TIPO CLIENTE FECHA]
+     * Devuelve un json con los mensajes, y con el id de la planilla creada.
+     * Carga el combobox con las cabeceras predefinidas
+     */
+    public function crearAction()
+    {
+        $this->view->disable();
+        $errors = array();      // array to hold validation errors
+        $data = array();      // array to pass back data
+        if (empty($_POST['fechaActual']))
+            $errors['fechaActual'] = 'La fecha actual es requerida';
+        if (empty($_POST['tipo_planilla']))
+            $errors['tipo_planilla'] = 'El tipo de planilla es requerido';
+        if (empty($_POST['cliente_nombre']))
+            $errors['cliente_nombre'] = 'El nombre del cliente es requerido';
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['mensaje'] = $errors;
+        } else {
+            $this->db->begin();
+            $planilla = new Planilla();
+            date_default_timezone_set('America/Argentina/Mendoza');
+            $tipo = $this->request->getPost('tipo_planilla')[0];
+            $planilla->setPlanillaTipo($tipo);
+            if($tipo==0)
+                $tipoPlanilla = "REGISTRO";
+            else{
+                if($tipo==1)
+                    $tipoPlanilla="1ERA QUINCENA ON CALL";
+                else
+                    $tipoPlanilla="2DA QUINCENA ON CALL";
+            }
+            $planilla->setPlanillaNombrecliente("PLANILLA " . $tipoPlanilla . " " . strtoupper($this->request->getPost("cliente_nombre", 'string')) . " " . $this->request->getPost('fechaActual'));
+            $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
+            $planilla->setPlanillaArmada(0);
+            $planilla->setPlanillaHabilitado(1);
+            $planilla->setPlanillaFinalizada(0);
+
+
+            if (!$planilla->save()) {
+                foreach ($planilla->getMessages() as $message) {
+                    $errors[] = $message . " <br>";
+                }
+                $data['success'] = false;
+                $data['mensaje'] = $errors;
+                $this->db->rollback();
+            } else {
+                $data['planilla_id'] = $planilla->getPlanillaId();
+                $data['success'] = true;
+                $this->db->commit();
+            }
+        }// return all our data to an AJAX call
+        echo json_encode($data);
     }
 
     /**
@@ -125,56 +182,6 @@ class PlanillaController extends ControllerBase
 
         }
     }
-
-    /**
-     * Permite guardar una nueva planilla utilizando ajax.
-     * Devuelve un json con los mensajes, y con el id de la planilla creada.
-     * Carga el combobox con las cabeceras predefinidas
-     */
-    public function crearAction()
-    {
-        $this->view->disable();
-        $errors = array();      // array to hold validation errors
-        $data = array();      // array to pass back data
-        if (empty($_POST['fechaActual']))
-            $errors['fechaActual'] = 'La fecha actual es requerida';
-        if (empty($_POST['tipo_planilla']))
-            $errors['tipo_planilla'] = 'El tipo de planilla es requerido';
-        if (empty($_POST['cliente_nombre']))
-            $errors['cliente_nombre'] = 'El nombre del cliente es requerido';
-        if (!empty($errors)) {
-            $data['success'] = false;
-            $data['mensaje'] = $errors;
-        } else {
-            $this->db->begin();
-            $planilla = new Planilla();
-            date_default_timezone_set('America/Argentina/Mendoza');
-            $planilla->setPlanillaNombrecliente("PLANILLA " . $this->request->getPost('tipo_planilla')[0] . " " . strtoupper($this->request->getPost("cliente_nombre", 'string')) . " " . $this->request->getPost('fechaActual') . " " . date("h:i:s"));
-            $planilla->setPlanillaFecha(Date('Y-m-d'));//fecha de creacion de la planilla, current time
-            $planilla->setPlanillaArmada(0);
-            $planilla->setPlanillaHabilitado(1);
-            if($this->request->getPost('tipo_planilla')[0]=="ONCALL")
-                $planilla->setPlanillaTipo(1);
-            else
-                $planilla->setPlanillaTipo(0);
-
-            if (!$planilla->save()) {
-                foreach ($planilla->getMessages() as $message) {
-                    $errors[] = $message . " <br>";
-                }
-                $data['success'] = false;
-                $data['mensaje'] = $errors;
-                $this->db->rollback();
-            } else {
-                $data['planilla_id'] = $planilla->getPlanillaId();
-                $data['success'] = true;
-                $this->db->commit();
-            }
-        }// return all our data to an AJAX call
-        echo json_encode($data);
-    }
-
-
     /**
      * Permite editar el nombre de la planilla a traves de json. Recibe el nombre de la planilla y el ID
      */
