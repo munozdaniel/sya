@@ -340,5 +340,10 @@ class Planilla extends \Phalcon\Mvc\Model
             return false;
         }
     }
+    public static function getCantidadDeRemitos($planilla_id)
+    {
+        $remitos = Remito::find(array('remito_planillaId =:planilla_id:','bind'=>array('planilla_id'=>$planilla_id)));
+        return count($remitos);
+    }
 
 }

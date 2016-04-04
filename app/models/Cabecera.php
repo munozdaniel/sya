@@ -218,6 +218,25 @@ class Cabecera extends \Phalcon\Mvc\Model
         return $retorno;
 
     }
+
+    /**
+     * Devuelve todas las columnas de una cabecera
+     */
+    public static function getTodasLasColumnasHabilitadas($cabecera_id){
+        $columnas = Columna::find(array('columna_cabeceraId =:cabecera_id: AND columna_habilitado=1','bind'=>array('cabecera_id'=>$cabecera_id)));
+        return $columnas;
+    }
+    /**
+     * Devuelve todas las columnas de una cabecera
+     */
+    public static function getTodasLasColumnasDeshabilitadas($cabecera_id){
+        $columnas = Columna::find(array('columna_cabeceraId =:cabecera_id: AND columna_habilitado=0','bind'=>array('cabecera_id'=>$cabecera_id)));
+        return $columnas;
+    }
+    /**
+     * Controla que no se repita el nombre de la cabecera. y que sea obligatorio
+     * @return bool
+     */
     public function validation()
     {
         $this->validate(new \Phalcon\Mvc\Model\Validator\Uniqueness(array(
@@ -232,4 +251,5 @@ class Cabecera extends \Phalcon\Mvc\Model
             return false;
         }
     }
+
 }

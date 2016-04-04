@@ -260,18 +260,6 @@ class PlanillaController extends ControllerBase
     }
 
     /**
-     * Guarda instancias de columnas extras: NO se usa mas
-     */
-    public function createColumnasAction()
-    {
-        $columnas = $this->request->getPost('columna');
-        foreach ($columnas AS $columna) {
-            $this->flash->success($columna);
-        }
-        $this->view->pick('planilla/columnas');
-    }
-
-    /**
      * HAY QUE FINALIZARLO. DEBERIA IR En COLUMNASCONTroLLER
      */
     public function ordenarAction()
@@ -486,6 +474,29 @@ class PlanillaController extends ControllerBase
 
     }
 
+    /**
+     * Permite ver un menu personalizado para cada planilla.
+     */
+    public function viewAction($planilla_id){
+        //Para el modal de eliminacion
+        $this->assets->collection('footerInline')
+            ->addInlineJs('
+            $(document).on("click", ".enviar-dato", function () {
+                var id = $(this).data("id");
+                $("#cuerpo #id").val( id );
+            });
+        ');
 
+        $planilla = Planilla::findFirst(array('planilla_id=:planilla:','bind'=>array('planilla'=>$planilla_id)));
+        if($planilla->getCabecera()!=null) {
+            $columnas = Columna::find(array('columna_cabeceraId=:cabecera: AND columna_habilitado=1',
+                'bind' => array('cabecera' => $planilla->getCabecera()->getCabeceraId())));
+            if ($columnas)
+                $this->view->columnas = $columnas;
+        }
+        //$cliente = Cliente::findFirst(array('cliente_nombre LIKE :nombre:','bind'=>array('nombre'=>$pla)))
+        $this->view->planilla = $planilla;
+
+    }
 
 }
