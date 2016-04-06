@@ -323,8 +323,12 @@ class ColumnaController extends ControllerBase
     }
 
     /***************************************************************************************************/
-    public function editarAction()
+    public function editarAction($planilla_id=null)
     {
+        if($planilla_id!=null)
+        {
+            $this->tag->setDefault('planilla_id',$planilla_id);
+        }
         $this->assets->collection("headerCss")
             ->addCss('plugins/iCheck/all.css');
         $this->assets->collection('headerJs')

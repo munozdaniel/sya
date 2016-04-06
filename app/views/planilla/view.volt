@@ -44,7 +44,7 @@
                                                     {% else %}
                                                         {{ link_to('planilla/habilitar/'~planilla.getPlanillaId(),'<i class="fa fa-check-square-o"></i>  ','class':' pull-right btn btn-flat bg-green-gradient','title':'HABILITAR PLANILLA') }}
                                                     {% endif %}
-                                                    {{ link_to('','<i class="fa fa-pencil"></i>  ','class':'pull-right btn btn-flat bg-light-blue-gradient','title':'EDITAR PLANILLA') }}
+                                                    {{ link_to('planilla/edit/'~planilla.getPlanillaId(),'<i class="fa fa-pencil"></i>  ','class':'pull-right btn btn-flat bg-light-blue-gradient','title':'EDITAR PLANILLA') }}
                                                 </a>
                                             </span>
                                             <hr>
@@ -101,13 +101,15 @@
 
                                                             <p>La planilla no tiene asignado una cabecera.</p>
                                                             {% if planilla.getPlanillaHabilitado() != 0 %}
-                                                                {{ link_to('','Asignar Cabecera','class':'btn btn-flat bg-red-gradient','SELECCIONAR UNA CABECERA') }}
-                                                                {{ link_to('','Nueva Cabecera','class':'btn btn-flat bg-red-gradient','AGREGAR UNA NUEVA CABECERA') }}
+                                                                {{ link_to('cabecera/asignarCabecera/'~planilla.getPlanillaId(),'Asignar Cabecera','class':'btn btn-flat bg-red-gradient','SELECCIONAR UNA CABECERA') }}
+                                                                {{ link_to('cabecera/nuevaCabecera/'~planilla.getPlanillaId(),'Nueva Cabecera','class':'btn btn-flat bg-red-gradient','AGREGAR UNA NUEVA CABECERA') }}
                                                             {% endif %}
                                                         </div>
                                                     {% else %}
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-12">
+                                                            {{ link_to('cabecera/quitar/'~planilla.getPlanillaId(),'<i class="fa fa-remove"></i>  ','class':'pull-right btn btn-flat bg-red-gradient','title':'QUITAR CABECERA') }}
                                                             <p>{{ planilla.getCabecera().getCabeceraNombre() }}</p>
+
                                                         </div>
 
                                                     {% endif %}
@@ -130,11 +132,11 @@
                                                             <p><strong><ins>Operaciones</ins></strong></p>
                                                             {% if planilla.getPlanillaHabilitado() != 0 %}
 
-                                                            {{ link_to('','Reordenar','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'REORDENAR LAS COLUMNAS') }}
+                                                            {{ link_to('cabecera/reordenar/'~planilla.getPlanillaId(),'Reordenar','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'REORDENAR LAS COLUMNAS') }}
                                                             <hr>
-                                                            {{ link_to('','Agregar Extra','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'AGREGAR UNA COLUMNA EXTRA A LA CABECERA') }}
+                                                            {{ link_to('columna/agregarExtra/'~planilla.getPlanillaId(),'Agregar Extra','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'AGREGAR UNA COLUMNA EXTRA A LA CABECERA') }}
                                                             <hr>
-                                                            {{ link_to('','Habilitar/Deshabilitar','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'HABILITAR/DESHABILITAR UNA COLUMNA') }}
+                                                            {{ link_to('columna/editar/'~planilla.getPlanillaId(),'Habilitar/Deshabilitar','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'HABILITAR/DESHABILITAR UNA COLUMNA') }}
                                                             {% endif %}
 
                                                         </div>

@@ -449,8 +449,10 @@ class CabeceraController extends ControllerBase
      *
      */
 
-    public function reordenarAction()
+    public function reordenarAction($planilla_id=null)
     {
+        if($planilla_id!=null)
+            $this->tag->setDefault('remito_planillaId',$planilla_id);
         $this->importarSelect2();
         //Assets para reordenar columnas.
         $this->assets->collection('headerJs')
@@ -554,5 +556,72 @@ class CabeceraController extends ControllerBase
         else{
             echo "DEBE SELECCIONAR UNA PLANILLA CON COLUMNAS";
         }
+    }
+    /**********************************************************************************/
+    /**
+     * Remueve la cabecera a una planilla
+     */
+    public function quitarAction($planilla_id)
+    {
+        $this->importarSelect2();
+        $planilla  = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_habilitado=1',
+            'bind'=>array('planilla_id'=>$planilla_id)));
+        if(!$planilla)
+        {
+            $this->flash->error("Ocurrio un Problema: La Planilla no se encontró, o no se encuentra habilitada.");
+            return $this->redireccionar('planilla/search');
+        }
+        if($planilla->getPlanillaCabeceraId()!=null)
+        {
+            $planilla->setPlanillaCabeceraId(null);
+            $planilla->setPlanillaArmada(0);
+            if($planilla->update()){
+                foreach ($planilla->getMessages() as $mensaje) {
+                    $this->flash->error($mensaje);
+                }
+                return $this->redireccionar('planilla/view/'.$planilla->getPlanillaId());
+            }
+            $this->flash->warning("Se ha eliminado la cabecera de la planilla");
+            return $this->redireccionar('planilla/view/'.$planilla->getPlanillaId());
+        }
+    }
+    /**
+     * Metodo llamado desde la administracion de la planilla
+     */
+    public function asignarCabeceraAction($planilla_id){
+        $this->importarSelect2();
+        $planilla  = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_habilitado=1',
+            'bind'=>array('planilla_id'=>$planilla_id)));
+        if(!$planilla)
+        {
+            $this->flash->error("Ocurrio un Problema: La Planilla no se encontró, o no se encuentra habilitada.");
+            return $this->redireccionar('planilla/search');
+        }
+        if($planilla->getPlanillaCabeceraId()!=null)
+        {
+            $this->flash->warning("La Planilla ya tiene asignada una cabecera");
+            return $this->redireccionar('planilla/view/'.$planilla->getPlanillaId());
+        }
+        $this->view->planilla= $planilla;
+    }
+    /**
+     * Metodo llamado desde la administracion de la planilla. Genera una nueva cabecera con columnas basicas
+     */
+    public function nuevaCabeceraAction($planilla_id)
+    {
+        $planilla  = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_habilitado=1',
+            'bind'=>array('planilla_id'=>$planilla_id)));
+        if(!$planilla)
+        {
+            $this->flash->error("Ocurrio un Problema: La Planilla no se encontró, o no se encuentra habilitada.");
+            return $this->redireccionar('planilla/search');
+        }
+        if($planilla->getPlanillaCabeceraId()!=null)
+        {
+            $this->flash->warning("La Planilla ya tiene asignada una cabecera");
+            return $this->redireccionar('planilla/view/'.$planilla->getPlanillaId());
+        }
+        $this->view->planilla= $planilla;
+
     }
 }
