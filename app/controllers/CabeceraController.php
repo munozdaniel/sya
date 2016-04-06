@@ -449,10 +449,9 @@ class CabeceraController extends ControllerBase
      *
      */
 
-    public function reordenarAction($planilla_id=null)
+    public function reordenarAction()
     {
-        if($planilla_id!=null)
-            $this->tag->setDefault('remito_planillaId',$planilla_id);
+
         $this->importarSelect2();
         //Assets para reordenar columnas.
         $this->assets->collection('headerJs')

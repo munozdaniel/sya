@@ -390,5 +390,65 @@ class ColumnaController extends ControllerBase
 
         return $this->redireccionar('columna/editar');
     }
+    /**
+     * Agregar columnas extras a la planilla
+     */
+    public function agregarExtraAction()
+    {
+        //SELECT2
+        $this->importarSelect2();
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('planilla_id',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => false,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => ''
+            ));
+    }
+    /**
+     * Guarda las columnas extras a una planilla determinada
+     */
+    public function guardarExtraAction()
+    {
+        if ($this->request->isPost()) {
+            if ($this->request->getPost('planilla_id') == null || $this->request->getPost('columna') == null) {
+                $this->flash->error("Por favor verifique que la planilla y las columnas no esten vacías.");
+                return $this->redireccionar('columna/agregarExtra');
+            }
+            //Con el planilla_id recuperamos la planilla y su cabecera para guardar las nuevas columnas.
+            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
+            if (!$planilla) {
+                $this->flash->error("La planilla no se encontró.");
+                return $this->redireccionar('columna/agregarExtra');
+            }
+            $max = count(Columna::find(array('columna_cabeceraId=:cabeceraId: AND columna_habilitado=1',
+                'bind' => array('cabeceraId' => $planilla->getCabecera()->getCabeceraId()))));
+            $arregloColumnas = $this->request->getPost('columna');
+            foreach ($arregloColumnas AS $columna) {
+                if (!empty($columna)) {
+                    $max = $max + 1;
+                    $nuevaColumna = new Columna();
+                    $nuevaColumna->setColumnaNombre(strtoupper($columna));
+                    $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
+                    $nuevaColumna->setColumnaExtra(1);
+                    $nuevaColumna->setColumnaPosicion($max);
+                    $nuevaColumna->setColumnaCabeceraId($planilla->getCabecera()->getCabeceraId());
+                    $nuevaColumna->setColumnaHabilitado(1);
+                    if (!$nuevaColumna->save()) {
+                        foreach ($nuevaColumna->getMessages() as $message) {
+                            $error[] = $message . " <br>";
+                        }
+                    }
+                }
+            }
+            $this->flash->success("Operación Exitosa: Las columnas extras se agregaron correctamente.");
+        }
+        return $this->redireccionar('columna/agregarExtra');
 
+    }
 }

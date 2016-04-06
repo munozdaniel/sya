@@ -9,7 +9,7 @@
     </div>
     {{ content() }}
 
-    {{ form("planilla/guardarExtra","id":"form-extras", "method":"post") }}
+    {{ form("columna/guardarExtra","id":"form-extras", "method":"post") }}
     <fieldset id="fielset-buscar-planilla" class="panel-border">
         <legend>SYA</legend>
         <div class="container">
