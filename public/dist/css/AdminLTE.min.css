@@ -3163,7 +3163,7 @@ table.text-center, table.text-center td, table.text-center th {
 
 .widget-user .widget-user-header {
     padding: 20px;
-    height: 120px;
+    height: 78px;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px
 }
@@ -4321,6 +4321,23 @@ table.text-center, table.text-center td, table.text-center th {
 {
     color: #FFF !important;
 }
+.font-red
+ {
+     color: #ac1910 !important;
+
+ }
+.font-blue{
+    color: #0076a0 !important;
+
+}
+.font-green{
+    color: #1fa617 !important;
+
+}
+.font-orange{
+    color: #ff9d22 !important;
+
+}
 .bg-gray {
     color: #000;
     background-color: #d2d6de !important
@@ -4967,4 +4984,14 @@ td.highlight {
 .col-max {
     /* custom max width */
     max-width:320px;
+}
+td.details-control {
+    background: url('/public/image/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+input {
+    text-align: right !important;
+}
+.text-align-left{
+    text-align: left;
 }

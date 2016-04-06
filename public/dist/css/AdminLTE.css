@@ -4551,6 +4551,28 @@ table.text-center th {
 .list-link > a:hover {
   color: #222;
 }
+
+.font-white
+{
+    color: #FFF !important;
+}
+.font-red
+{
+    color: #ac1910 !important;
+
+}
+.font-blue{
+    color: #0076a0 !important;
+
+}
+.font-green{
+    color: #1fa617 !important;
+
+}
+.font-orange{
+    color: #ff9d22 !important;
+
+}
 .font-light {
   font-weight: 300;
 }
