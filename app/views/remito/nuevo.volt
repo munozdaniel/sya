@@ -4,20 +4,20 @@
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-sign-out fa-rotate-180'></i> VOLVER",'class':'btn btn-flat bg-olive') }}<br>
-
+                    {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Realizar nueva búsqueda",'class':'btn btn-flat btn-google') }}
                 </td>
 
                 <td align="right">
-                    {{ submit_button(" Guardar Remito",'id':'submit','class':'btn btn-flat btn-lg btn-primary') }}
+                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-search'></i> Agregar Remito",'class':'btn btn-flat btn-primary') }}
                 </td>
+
             </tr>
         </table>
     </div>
 </div>
 <!-- Formulario -->
 {{ content() }}
-{{ form("remito/guardarNuevo",'id':'form-crearRemito' ,"method":"post") }}
+{{ form("remito/guardarNuevo",'id':'form-crearRemito' ,"method":"post",'enctype':'multipart/form-data') }}
 
 
 <!-- Cuerpo -->
@@ -35,13 +35,11 @@
             </h3>
         </div>
         <div class="row">
-            <div class="col-md-4 form-group">
+            <div class="col-md-4 ">
                 {% if planilla is defined %}
                     <br>
-                    <div class="btn btn-flat table-bordered">
                         <strong>{{ planilla.getPlanillaNombreCliente() }}</strong>
                         <br> {{ date('d/m/Y',(planilla.getPlanillaFecha()) | strtotime) }}
-                    </div>
                 {% endif %}
             </div>
             <div class="col-md-8">
@@ -57,23 +55,23 @@
                     <hr>
                 </div>
 
-                <div class="col-md-6 form-group">
-                    <label>Tipo de Planilla</label>
-                    <br>
-                    <label style="margin-right: 55px">
-                        <input type="radio" name="remito_tipo" value="0" class="flat-red" checked> Mensual
-                    </label>
-                    <label>
-                        <input type="radio" name="remito_tipo" class="flat-red" value="1"> On Call
-                    </label>
-                </div>
-                <div class="col-md-6 form-group">
+
+                <div class="col-md-12 form-group">
 
                     <label for="exampleInputFile">Remito Escaneado</label>
                     <br>
-                    <input type="file" id="remito_pdf">
+                        <input type="file" id="remito_pdf" name="remito_pdf" data-max-size='3mb' class="form-control">
 
-                    <p class="help-block"><i class="fa fa-info-circle"></i> Buscar en el Servidor el PDF</p>
+                    <p class="help-block"><i class="fa fa-info-circle"></i> Buscar el PDF en el Servidor </p>
+                    <script>
+                        $('input[type=file]').fileValidator({
+                            onValidation: function(files){      $(this).attr('class','');          },
+                            onInvalid:    function(type, file){ $(this).addClass('invalid '+type); },
+                            maxSize:      '3m',
+                            type:           'pdf'
+                        });
+
+                    </script>
                 </div>
 
             </div>
@@ -96,6 +94,7 @@
             <div class="col-md-3 form-group">
                 {{ remitoForm.label('transporte_dominio') }}
                 {{ remitoForm.render('transporte_dominio') }}
+                <a class="btn   " onclick='$("#transporte_dominio").empty(); '>ACTUALIZAR</a>
             </div>
             <div class="col-md-3 form-group">
                 {{ remitoForm.label('tipoEquipo_nombre') }}

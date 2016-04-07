@@ -5,6 +5,13 @@ use Phalcon\Paginator\Adapter\NativeArray as Paginator;
 use Phalcon\Paginator\Adapter\Model as PaginatorModelo;
 use \DataTables\DataTable;
 
+/**
+ * 1. Guardar un nuevo Remito: nuevoRemitoPorPlanillaAction nuevoAction guardarNuevoAction
+ * 2. Agregar un nuevo Remito: agregarAction -> nuevoAction -> guardarNuevoAction
+ * 3. Buscar Remitos por planilla: buscarRemitoPorPlanillaAction -> buscarRemitosPorPlanillaIdAjaxAction [generarTabla]
+ * 4. Buscar todos los remitos que no tengan pdf: buscarRemitoPorPlanillaSinPDF ->  buscarRemitosPorPlanillaIdAjaxSinPDF [generarTabla]
+ * Class RemitoController
+ */
 class RemitoController extends ControllerBase
 {
     public function initialize()
@@ -50,7 +57,7 @@ class RemitoController extends ControllerBase
                 'class' => 'form-control autocompletar',
                 'style' => 'width:100%',
                 'required' => '',
-                'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
+                'onchange' => 'var x = document.getElementById("remito_planillaId").value;'
             ));
     }
 
@@ -78,7 +85,7 @@ class RemitoController extends ControllerBase
 
         }
         $data['problemas'] = $error;
-        echo json_encode(array('data' => $tabla,'errores'=>$data));
+        echo json_encode(array('data' => $tabla, 'errores' => $data));
     }
 
     /**
@@ -105,11 +112,12 @@ class RemitoController extends ControllerBase
                 'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
             ));
     }
+
     /**
      * OK: Busca todas las planillas que no tengan los remitos escaneados
      * usado en buscarRemitoPorPlanillaSinPDFAction
      */
-    public function buscarRemitosPorPlanillaIdAjaxSinRemitoAction()
+    public function buscarRemitosPorPlanillaIdAjaxSinPDFAction()
     {
         $this->view->disable();
         $remito = null;
@@ -129,7 +137,7 @@ class RemitoController extends ControllerBase
 
         }
         $data['problemas'] = $error;
-        echo json_encode(array('data' => $tabla,'errores'=>$data));
+        echo json_encode(array('data' => $tabla, 'errores' => ""));
     }
 
     /**
@@ -155,15 +163,18 @@ class RemitoController extends ControllerBase
             $fila['remito_planillaId'] = $unRemito->getRemitoPlanillaId();
 
             /*================ Remito ================*/
+
             $fila['ORDEN'] = $unRemito->getRemitoNroOrden();
             $fila['FECHA'] = date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
             $fila['REMITO'] = $unRemito->getRemitoNro();//remito Sya
-            $fila['remito_pdf'] = $unRemito->getRemitoPdf();//remito Sya
-
+            if ($unRemito->getRemitoPdf() == null)
+                $fila['PDF'] = "<a href=''>AGREGAR PDF</a>";
+            else
+                $fila['PDF'] = $this->tag->linkTo("'" . $unRemito->getRemitoPdf() . "'", 'ABRIR REMITO');
 
             /*================ Transporte ================*/
             $fila['PATENTE'] = $unRemito->getTransporte()->getTransporteDominio();
-            $fila['INTERNO'] = $unRemito->getTransporte()->getTransporteNroInterno();
+            $fila['N° INTERNO'] = $unRemito->getTransporte()->getTransporteNroInterno();
 
             /*================ TipoEquipo ================*/
             $fila['TIPO EQUIPO'] = $unRemito->getTipoequipo()->getTipoEquipoNombre();
@@ -199,7 +210,7 @@ class RemitoController extends ControllerBase
 
             /*================ Linea ================*/
             $linea = Linea::findFirstByLinea_id($unRemito->getCentrocosto()->getCentroCostoLineaId());
-            $fila['LINEA'] = $linea->getLineaNombre();
+            $fila['LINEA-PSL'] = $linea->getLineaNombre();
 
             /*================ Viaje ================*/
             $fila['ORIGEN'] = $unRemito->getViaje()->getViajeOrigen();
@@ -219,21 +230,19 @@ class RemitoController extends ControllerBase
             $fila['MOT NO CONFORM RE'] = ($unRemito->getRemitoNoConformidad() == NULL ? "SIN ESPECIFICAR" : $unRemito->getRemitoNoConformidad());
             /*================ Extra ================*/
             $columnas = Columna::find(array('columna_cabeceraId = :cabecera_id: AND columna_extra= 1 AND columna_habilitado=1',
-                'bind'=>array('cabecera_id'=>$planilla->getCabecera()->getCabeceraId())));
-            if(!empty($columnas))
-            {
+                'bind' => array('cabecera_id' => $planilla->getCabecera()->getCabeceraId())));
+            if (!empty($columnas)) {
                 foreach ($columnas as $col) {
                     $contenidoExtra = Contenidoextra::findFirst(array('contenidoExtra_columnaId=:columna_id: AND contenidoExtra_habilitado=1',
-                        'bind'=>array('columna_id'=>$col->getColumnaId())));
-                    if($contenidoExtra)
+                        'bind' => array('columna_id' => $col->getColumnaId())));
+                    if ($contenidoExtra)
                         $descripcion = $contenidoExtra->getContenidoExtraDescripcion();
                     else
-                        $descripcion= "SIN ESPECIFICAR";
-                    $fila[$col->getColumnaNombre()]=$descripcion;
+                        $descripcion = "SIN ESPECIFICAR";
+                    $fila[$col->getColumnaNombre()] = $descripcion;
                 }
 
             }
-
             $tabla[] = $fila;
         }
 
@@ -413,15 +422,18 @@ class RemitoController extends ControllerBase
     public function nuevoAction()
     {
         $this->assets->collection("headerCss")
+            ->addCss('plugins/validador-upload/css/file-validator.css')
             ->addCss('plugins/iCheck/all.css');
         $this->assets->collection('headerJs')
+            ->addJs('plugins/validador-upload/file-validator.js')
             ->addJs('plugins/iCheck/icheck.min.js');
-
-        if(!$this->request->hasPost('remito_planillaId') || $this->request->getPost('remito_planillaId')==null){
+        if (!$this->request->hasPost('remito_planillaId') || $this->request->getPost('remito_planillaId') == null) {
             $this->flash->error("Es necesario que seleccione una planilla");
             return $this->redireccionar('remito/nuevoRemitoPorPlanilla');
         }
-        $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('remito_planillaId'));
+
+        $planilla = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_finalizada=0 AND planilla_habilitado=1 ',
+            'bind' => array('planilla_id' => $this->request->getPost('remito_planillaId'))));
         $columnas = Columna::find(array(
             "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
             'bind' => array('cabecera_id' => $planilla->getPlanillaCabeceraid())
@@ -430,9 +442,13 @@ class RemitoController extends ControllerBase
         if (count($columnas) != 0) {
             $this->view->columnaExtraForm = new ColumnaExtraForm(null, array('extra' => $columnas));
         }
+
         $this->view->remitoForm = new RemitoForm(null, array('required' => ''));
-        $cliente = Cliente::findFirst(array('cliente_id=:cliente_id:','bind'=>array('cliente_id'=>$planilla->getPlanillaClienteId())));
-        $this->view->clienteForm  = new ClienteNewForm($cliente, array('required' => ''));
+
+        $cliente = Cliente::findFirst(array('cliente_id=:cliente_id:', 'bind' => array('cliente_id' => $planilla->getPlanillaClienteId())));
+
+        $this->view->clienteForm = new ClienteNewForm($cliente, array('required' => ''));
+
         $this->view->planilla = $planilla;
     }
 
@@ -452,9 +468,9 @@ class RemitoController extends ControllerBase
         }
         //Controlamos que exista la planilla
         $planilla_id = $this->request->getPost("remito_planillaId");
-        $planilla = Planilla::findFirstByPlanilla_id($planilla_id);
-        if(!$planilla)
-        {
+        $planilla = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_finalizada=0 AND planilla_habilitado=1 AND planilla_armada=1',
+            'bind' => array('planilla_id' => $planilla_id)));
+        if (!$planilla) {
             $this->flash->error('Hubo un problema, la planilla no existe.');
             return $this->dispatcher->forward(array(
                 "controller" => "remito",
@@ -483,7 +499,7 @@ class RemitoController extends ControllerBase
                 $this->db->rollback();
                 return $this->dispatcher->forward(array(
                     "controller" => "remito",
-                    "action" => "nuevoRemito",
+                    "action" => "nuevo",
                     "params" => array($planilla_id)
                 ));
             }
@@ -496,18 +512,23 @@ class RemitoController extends ControllerBase
         $nuevoRemito->setRemitoFecha($this->request->getPost('remito_fecha'));
         $nuevoRemito->setRemitoNro($this->request->getPost('remito_nro'));
         $nuevoRemito->setRemitoPeriodo(date('m', date(strtotime(date($this->request->getPost("remito_fecha"))))));
-        $tipo =$this->request->getPost('remito_tipo');
-        if($tipo !=  $planilla->getPlanillaTipo())
-        {
-            $this->flash->error($tipo . " - ".$planilla->getPlanillaTipo()."El remito no coincide con el tipo de planilla, verifique que sean del mismo tipo");
-            $this->db->rollback();
-            return $this->dispatcher->forward(array(
-                "controller" => "remito",
-                "action" => "nuevoRemito",
-                "params" => array($planilla_id)
-            ));
+        if ($this->request->hasFiles() == true) {
+            $upload = $this->guardarPDF($this->request->getUploadedFiles(), $planilla->getPlanillaClienteId(),$planilla->getPlanillaFecha());
+            if (!$upload['success']) {
+                $this->flash->error($upload['mensaje']);
+                $this->db->rollback();
+                return $this->dispatcher->forward(array(
+                    "controller" => "remito",
+                    "action" => "nuevo",
+                    "params" => array($planilla_id)
+                ));
+            }
+            $nuevoRemito->setRemitoPdf($upload['path']);
         }
-        $nuevoRemito->setRemitoTipo($tipo);
+        else{
+            echo "NO TIENE ARCHVOS?";
+        }
+
         $nuevoRemito->setRemitoObservacion($this->request->getPost('remito_observacion'));
         $nuevoRemito->setRemitoConformidad($this->request->getPost('remito_conformidad'));
         $nuevoRemito->setRemitoNoConformidad($this->request->getPost('remito_noConformidad'));
@@ -540,7 +561,7 @@ class RemitoController extends ControllerBase
             $this->db->rollback();
             return $this->dispatcher->forward(array(
                 "controller" => "remito",
-                "action" => "nuevoRemito",
+                "action" => "nuevo",
                 "params" => array($planilla_id)
             ));
         }
@@ -565,7 +586,7 @@ class RemitoController extends ControllerBase
                     $this->db->rollback();
                     return $this->dispatcher->forward(array(
                         "controller" => "remito",
-                        "action" => "nuevoRemito",
+                        "action" => "nuevo",
                         "params" => array($planilla_id)
                     ));
                 }
@@ -579,7 +600,7 @@ class RemitoController extends ControllerBase
             $this->db->rollback();
             return $this->dispatcher->forward(array(
                 "controller" => "remito",
-                "action" => "nuevoRemito",
+                "action" => "nuevo",
                 "params" => array($planilla_id)
             ));
         }
@@ -593,6 +614,46 @@ class RemitoController extends ControllerBase
         ));
     }
 
+    /**
+     * Guarda el archivo pdf en la carpeta : 'CLIENTE/fechaCreacionPlanilla/NombrePDF'
+     * @param $file
+     */
+    private function guardarPDF($archivos,$cliente_id,$fechaCreacion)
+    {
+        $retorno = array();
+        $retorno['path'] = '';//Nombre de la ruta en donde se guardo el archivo
+        $retorno['success'] = true;//Si finaliza correctamente o no.
+        $retorno['mensaje'] = '';//Mensaje de error en caso de que falle.
+
+        foreach ($archivos as $archivo) {
+
+            if (!($archivo->getType() == "application/pdf")) {
+                $retorno['mensaje'] .= " Tu archivo tiene que ser PDF. Otros archivos no son permitidos <br>";
+                $retorno['success']=false;
+            }
+            if($retorno['success']) {
+                //Creando Carpeta
+                $nombreArchivo = $archivo->getName();
+                $cliente = Cliente::findFirst(array('cliente_id=:cliente_id: AND cliente_habilitado=1',
+                    'bind' => array('cliente_id' => $cliente_id)));
+                $nombreCarpeta = 'temp/' . $cliente->getClienteNombre() . '/' . $fechaCreacion;
+                if (!file_exists($nombreCarpeta)) {
+                    mkdir($nombreCarpeta, 0777, true);
+                }
+                $path = $nombreCarpeta . '/' . $nombreArchivo;
+                #move the file and simultaneously check if everything was ok
+                ($archivo->moveTo($path)) ? $retorno['success'] = true : $retorno['success'] = false;
+                if (!$retorno['success'])
+                    $retorno = "Ocurrio un problema al guardar el archivo en el servidor.";
+                else{
+                    $retorno['path']=$path;
+                }
+            }
+
+        }
+       return $retorno;
+
+    }
 
     /***************************************************************************************************
      * Permite buscar la planilla a la cual se le va agregar el remito, y se lo redirecciona al nuevoRemito.
@@ -602,7 +663,7 @@ class RemitoController extends ControllerBase
         $this->importarSelect2();
         //Select Autocomplete Planilla
         $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            Planilla::find(array('planilla_habilitado=1 AND planilla_finalizada=0 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
             array(
                 'using' => array('planilla_id', 'planilla_nombreCliente'),
                 'useEmpty' => false,
@@ -614,4 +675,38 @@ class RemitoController extends ControllerBase
             ));
     }
 
+    /**
+     * Nuevo remito por ID
+     */
+    public function agregarAction($planilla_id)
+    {
+        $this->assets->collection("headerCss")
+            ->addCss('plugins/iCheck/all.css');
+        $this->assets->collection('headerJs')
+            ->addJs('plugins/iCheck/icheck.min.js');
+        if ($planilla_id == null) {
+            $this->flash->error("No se encontro la planilla solicitada #$planilla_id");
+            return $this->redireccionar('remito/nuevoRemitoPorPlanilla');
+        }
+
+        $planilla = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_armada=1 AND planilla_finalizada=0 AND planilla_habilitado=1 ',
+            'bind' => array('planilla_id' => $planilla_id)));
+        $columnas = Columna::find(array(
+            "columna_cabeceraId=:cabecera_id: AND columna_habilitado = 1 AND columna_extra = 1",
+            'bind' => array('cabecera_id' => $planilla->getPlanillaCabeceraid())
+        ));
+
+        if (count($columnas) != 0) {
+            $this->view->columnaExtraForm = new ColumnaExtraForm(null, array('extra' => $columnas));
+        }
+
+        $this->view->remitoForm = new RemitoForm(null, array('required' => ''));
+
+        $cliente = Cliente::findFirst(array('cliente_id=:cliente_id:', 'bind' => array('cliente_id' => $planilla->getPlanillaClienteId())));
+
+        $this->view->clienteForm = new ClienteNewForm($cliente, array('required' => ''));
+
+        $this->view->planilla = $planilla;
+        $this->view->pick('remito/nuevo');
+    }
 }

@@ -1,14 +1,16 @@
+
 <div class="box box-primary">
     <div class="box-header">
-        <h3>AGREGAR REMITO
-            <small>
-                <br> Seleccione la planilla a la cual desea agregar un remito.
-            </small>
-        </h3>
+        <h3 class="box-title">AGREGAR REMITO A PLANILLA<br></h3>
+
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("remito/searchDataTable", "<i class='fa fa-search'></i> Busqueda de Remitos",'class':'btn btn-flat btn-large bg-olive') }}
+                    {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Realizar nueva búsqueda",'class':'btn btn-flat btn-google') }}
+                </td>
+
+                <td align="right">
+                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-search'></i> Agregar Remito",'class':'btn btn-flat btn-primary') }}
                 </td>
 
             </tr>

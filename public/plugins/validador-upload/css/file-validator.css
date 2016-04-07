@@ -1,0 +1,40 @@
+input[type=file].invalid{ 
+  position: relative;
+  color: #852324;
+  background: #FDD9DB;
+}
+
+input[type=file].invalid:hover:after{
+  content: "Archivo Invalido";
+  
+  position: absolute;
+  right: -6em;
+  bottom: 2em;
+  z-index: 99;
+  width: 12em;
+  
+  font-weight: bold;
+  padding: 1em;
+  border: 1px solid #FB2B31;
+  background-color: #FDD9DB;
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px #999;
+}
+
+/* Data Driven Error Messages */
+
+input[type=file].invalid.maxSize:hover:after{
+  content: "El Archivo es demasiado grande";
+}
+
+input[type=file].invalid.maxSize[data-max-size]:hover:after{
+  content: "El archivo es demasiado grande, debe ser menor a (" attr(data-max-size) ")";
+}
+
+input[type=file].invalid.type:hover:after{
+  content: "El tipo de archivo no corresponde";
+}
+
+input[type=file].invalid.type[data-type]:hover:after{
+  content: "El tipo de archivo debe ser: " attr(data-type);
+}
