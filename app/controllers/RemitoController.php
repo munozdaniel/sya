@@ -46,6 +46,10 @@ class RemitoController extends ControllerBase
         $this->importarSelect2();
         //DATATABLES
         $this->importarDataTables();
+        $this->assets->collection("headerCss")
+            ->addCss('plugins/validador-upload/css/file-validator.css');
+        $this->assets->collection('headerJs')
+            ->addJs('plugins/validador-upload/file-validator.js');
         //Select Autocomplete Planilla
         $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
             Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
@@ -156,7 +160,9 @@ class RemitoController extends ControllerBase
         $planilla = "";
         foreach ($remitos as $unRemito) {
             $fila = array();
-            $planilla = Planilla::findFirstByPlanilla_id($unRemito->getRemitoPlanillaId());
+            $planilla = Planilla::findFirst(
+                array('planilla_id=:planilla_id: AND planilla_armada=1 AND planilla_finalizada=0 AND planilla_habilitado=1',
+                    'bind' => array('planilla_id' => $unRemito->getRemitoPlanillaId())));
             /*================ Planilla ================*/
 
             $fila['planilla_nombreCliente'] = $planilla->getPlanillaNombreCliente();
@@ -168,9 +174,10 @@ class RemitoController extends ControllerBase
             $fila['FECHA'] = date('d/m/Y', date(strtotime(date($unRemito->getRemitoFecha()))));
             $fila['REMITO'] = $unRemito->getRemitoNro();//remito Sya
             if ($unRemito->getRemitoPdf() == null)
-                $fila['PDF'] = "<a href=''>AGREGAR PDF</a>";
+                $fila['PDF'] = '<a href="#agregarRemitoEscaneado" role="button" class="enviar-dato btn btn-flat btn-block bg-green-gradient"
+                                    data-toggle="modal" data-id="' . $unRemito->getRemitoId() . '">AGREGAR REMITO</a>';
             else
-                $fila['PDF'] = $this->tag->linkTo("'" . $unRemito->getRemitoPdf() . "'", 'ABRIR REMITO');
+                $fila['PDF'] = "<a href='/sya/" . $unRemito->getRemitoPdf() . "' target='_blank' class='btn btn-flat btn-block bg-light-blue-gradient'>ABRIR REMITO</a>";
 
             /*================ Transporte ================*/
             $fila['PATENTE'] = $unRemito->getTransporte()->getTransporteDominio();
@@ -513,7 +520,7 @@ class RemitoController extends ControllerBase
         $nuevoRemito->setRemitoNro($this->request->getPost('remito_nro'));
         $nuevoRemito->setRemitoPeriodo(date('m', date(strtotime(date($this->request->getPost("remito_fecha"))))));
         if ($this->request->hasFiles() == true) {
-            $upload = $this->guardarPDF($this->request->getUploadedFiles(), $planilla->getPlanillaClienteId(),$planilla->getPlanillaFecha());
+            $upload = $this->guardarPDF($this->request->getUploadedFiles(), $planilla->getPlanillaClienteId(), $planilla->getPlanillaFecha());
             if (!$upload['success']) {
                 $this->flash->error($upload['mensaje']);
                 $this->db->rollback();
@@ -525,9 +532,7 @@ class RemitoController extends ControllerBase
             }
             $nuevoRemito->setRemitoPdf($upload['path']);
         }
-        else{
-            echo "NO TIENE ARCHVOS?";
-        }
+
 
         $nuevoRemito->setRemitoObservacion($this->request->getPost('remito_observacion'));
         $nuevoRemito->setRemitoConformidad($this->request->getPost('remito_conformidad'));
@@ -618,7 +623,7 @@ class RemitoController extends ControllerBase
      * Guarda el archivo pdf en la carpeta : 'CLIENTE/fechaCreacionPlanilla/NombrePDF'
      * @param $file
      */
-    private function guardarPDF($archivos,$cliente_id,$fechaCreacion)
+    private function guardarPDF($archivos, $cliente_id, $fechaCreacion)
     {
         $retorno = array();
         $retorno['path'] = '';//Nombre de la ruta en donde se guardo el archivo
@@ -629,9 +634,9 @@ class RemitoController extends ControllerBase
 
             if (!($archivo->getType() == "application/pdf")) {
                 $retorno['mensaje'] .= " Tu archivo tiene que ser PDF. Otros archivos no son permitidos <br>";
-                $retorno['success']=false;
+                $retorno['success'] = false;
             }
-            if($retorno['success']) {
+            if ($retorno['success']) {
                 //Creando Carpeta
                 $nombreArchivo = $archivo->getName();
                 $cliente = Cliente::findFirst(array('cliente_id=:cliente_id: AND cliente_habilitado=1',
@@ -645,13 +650,13 @@ class RemitoController extends ControllerBase
                 ($archivo->moveTo($path)) ? $retorno['success'] = true : $retorno['success'] = false;
                 if (!$retorno['success'])
                     $retorno = "Ocurrio un problema al guardar el archivo en el servidor.";
-                else{
-                    $retorno['path']=$path;
+                else {
+                    $retorno['path'] = $path;
                 }
             }
 
         }
-       return $retorno;
+        return $retorno;
 
     }
 
@@ -708,5 +713,60 @@ class RemitoController extends ControllerBase
 
         $this->view->planilla = $planilla;
         $this->view->pick('remito/nuevo');
+    }
+
+    /**
+     * Guarda un remito escaneado en el servidor.
+     */
+    public function guardarRemitoEscaneadoAction()
+    {
+        $this->view->disable();
+        $retorno = array();
+        $retorno['success'] = true;
+        $retorno['mensaje'] = '';
+        if ($this->request->isPost()) {
+            $planilla = Planilla::findFirst(array('planilla_id=:planilla_id: AND planilla_habilitado=1 AND planilla_armada=1 AND planilla_finalizada=0',
+                'bind' => array('planilla_id' => $this->request->getPost('planilla_id'))));
+            if (!$planilla) {
+                $retorno['success'] = false;
+                $retorno['mensaje'] = "NO SE ENCONTRO NINGUNA PLANILLA HABILITADA. ID: ". $this->request->getPost('planilla_id');
+            } else {
+                $nombreCarpeta = 'temp/' . $planilla->getCliente()->getClienteNombre() . '/' . $planilla->getPlanillaFecha();
+                if (!file_exists($nombreCarpeta)) {
+                    mkdir($nombreCarpeta, 0777, true);
+                }
+                $path = $nombreCarpeta . '/' . $_FILES['file']['name'];
+                #move the file and simultaneously check if everything was ok
+                (move_uploaded_file($_FILES['file']['tmp_name'], $path)) ? $retorno['success'] = true : $retorno['success'] = false;
+                if (!$retorno['success']) {
+                    $retorno['success'] = false;
+                    $retorno['mensaje'] = "Ocurrio un problema al guardar el archivo en el servidor. ";
+                } else {
+                    $remito = Remito::findFirst(array('remito_id=:remito_id:','bind'=>array('remito_id'=>$this->request->getPost('remito_id'))));
+                    if(!$remito){
+                        $retorno['success']=false;
+                        $retorno['mensaje']="El Remito no se encontró ID:".$this->request->getPost('remito_id');
+                        echo json_encode($retorno);
+                        return;
+                    }
+                    $remito->setRemitoPdf($path);
+                    if(!$remito->update())
+                    {
+                        $retorno['success'] = false;
+                        foreach ($remito->getMessages() as $mensaje) {
+
+                            $retorno['mensaje'] .= $mensaje ."<br>";
+                        }
+
+                    }else{
+                        $retorno['mensaje']="Operación Exitosa, el archivo se ha guardado en $path";
+                    }
+                }
+            }
+
+        }
+
+        echo json_encode($retorno);
+        return;
     }
 }
