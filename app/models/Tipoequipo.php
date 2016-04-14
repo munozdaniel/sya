@@ -129,5 +129,18 @@ class Tipoequipo extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    public function validation()
+    {
 
+        $this->validate(
+            new \Phalcon\Mvc\Model\Validator\Uniqueness(
+                array(
+                    "field"   => "tipoEquipo_nombre",
+                    "message" => "Ya existe el tipo de equipo en la Base de Datos."
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }

@@ -137,7 +137,7 @@ class Yacimiento extends \Phalcon\Mvc\Model
             new \Phalcon\Mvc\Model\Validator\Uniqueness(
                 array(
                     "field"   => "yacimiento_destino",
-                    "message" => "El Destino ya existe"
+                    "message" => "El Destino ya existe en la Base de Datos."
                 )
             )
         );

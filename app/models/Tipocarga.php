@@ -121,5 +121,18 @@ class Tipocarga extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    public function validation()
+    {
 
+        $this->validate(
+            new \Phalcon\Mvc\Model\Validator\Uniqueness(
+                array(
+                    "field"   => "tipoCarga_nombre",
+                    "message" => "Ya existe el tipo de carga  en la Base de Datos."
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }

@@ -179,5 +179,18 @@ class Chofer extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    public function validation()
+    {
 
+        $this->validate(
+            new \Phalcon\Mvc\Model\Validator\Uniqueness(
+                array(
+                    "field"   => "chofer_nombreCompleto",
+                    "message" => "Ya existe el Chofer  en la Base de Datos"
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }

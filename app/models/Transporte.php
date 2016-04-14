@@ -160,7 +160,7 @@ class Transporte extends \Phalcon\Mvc\Model
             new Uniqueness(
                 array(
                     "field"   => "transporte_dominio",
-                    "message" => "El Dominio ya se encuentra registrado."
+                    "message" => "El Dominio ya se encuentra  en la Base de Datos."
                 )
             )
         );
