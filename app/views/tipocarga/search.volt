@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("tipocarga/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("tipocarga", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("tipocarga/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("tipocarga/new", "Nuevo Tipo de Carga",'class':'btn btn-large btn-danger btn-flat') }}
             </td>
         </tr>
     </table>
