@@ -9,26 +9,29 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("transporte", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+            {{ link_to("transporte", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
 </table>
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="transporte_dominio">Dominio</label>
+    <div class="col-md-6 col-md-offset-3">
 
-    <div class="form-group">
-        {{ text_field("transporte_dominio", "size" : 30) }}
-    </div>
-    {#==================================================#}
-    <label for="transporte_nroInterno">Nro Interno</label>
+        <label for="transporte_dominio">Dominio</label>
 
-    <div class="form-group">
-        {{ text_field("transporte_nroInterno", "type" : "numeric") }}
+        <div class="form-group">
+            {{ text_field("transporte_dominio", "size" : 30,'class':'form-control','required':'','placeholder':'INGRESE EL DOMINIO') }}
+        </div>
+        {#==================================================#}
+        <label for="transporte_nroInterno">Nro Interno</label>
+
+        <div class="form-group">
+            {{ text_field("transporte_nroInterno", "type" : "numeric",'class':'form-control','required':'','placeholder':'INGRESE EL NRO DE INTERNO') }}
+        </div>
+        {#==================================================#}
     </div>
-    {#==================================================#}
-</div><!-- /. Cuerpo -->
+</div>
 <!-- Footer -->
 <div class="box-footer">
     {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}

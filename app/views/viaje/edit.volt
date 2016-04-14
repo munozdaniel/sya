@@ -8,15 +8,21 @@
 {{ form("viaje/save", "method":"post") }}
 <table width="100%">
     <tr>
-        <td align="left">{{ link_to("viaje", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}</td>
+        <td align="left">
+            {{ link_to("viaje", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
+        </td>
     </tr>
 </table>
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="viaje_origen">Origen</label>
-    <div class="form-group">
-        {{ text_field("viaje_origen", "size" : 30) }}
+    <div class="col-md-6 col-md-offset-3">
+
+        <label for="viaje_origen">Origen</label>
+
+        <div class="form-group">
+            {{ text_field("viaje_origen", "size" : 60,'class':'form-control','required':'','placeholder':'INGRESE EL ORIGEN') }}
+        </div>
     </div>
 
 

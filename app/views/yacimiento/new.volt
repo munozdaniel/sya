@@ -9,20 +9,19 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("yacimiento", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+            {{ link_to("yacimiento", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
 </table>
 
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="yacimiento_destino">Destino</label>
-
-    <div class="form-group">
-        {{ text_field("yacimiento_destino", "size" : 30) }}
+    <div class="col-md-6 col-md-offset-3">
+        <label for="yacimiento_destino">Destino</label>
+        <div class="form-group">
+            {{ text_field("yacimiento_destino", "size" : 30,'class':'form-control','required':'','placeholder':'INGRESE EL DESTINO') }}
+        </div>
     </div>
-    {#==================================================#}
-
 </div><!-- /. Cuerpo -->
 
 <!-- Footer -->

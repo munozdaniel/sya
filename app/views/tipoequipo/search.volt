@@ -19,7 +19,6 @@
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
         <tr>
-        <tr>
             <th>N° de Equipo</th>
             <th>Tipo de Equipo</th>
             <th>Editar</th>

@@ -19,7 +19,6 @@
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
         <tr>
-        <tr>
             <th>N° de Carga</th>
             <th>Tipo de Carga</th>
             <th>Editar</th>

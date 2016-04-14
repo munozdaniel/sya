@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("transporte/index", "<i class='fa  fa-mail-reply-all'></i> &nbsp; VOLVER",'class':'btn btn-flat btn-large bg-olive') }}
+                {{ link_to("transporte", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("transporte/new", "<i class='fa fa-plus-square'></i> &nbsp; AGREGAR TRANSPORTE",'class':'btn btn-large btn-danger btn-flat') }}
+                {{ link_to("transporte/new", "Nuevo Transporte",'class':'btn btn-large btn-danger btn-flat') }}
             </td>
         </tr>
     </table>

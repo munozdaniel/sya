@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("viaje/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("viaje", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("viaje/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("viaje/new", "Nuevo Viaje",'class':'btn btn-large btn-danger btn-flat') }}
             </td>
         </tr>
     </table>
@@ -20,7 +20,6 @@
 <div class="box-body">
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
-        <tr>
         <tr>
             <th>N° Viaje</th>
             <th>Origen</th>

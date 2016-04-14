@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("yacimiento/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("yacimiento", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("yacimiento/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("yacimiento/new", "Nuevo Yacimiento",'class':'btn btn-large btn-danger btn-flat') }}
             </td>
         </tr>
     </table>
@@ -19,7 +19,6 @@
 <div class="box-body">
     <table id="tabla_id" class="table table-bordered table-striped">
         <thead>
-        <tr>
         <tr>
             <th>N° Yacimiento</th>
             <th>Destino</th>
