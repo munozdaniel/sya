@@ -30,7 +30,7 @@ class ChoferController extends ControllerBase
      */
     public function searchAction()
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
 

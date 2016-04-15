@@ -24,15 +24,15 @@ class ClienteController extends ControllerBase
     public function indexAction()
     {
         $this->importarSelect2();
-        $elemento =  new \Phalcon\Forms\Element\Select('cliente_id',
-            Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre ASC')),
+        $elemento = new \Phalcon\Forms\Element\Select('cliente_id',
+            Cliente::find(array('cliente_habilitado=1', 'order' => 'cliente_nombre ASC')),
             array(
-                'using'      => array('cliente_id', 'cliente_nombre'),
-                'useEmpty'   => true,
-                'emptyText'  => 'BUSCAR TODOS LOS CLIENTES',
+                'using' => array('cliente_id', 'cliente_nombre'),
+                'useEmpty' => true,
+                'emptyText' => 'BUSCAR TODOS LOS CLIENTES',
                 'emptyValue' => '',
-                'class'=>'form-control autocompletar',
-                'style'=>'height:40px !important;'
+                'class' => 'form-control autocompletar',
+                'style' => 'height:40px !important;'
             ));
         $this->view->formulario = $elemento;
         $this->persistent->parameters = null;
@@ -43,7 +43,7 @@ class ClienteController extends ControllerBase
      */
     public function searchAction()
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -84,19 +84,18 @@ class ClienteController extends ControllerBase
     public function newAction()
     {
         $this->importarSelect2();
-        $elemento =  new \Phalcon\Forms\Element\Select('cliente_id',
-            Cliente::find(array('cliente_habilitado=1','order'=>'cliente_nombre ASC')),
+        $elemento = new \Phalcon\Forms\Element\Select('cliente_id',
+            Cliente::find(array('cliente_habilitado=1', 'order' => 'cliente_nombre ASC')),
             array(
-                'using'      => array('cliente_id', 'cliente_nombre'),
-                'useEmpty'   => true,
-                'emptyText'  => 'BUSCAR TODOS LOS CLIENTES',
+                'using' => array('cliente_id', 'cliente_nombre'),
+                'useEmpty' => true,
+                'emptyText' => 'BUSCAR TODOS LOS CLIENTES',
                 'emptyValue' => '',
-                'class'=>'form-control autocompletar',
-                'style'=>'height:40px !important;'
+                'class' => 'form-control autocompletar',
+                'style' => 'height:40px !important;'
             ));
         $this->view->formulario = $elemento;
     }
-
 
 
     /**
@@ -253,6 +252,7 @@ class ClienteController extends ControllerBase
             "action" => "index"
         ));
     }
+
     /**
      * Eliminar manera logica.
      *
@@ -319,5 +319,15 @@ class ClienteController extends ControllerBase
             "controller" => "cliente",
             "action" => "search"
         ));
+    }
+
+    /**
+     * Muestra un formulario que permite gestionar individualmente cada entidad
+     * del sistema.
+     * Cliente/Operadora/CentroCosto/Linea/EquipoPozo/Yacimiento/Chofer/Transporte/TipoEquipo/TipoCarga/Viaje
+     */
+    public function gestionAction()
+    {
+
     }
 }

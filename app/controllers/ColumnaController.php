@@ -26,6 +26,7 @@ class ColumnaController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsTable();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -265,6 +266,7 @@ class ColumnaController extends ControllerBase
                         $claves[] = array("data" => $col['columna_nombre']);
                         $i++;
                     }
+                    $data['planilla_nombreCliente'] = $planilla->getPlanillaNombreCliente();
                     $data['columnas'] = $retorno;
                     $data['claves'] = $claves;
 
@@ -280,54 +282,12 @@ class ColumnaController extends ControllerBase
         echo json_encode($data);
     }
 
-    /***************************************************************************************************/
-    public function obtenerColumnasNombreIdAction()
-    {
-        $data['success'] = false;
-        $this->view->disable();
-        if ($this->request->getPost('planilla_id') != null) {
-            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
-            if ($planilla && $planilla->getPlanillaCabeceraid() != null) {
-                $columnas = $this->modelsManager
-                    ->createBuilder()
-                    ->columns('columna_nombre,columna_id,columna_habilitado')
-                    ->from('Columna')
-                    ->where('columna_cabeceraId=:columna_cabeceraId:', array('columna_cabeceraId' => $planilla->getPlanillaCabeceraid()))
-                    ->orderBy('columna_posicion ASC')
-                    ->getQuery()
-                    ->execute()->toArray();
-                $data['cabecera_id'] = $planilla->getPlanillaCabeceraid();
-
-                if ($columnas) {
-                    $data['success'] = true;
-                    $retorno = array();
-                    foreach ($columnas as $col) {
-                        $item = array();
-                        $item['columna_id'] = $col['columna_id'];
-                        $item['columna_nombre'] = $col['columna_nombre'];
-                        $item['columna_habilitado'] = $col['columna_habilitado'];
-                        $retorno[] = $item;
-                    }
-                    $data['columnas'] = $retorno;
-
-                } else {
-                    $data['success'] = false;
-                }
-            } else {
-                $data['error'] = "La planilla no se encontró, o no contiene una cabecera apropiada.";
-            }
-        } else {
-            $data['error'] = "Es necesario que seleccione una planilla ";
-        }
-        echo json_encode($data);
-    }
 
     /***************************************************************************************************/
-    public function editarAction($planilla_id=null)
+    public function editarAction($planilla_id = null)
     {
-        if($planilla_id!=null)
-        {
-            $this->tag->setDefault('planilla_id',$planilla_id);
+        if ($planilla_id != null) {
+            $this->tag->setDefault('planilla_id', $planilla_id);
         }
         $this->assets->collection("headerCss")
             ->addCss('plugins/iCheck/all.css');
@@ -336,21 +296,59 @@ class ColumnaController extends ControllerBase
 
         //SELECT2
         $this->importarSelect2();
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('planilla_id',
-            Planilla::find(array('planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('cabecera_id',
+            Cabecera::find(array('cabecera_habilitado=1', 'order' => 'cabecera_id DESC')),
             array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'using' => array('cabecera_id', 'cabecera_nombre'),
                 'useEmpty' => true,
-                'emptyText' => 'SELECCIONAR PLANILLA',
+                'emptyText' => 'Seleccione una cabecera',
                 'emptyValue' => '',
                 'class' => 'form-control autocompletar',
                 'style' => 'width:100%',
                 'required' => '',
-                'onchange' => 'cargarColumnas()'
+                'onchange'=>'cargarColumnas()'
             ));
     }
 
+    /***************************************************************************************************/
+    public function obtenerColumnasNombreIdAction()
+    {
+        $data['success'] = false;
+        $this->view->disable();
+        if ($this->request->getPost('cabecera_id','int') != null) {
+            $columnas = $this->modelsManager
+                ->createBuilder()
+                ->columns('columna_nombre,columna_id,columna_habilitado')
+                ->from('Columna')
+                ->where('columna_cabeceraId=:columna_cabeceraId:', array('columna_cabeceraId' => $this->request->getPost('cabecera_id','int')))
+                ->orderBy('columna_posicion ASC')
+                ->getQuery()
+                ->execute()->toArray();
+            $data['cabecera_id'] = $this->request->getPost('cabecera_id','int');
+
+            if ($columnas) {
+                $data['success'] = true;
+                $retorno = array();
+                foreach ($columnas as $col) {
+                    $item = array();
+                    $item['columna_id'] = $col['columna_id'];
+                    $item['columna_nombre'] = $col['columna_nombre'];
+                    $item['columna_habilitado'] = $col['columna_habilitado'];
+                    $retorno[] = $item;
+                }
+                $data['columnas'] = $retorno;
+
+            } else {
+                $data['success'] = false;
+                $data['mensaje'] = "Por favor seleccione una cabecera que contenga columnas.";
+
+            }
+        } else {
+            $data['mensaje'] = "Por favor seleccione una cabecera.";
+        }
+
+        echo json_encode($data);
+    }
     public function guardarEditarAction()
     {
         $band = true;
@@ -366,7 +364,7 @@ class ColumnaController extends ControllerBase
             $this->flash->error("Hubo un problema al encontrar la cabecera");
             return $this->redireccionar('columna/editar');
         }
-        $encontro=false;
+        $encontro = false;
         $allColumns = Columna::find(array("columna_cabeceraId = :cabecera_id:", 'bind' => array("cabecera_id" => $this->request->getPost("cabecera_id"))));
         foreach ($allColumns as $colBD) {
 
@@ -377,7 +375,7 @@ class ColumnaController extends ControllerBase
                     $encontro = true;
                 }
             }
-            if(!$encontro)
+            if (!$encontro)
                 $colBD->setColumnaHabilitado(0);
             if (!$colBD->update()) {
                 $band = false;
@@ -390,6 +388,7 @@ class ColumnaController extends ControllerBase
 
         return $this->redireccionar('columna/editar');
     }
+
     /**
      * Agregar columnas extras a la planilla
      */
@@ -397,37 +396,32 @@ class ColumnaController extends ControllerBase
     {
         //SELECT2
         $this->importarSelect2();
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('planilla_id',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+        //Select Autocomplete Cabecera
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('cabecera_id',
+            Cabecera::find(array('cabecera_habilitado=1', 'order' => 'cabecera_id DESC')),
             array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'using' => array('cabecera_id', 'cabecera_nombre'),
                 'useEmpty' => false,
-                'emptyText' => 'Seleccione una planilla',
+                'emptyText' => 'Seleccione una cabecera',
                 'emptyValue' => '',
                 'class' => 'form-control autocompletar',
                 'style' => 'width:100%',
                 'required' => ''
             ));
     }
+
     /**
      * Guarda las columnas extras a una planilla determinada
      */
     public function guardarExtraAction()
     {
         if ($this->request->isPost()) {
-            if ($this->request->getPost('planilla_id') == null || $this->request->getPost('columna') == null) {
+            if ($this->request->getPost('cabecera_id', 'int') == null || $this->request->getPost('columna') == null) {
                 $this->flash->error("Por favor verifique que la planilla y las columnas no esten vacías.");
                 return $this->redireccionar('columna/agregarExtra');
             }
-            //Con el planilla_id recuperamos la planilla y su cabecera para guardar las nuevas columnas.
-            $planilla = Planilla::findFirstByPlanilla_id($this->request->getPost('planilla_id'));
-            if (!$planilla) {
-                $this->flash->error("La planilla no se encontró.");
-                return $this->redireccionar('columna/agregarExtra');
-            }
             $max = count(Columna::find(array('columna_cabeceraId=:cabeceraId: AND columna_habilitado=1',
-                'bind' => array('cabeceraId' => $planilla->getCabecera()->getCabeceraId()))));
+                'bind' => array('cabeceraId' => $this->request->getPost('cabecera_id', 'int')))));
             $arregloColumnas = $this->request->getPost('columna');
             foreach ($arregloColumnas AS $columna) {
                 if (!empty($columna)) {
@@ -437,7 +431,7 @@ class ColumnaController extends ControllerBase
                     $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
                     $nuevaColumna->setColumnaExtra(1);
                     $nuevaColumna->setColumnaPosicion($max);
-                    $nuevaColumna->setColumnaCabeceraId($planilla->getCabecera()->getCabeceraId());
+                    $nuevaColumna->setColumnaCabeceraId($this->request->getPost('cabecera_id', 'int'));
                     $nuevaColumna->setColumnaHabilitado(1);
                     if (!$nuevaColumna->save()) {
                         foreach ($nuevaColumna->getMessages() as $message) {

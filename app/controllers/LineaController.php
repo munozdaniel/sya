@@ -3,6 +3,13 @@
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
+/**
+ * Las Siguientes busquedas deberán ser cambiadas para utilizar datatables
+ * buscarLineaPorId
+ * searchAction
+ * buscarLineasPorClienteAction
+ * Class LineaController
+ */
 class LineaController extends ControllerBase
 {
     public function initialize()
@@ -24,13 +31,13 @@ class LineaController extends ControllerBase
     {
         $this->persistent->parameters = null;
     }
-
+    /*INICIO BUSCADORES*/
     /**
      * Searches for linea
      */
     public function searchAction()
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
         if ($this->request->isPost()) {
@@ -92,6 +99,39 @@ class LineaController extends ControllerBase
         $this->view->page = $paginator->getPaginate();
         $this->view->pick('linea/search');
     }
+    /**
+     * Buscar la linea correspondiente a un ID enviado por GET
+     * @return bool
+     */
+    public function buscarLineaPorIdAction()
+    {
+        if(!$this->request->isGet()){
+            return $this->redireccionar('linea/index');
+        }
+        parent::importarJsSearch();
+
+        $numberPage = 1;
+        $numberPage = $this->request->getQuery("page", "int");
+        $linea = Linea::find(array('linea_id=:linea_id:',
+            'bind'=>array('linea_id'=>$this->request->get('linea_id')),'order by'=>'linea_nombre ASC'));
+        if (count($linea) == 0) {
+            $this->flash->notice("No se encontraron resultados en la búsqueda");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "linea",
+                "action" => "index"
+            ));
+        }
+        $paginator = new Paginator(array(
+            "data" => $linea,
+            "limit"=> 10000,
+            "page" => $numberPage
+        ));
+
+        $this->view->page = $paginator->getPaginate();
+        $this->view->pick('linea/search');
+    }
+    /*FIN BUSCADORES*/
     /**
      * Displays the creation form
      */
@@ -324,6 +364,10 @@ class LineaController extends ControllerBase
             "action" => "search"
         ));
     }
+
+    /**
+     * Metodo ajax
+     */
     public function buscarLineasAction()
     {
         $this->view->disable();
@@ -350,4 +394,6 @@ class LineaController extends ControllerBase
         }
 
     }
+
+
 }

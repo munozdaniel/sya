@@ -5,7 +5,18 @@ use Phalcon\Paginator\Adapter\Model as Paginator;
 
 class ConcatenadoController extends ControllerBase
 {
+    public function initialize()
+    {
+        $this->view->setTemplateAfter('principal');
+        $this->tag->setTitle('Concatenado');
+        $miSesion = $this->session->get('auth');
+        if ($miSesion['rol_nombre'] == 'ADMIN')
+            $this->view->admin = 1;
+        else
+            $this->view->admin = 0;
+        parent::initialize();
 
+    }
     /**
      * Index action
      */
@@ -20,6 +31,7 @@ class ConcatenadoController extends ControllerBase
     public function searchAction()
     {
 
+        parent::importarJsTable();
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, "Concatenado", $_POST);
@@ -36,7 +48,7 @@ class ConcatenadoController extends ControllerBase
 
         $concatenado = Concatenado::find($parameters);
         if (count($concatenado) == 0) {
-            $this->flash->notice("The search did not find any concatenado");
+            $this->flash->notice("La búsqueda no encontró ningún resultado");
 
             return $this->dispatcher->forward(array(
                 "controller" => "concatenado",
@@ -46,7 +58,7 @@ class ConcatenadoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $concatenado,
-            "limit"=> 10,
+            "limit"=> 10000,
             "page" => $numberPage
         ));
 
@@ -73,7 +85,7 @@ class ConcatenadoController extends ControllerBase
 
             $concatenado = Concatenado::findFirstByconcatenado_id($concatenado_id);
             if (!$concatenado) {
-                $this->flash->error("concatenado was not found");
+                $this->flash->error("El concatenado no se encontró");
 
                 return $this->dispatcher->forward(array(
                     "controller" => "concatenado",
@@ -106,7 +118,7 @@ class ConcatenadoController extends ControllerBase
         $concatenado = new Concatenado();
 
         $concatenado->setConcatenadoNombre($this->request->getPost("concatenado_nombre"));
-        $concatenado->setConcatenadoHabilitado($this->request->getPost("concatenado_habilitado"));
+        $concatenado->setConcatenadoHabilitado(1);
         
 
         if (!$concatenado->save()) {
@@ -120,7 +132,7 @@ class ConcatenadoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("concatenado was created successfully");
+        $this->flash->success("El concatenado fue creado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "concatenado",
@@ -147,7 +159,7 @@ class ConcatenadoController extends ControllerBase
 
         $concatenado = Concatenado::findFirstByconcatenado_id($concatenado_id);
         if (!$concatenado) {
-            $this->flash->error("concatenado does not exist " . $concatenado_id);
+            $this->flash->error("El concatenado no existe " . $concatenado_id);
 
             return $this->dispatcher->forward(array(
                 "controller" => "concatenado",
@@ -172,7 +184,7 @@ class ConcatenadoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("concatenado was updated successfully");
+        $this->flash->success("El concatenado fue actualizado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "concatenado",
@@ -211,7 +223,7 @@ class ConcatenadoController extends ControllerBase
             ));
         }
 
-        $this->flash->success("concatenado was deleted successfully");
+        $this->flash->success("El concatenado fue borrado correctamente");
 
         return $this->dispatcher->forward(array(
             "controller" => "concatenado",

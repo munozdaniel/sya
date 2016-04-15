@@ -30,7 +30,7 @@ class ViajeController extends ControllerBase
      */
     public function searchAction()
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
         if ($this->request->isPost()) {

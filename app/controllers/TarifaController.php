@@ -19,6 +19,7 @@ class TarifaController extends ControllerBase
      */
     public function searchAction()
     {
+        parent::importarJsTable();
 
         $numberPage = 1;
         if ($this->request->isPost()) {

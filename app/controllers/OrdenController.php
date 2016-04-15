@@ -3,6 +3,10 @@
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\NativeArray as Paginator;
 
+/**
+ * fixme: ELIMINAR!!
+ * Class OrdenController
+ */
 class OrdenController extends ControllerBase
 {
     public function initialize()
