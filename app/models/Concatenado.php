@@ -129,5 +129,18 @@ class Concatenado extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    public function validation()
+    {
 
+        $this->validate(
+            new \Phalcon\Mvc\Model\Validator\Uniqueness(
+                array(
+                    "field"   => "concatenado_nombre",
+                    "message" => "El Concatenado ya se encuentra  en la Base de Datos."
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }

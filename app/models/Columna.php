@@ -688,7 +688,7 @@ class Columna extends \Phalcon\Mvc\Model
             $columna = new Columna();
             $columna->setTransaction($transaction);
             $columna->setColumnaCabeceraId($cabecera_id);
-            $columna->setColumnaPosicion(24);
+            $columna->setColumnaPosicion(25);
             $columna->setColumnaNombre('PDF');
             $columna->setColumnaClave('Remito.remito_pdf');
             $columna->setColumnaHabilitado(1);
@@ -701,6 +701,39 @@ class Columna extends \Phalcon\Mvc\Model
             }
             $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
             /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(26);
+            $columna->setColumnaNombre('ADMIN');
+            $columna->setColumnaClave('Administrar');
+            $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
+            }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+            /*=================================*/
+            $columna = new Columna();
+            $columna->setTransaction($transaction);
+            $columna->setColumnaCabeceraId($cabecera_id);
+            $columna->setColumnaPosicion(26);
+            $columna->setColumnaNombre('ES FLETERO');
+            $columna->setColumnaClave('Chofer.chofer_esFletero');
+            $columna->setColumnaHabilitado(1);
+            $columna->setColumnaExtra(0);
+            if (!$columna->save()) {
+                $transaction->rollback("Ocurrió un problema al guardar una columna");
+                $data['mensaje']= "Ocurrio un problema al guardar la columna";
+                $data['success']=false;
+                return $data;
+            }
+            $retorno[]=array('columna_id'=>$columna->getColumnaId(),'columna_nombre'=>$columna->getColumnaNombre());
+            /*=================================*/
+
             $transaction->commit();
             $data['columnas']=$retorno;
             return $data;

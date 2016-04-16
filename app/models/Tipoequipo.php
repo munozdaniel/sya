@@ -105,7 +105,7 @@ class Tipoequipo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'tipoEquipo';
+        return 'tipoequipo';
     }
 
     /**
