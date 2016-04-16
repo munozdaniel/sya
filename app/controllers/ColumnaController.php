@@ -284,6 +284,10 @@ class ColumnaController extends ControllerBase
 
 
     /***************************************************************************************************/
+    /**
+     * Muestra todas las cabeceras disponibles, para luego buscar sus columnas en obtenerColumnasNombreId.
+     * @param null $planilla_id
+     */
     public function editarAction($planilla_id = null)
     {
         if ($planilla_id != null) {
@@ -296,7 +300,7 @@ class ColumnaController extends ControllerBase
 
         //SELECT2
         $this->importarSelect2();
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('cabecera_id',
+        $select = new \Phalcon\Forms\Element\Select('cabecera_id',
             Cabecera::find(array('cabecera_habilitado=1', 'order' => 'cabecera_id DESC')),
             array(
                 'using' => array('cabecera_id', 'cabecera_nombre'),
@@ -305,12 +309,12 @@ class ColumnaController extends ControllerBase
                 'emptyValue' => '',
                 'class' => 'form-control autocompletar',
                 'style' => 'width:100%',
-                'required' => '',
-                'onchange'=>'cargarColumnas()'
+                'required' => ''
             ));
+        $select->clear();
+        $this->view->formulario =$select;
     }
 
-    /***************************************************************************************************/
     public function obtenerColumnasNombreIdAction()
     {
         $data['success'] = false;
@@ -349,6 +353,11 @@ class ColumnaController extends ControllerBase
 
         echo json_encode($data);
     }
+
+    /**
+     * Verifica que columna esta chequeada y cual no, para habilitar o deshabilitar
+     * @return null
+     */
     public function guardarEditarAction()
     {
         $band = true;
@@ -364,10 +373,11 @@ class ColumnaController extends ControllerBase
             $this->flash->error("Hubo un problema al encontrar la cabecera");
             return $this->redireccionar('columna/editar');
         }
-        $encontro = false;
-        $allColumns = Columna::find(array("columna_cabeceraId = :cabecera_id:", 'bind' => array("cabecera_id" => $this->request->getPost("cabecera_id"))));
-        foreach ($allColumns as $colBD) {
 
+        $allColumns = Columna::find(array("columna_cabeceraId = :cabecera_id:", 'bind' => array("cabecera_id" => $this->request->getPost("cabecera_id",'int'))));
+
+        foreach ($allColumns as $colBD) {
+            $encontro =false;
             foreach ($columnas as $col) {
                 if ($colBD->getColumnaId() == $col)//Si son iguales, es porque esta chequeado => Habilitar
                 {
@@ -428,7 +438,8 @@ class ColumnaController extends ControllerBase
                     $max = $max + 1;
                     $nuevaColumna = new Columna();
                     $nuevaColumna->setColumnaNombre(strtoupper($columna));
-                    $nuevaColumna->setColumnaClave('CLAVE_' . strtoupper($columna));
+                    $cadenaLimpia = preg_replace('/\&(.)[^;]*;/', '\\1', $columna);
+                    $nuevaColumna->setColumnaClave(strtoupper(trim($cadenaLimpia)));
                     $nuevaColumna->setColumnaExtra(1);
                     $nuevaColumna->setColumnaPosicion($max);
                     $nuevaColumna->setColumnaCabeceraId($this->request->getPost('cabecera_id', 'int'));

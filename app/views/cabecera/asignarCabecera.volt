@@ -7,46 +7,44 @@
                 <td align="left">
                     {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Seleccionar otra planilla",'class':'btn btn-flat btn-google') }}
                 </td>
-
-                <td align="right">
-                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-search'></i> Agregar Remito",'class':'btn btn-flat btn-primary') }}
-                </td>
-
             </tr>
         </table>
     </div>
 </div>
 {#=============================================================================================================#}
+<div class="box box-body">
 
-{# Utilizar cabecera existente#}
-<fieldset class="panel-border" >
-    {{ form('planilla/guardarCabeceraPredefinida','method':'post','id':'form_guardarCabeceraPredefinida') }}
-    {{ hidden_field('planilla_id','value':planilla.getPlanillaId()) }}
-    <legend>Seleccionar Cabecera Existente</legend>
-    <div class="col-md-10">
-        <div id="mensajes-alertas"></div>
-        <div id="boton" class="input-group margin">
-            <select id="cabecera_id" name="cabecera_id" class="form-control autocompletar" style="width:100%" required="" tabindex="-1" aria-hidden="true">
-            </select>
+    {# Utilizar cabecera existente#}
+    <fieldset class="panel-border">
+        {{ form('planilla/guardarCabeceraPredefinida','method':'post','id':'form_guardarCabeceraPredefinida') }}
+        {{ hidden_field('planilla_id','value':planilla.getPlanillaId()) }}
+        <legend>Seleccionar Cabecera Existente</legend>
+        <div class="col-md-10">
+            <div id="mensajes-alertas"></div>
+            <div id="boton" class="input-group margin">
+                <select id="cabecera_id" name="cabecera_id" class="form-control autocompletar" style="width:100%"
+                        required="" tabindex="-1" aria-hidden="true">
+                </select>
 
                 <span class="input-group-btn">
                     {{ submit_button('Guardar Cabecera Seleccionada','class':'btn btn-info btn-flat') }}
                 </span>
+            </div>
         </div>
-    </div>
-    <div class="col-md-12"><hr></div>
-    {{ end_form() }}
-</fieldset>
+
+        {{ end_form() }}
+    </fieldset>
+</div>
 <script>
     $(function () {
         $(".autocompletar").select2();
     });
 </script>
 <script>
-    window.onload=function() {
+    window.onload = function () {
         todasLasCabeceras();
     };
-    function todasLasCabeceras(){
+    function todasLasCabeceras() {
         datos = {
             'cliente_nombre': $('#cliente_nombre').val()
         };
@@ -59,8 +57,7 @@
         })
                 .done(function (data) {
                     //console.log(data);
-                    if (data.success)
-                    {
+                    if (data.success) {
                         llenarComboBoxCabecera(data.cabeceras);
                         $('#extra').prop('disabled', false);//Habilitar panel extra
                         $('#ordenar').prop('disabled', false);//Habilitar panel columnas para ordenar
@@ -68,8 +65,7 @@
                         $('#mensajes-alertas').append('<div class="help-block  alert-success"><h4> Por favor, seleccione la cabecera a utilizar </h4></div>'); // add the actual error message under our input
 
                     }
-                    else
-                    {
+                    else {
                         for (var item in data.mensaje) {
                             var elemento = data.mensaje[item];
                             $('#mensajes-alertas').append('<div class="help-block  alert-danger"><h4> <i class="fa fa-exclamation-triangle"></i> ' + elemento + ' <br> Por favor, cree una nueva cabecera.</h4></div>'); // add the actual error message under our input
@@ -82,17 +78,15 @@
                     console.log(data);
                 });
     }
-    function llenarComboBoxCabecera(cabeceras)
-    {
+    function llenarComboBoxCabecera(cabeceras) {
         $('#cabecera_id').empty();
 
         var select = document.getElementById("cabecera_id");
         var optEmpty = document.createElement("option");
-        optEmpty.text="Seleccione una opción";
-        optEmpty.value="";
+        optEmpty.text = "Seleccione una opción";
+        optEmpty.value = "";
         select.appendChild(optEmpty);
-        for(var item in cabeceras)
-        {
+        for (var item in cabeceras) {
 
             var elemento = cabeceras[item];
             // log data to the console so we can see
@@ -126,7 +120,7 @@
                     } else {
                         $('#mensajes-alertas').append("<div class='alert alert-success'>OPERACIÓN EXITOSA, REDIRECCIONANDO ... </div>"); // add the actual error message under our input
                         $('#boton').hide(1000);
-                        setTimeout ("redireccionar()", 2000); //tiempo expresado en milisegundos
+                        setTimeout("redireccionar()", 2000); //tiempo expresado en milisegundos
 
                     }
                 })
@@ -137,7 +131,7 @@
                 });
         event.preventDefault();
     });
-    function redireccionar(){
-        window.location="/sya/planilla/view/"+{{ planilla.getPlanillaId() }};
+    function redireccionar() {
+        window.location = "/sya/planilla/view/" +{{ planilla.getPlanillaId() }};
     }
 </script>
