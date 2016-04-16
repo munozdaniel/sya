@@ -176,9 +176,7 @@ class OperadoraController extends ControllerBase
 
     }
 
-    /**
-     * Creates a new linea
-     */
+
     public function agregarOperadoraAlYacimientoAction()
     {
         $this->view->disable();
