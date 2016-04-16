@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("chofer/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("chofer", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("chofer/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("chofer/new", "Nuevo Chofer",'class':'btn btn-large btn-danger btn-flat') }}
             </td>
         </tr>
     </table>
@@ -23,17 +23,26 @@
     });
 </script>
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <table id="tabla"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-toggle="table"
+           data-cookie="true"
+           data-cookie-id-table="tabla"
+           data-reorderable-columns="true"
+           data-click-to-select="true"
+           data-row-style="rowStyle"
+           class="table table-bordered table-striped">
         <thead>
         <tr>
-        <tr>
-            <th>#</th>
-            <th>Nombre Completo</th>
-            <th>Nro Documento</th>
-            <th>Fletero</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
+            <th data-field="Nro" data-sortable="true">#</th>
+            <th data-field="nombre" data-sortable="true" data-halign="center" data-align="center">Nombre Completo</th>
+            <th data-field="dni" data-sortable="true" data-halign="center" data-align="center">Nro Documento</th>
+            <th data-field="fletero" data-sortable="true" data-halign="center" data-align="center">Es Fletero?</th>
+            <th data-field="editar" data-sortable="true" data-halign="center" data-align="center">Editar</th>
+            <th data-field="eliminar" data-sortable="true" data-halign="center" data-align="center">Eliminar</th>
+            <th data-field="estado" style="width: 10px;" data-sortable="true" data-halign="center"
+                data-align="center">EST
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -43,16 +52,14 @@
                     <td>{{ chofer.getChoferId() }}</td>
                     <td>{{ chofer.getChoferNombrecompleto() }}</td>
                     <td>{{ chofer.getChoferDni() }}</td>
-                    <td>{{ chofer.getChoferEsfletero() }}</td>
+                    <td>{% if chofer.getChoferEsfletero()== 0%} NO {% else %} SI {% endif %}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("chofer/edit/"~chofer.getChoferId(), "Editar") }}</td>
-                        <td>
                             {% if chofer.getChoferHabilitado() == 1 %}
-                                <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  chofer.getChoferId() }}">Eliminar</a>
+                                <td><a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  chofer.getChoferId() }}">Eliminar</a></td>
                             {% else %}
-                                {{ link_to("chofer/habilitar/"~chofer.getChoferId(), "Habilitar") }}
+                                <td>{{ link_to("chofer/habilitar/"~chofer.getChoferId(), "Habilitar") }}</td>
                             {%endif%}
-                        </td>
                     {% else %}
                         <td> sin acceso</td>
                         <td> sin acceso</td>
@@ -66,6 +73,12 @@
             {% endfor %}
         {% endif %}
         </tbody>
+        {{ link_to("chofer/search", "Primera",'class':'btn btn-flat btn-primary') }}
+        {{ link_to("chofer/search?page="~page.before, "Anterior",'class':'btn btn-flat btn-primary') }}
+        <a class="btn btn-flat bg-blue-gradient"> {{ page.current~"/"~page.total_pages }} </a>
+        {{ link_to("chofer/search?page="~page.next, "Siguiente",'class':'btn btn-flat btn-primary') }}
+        {{ link_to("chofer/search?page="~page.last, "Ultima",'class':'btn btn-flat btn-primary') }}
+        <hr>
     </table>
 </div>
 
