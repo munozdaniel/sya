@@ -31,7 +31,6 @@
                class="table table-bordered table-striped">
             <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
                 <th data-field="Nro" data-sortable="true">#</th>
                 <th data-field="nombre" data-sortable="true" data-halign="center" data-align="center">Nombre</th>
                 <th data-field="lineas" data-sortable="true" data-halign="center" data-align="center">Lineas</th>
@@ -46,7 +45,6 @@
             {% if page.items is defined %}
                 {% for cliente in page.items %}
                     <tr>
-                        <td>X</td>
                         <td>{{ cliente.getClienteId() }}</td>
                         <td>{{ cliente.getClienteNombre() }}</td>
                         <td>

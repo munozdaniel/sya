@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("centrocosto/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("centrocosto/index", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("centrocosto/new", "CREAR CENTRO DE COSTO ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("centrocosto/new", "Nuevo Centro de Costo",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -17,9 +17,16 @@
 {{ content() }}
 
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <table id="tabla"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-toggle="table"
+           data-cookie="true"
+           data-cookie-id-table="tabla"
+           data-reorderable-columns="true"
+           data-click-to-select="true"
+           data-row-style="rowStyle"
+           class="table table-bordered table-striped">
         <thead>
-        <tr>
         <tr>
             <th>#</th>
             <th>Codigo</th>
@@ -35,7 +42,7 @@
                 <tr>
                     <td>{{ centrocosto.getCentrocostoId() }}</td>
                     <td>{{ centrocosto.getCentrocostoCodigo() }}</td>
-                    <td>{{ link_to('linea/buscarPorNombre/?nombre='~centrocosto.getLinea().getLineaNombre(),""~centrocosto.getLinea().getLineaNombre())}}</td>
+                    <td>{{ link_to('linea/buscarLineaPorId/?linea_id='~centrocosto.getLinea().getLineaId(),""~centrocosto.getLinea().getLineaNombre(),'class':'btn btn-flat bg-light-blue-gradient btn-block')}}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("centrocosto/edit/"~centrocosto.getCentrocostoId(), "Editar") }}</td>
                         <td>
@@ -58,6 +65,12 @@
             {% endfor %}
         {% endif %}
         </tbody>
+        {{ link_to("centrocosto/search", "Primera",'class':'btn btn-flat btn-primary') }}
+        {{ link_to("centrocosto/search?page="~page.before, "Anterior",'class':'btn btn-flat btn-primary') }}
+        <a class="btn btn-flat bg-blue-gradient"> {{ page.current~"/"~page.total_pages }} </a>
+        {{ link_to("centrocosto/search?page="~page.next, "Siguiente",'class':'btn btn-flat btn-primary') }}
+        {{ link_to("centrocosto/search?page="~page.last, "Ultima",'class':'btn btn-flat btn-primary') }}
+        <hr>
     </table>
 </div>
 

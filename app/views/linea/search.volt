@@ -27,7 +27,6 @@
            class="table table-bordered table-striped">
         <thead>
         <tr>
-            <th data-field="state" data-checkbox="true"></th>
             <th data-field="Nro" data-sortable="true">#</th>
             <th data-field="nombre" data-sortable="true" data-halign="center" data-align="center">Nombre</th>
             <th data-field="cliente" data-sortable="true" data-halign="center" data-align="center">Cliente</th>
@@ -42,7 +41,6 @@
         {% if page.items is defined %}
             {% for linea in page.items %}
                 <tr>
-                    <td>X</td>
                     <td>{{ linea.getLineaId() }}</td>
                     <td>{{ linea.getLineaNombre() }}</td>
                     <td><a class="btn btn-flat bg-gray btn-block">{{ linea.getCliente().getClienteNombre() }}</a> </td>
