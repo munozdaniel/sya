@@ -7,10 +7,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("cliente/index", " VOLVER",'class':'btn btn-flat btn-large bg-olive') }}
+                {{ link_to("cliente/index", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("cliente/new", "AGREGAR CLIENTE ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("cliente/new", "Nuevo Cliente",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -83,6 +83,7 @@
             <a class="btn btn-flat bg-blue-gradient"> {{ page.current~"/"~page.total_pages }} </a>
             {{ link_to("cliente/search?page="~page.next, "Siguiente",'class':'btn btn-flat btn-primary') }}
             {{ link_to("cliente/search?page="~page.last, "Ultima",'class':'btn btn-flat btn-primary') }}
+            <hr>
         </table>
     </div>
 </div>

@@ -3,7 +3,7 @@
     <h3 class="box-title">Buscar Cliente</h3>
 </div><!-- /.Titulo -->
 <div align="right">
-    {{ link_to("cliente/new", "Nuevo Cliente",'class':'btn btn-large btn-danger btn-flat') }}
+    {{ link_to("cliente/new", "Nuevo Cliente",'class':'btn btn-flat btn-large btn-danger') }}
 </div>
 <!-- Inicio Formulario -->
 {{ content() }}
@@ -11,6 +11,7 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
+
     {% if formulario is defined %}
         <div class="row form-group">
             <div class="col-md-3">

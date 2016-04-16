@@ -8,7 +8,7 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("cliente", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+            {{ link_to("cliente/index", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
 </table>
@@ -17,7 +17,7 @@
 <div class=" box-body">
     <div class="col-md-6 col-md-offset-3">
         <label>Nombre del cliente</label>
-        {{ text_field('cliente_nombre','class':'form-control','required':'','placeholder':'INGRESE DEL CLIENTE') }}
+        {{ text_field('cliente_nombre','class':'form-control','required':'','placeholder':'INGRESE EL NOMBRE') }}
     </div>
     {#===============================================#}
 </div><!-- /. Cuerpo -->
