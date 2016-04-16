@@ -3,27 +3,21 @@
     <div class="box-header">
         <h2 class="box-title">HABILITAR/DESHABILITAR COLUMNAS
             <br>
-            <small> Seleccione la planilla luego marque las columnas. </small>
+            <small> Seleccione la cabecera y luego marque las columnas a editar. </small>
         </h2>
-        <table width="100%">
-            <tr>
-                <td align="left">{{ link_to("index/dashboard", "<i class='fa fa-home'></i> Tablero Principal",'class':'btn btn-flat btn-primary') }}</td>
-                <td align="right">{{ link_to("cabecera/reordenar", "<i class='fa fa-hand-pointer-o'></i> Reordenar Columnas",'class':'btn btn-flat btn-primary') }}</td>
-            </tr>
-        </table>
     </div>
     {{ content() }}
     <div id="mensajes"></div>
     {{ form("columna/guardarEditar","id":"form-extras", "method":"post") }}
-    {{ hidden_field("cabecera_id") }}
     <fieldset id="fielset-buscar-planilla" class="panel-border">
         <legend>SYA</legend>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-2">
                     <div class="form-group">
-                        <label>Nombre de la planilla</label>
+                        <label>Nombre de la cabecera</label>
                         {{ formulario.render() }}
+                        <a onclick="cargarColumnas()" class="btn btn-primary btn-flat"> Buscar columnas</a>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -33,7 +27,7 @@
             </div>
             <div class="row">
                 <hr>
-                <div class="col-md-6 col-md-offset-4">
+                <div class="col-md-6 col-md-offset-3">
 
                     {{ submit_button('HABILITAR/DESHABILITAR SELECCIONADOS','class':'btn btn-lg btn-primary btn-flat') }}
                 </div>
@@ -53,23 +47,23 @@
     function cargarColumnas()
     {
         var datos = {
-            'planilla_id': document.getElementById("planilla_id").value
+            'cabecera_id': document.getElementById("cabecera_id").value
         };
         $.ajax({
-            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            type: 'POST',
             url: '/sya/columna/obtenerColumnasNombreId',
-            data: datos, // our data object
-            dataType: 'json', // what type of data do we expect back from the server
+            data: datos,
+            dataType: 'json',
             encode: true
         })
                 .done(function (data) {
-                    //console.log(data);
+                    console.log(data);
                     $('#cabecera').empty();
                     $('#mensajes').empty();
                     if (!data.success)
                     {
                         $('#mensajes').append('<div class="help-block  alert-danger">&nbsp;' +
-                        ' <i class="fa fa-exclamation-triangle"></i> Por favor, seleccione una planilla que contenga columnas extras. </div>'); // add the actual error message under our input
+                        ' <i class="fa fa-exclamation-triangle"></i> '+ data.mensaje +'</div>'); // add the actual error message under our input
                     }else{
                         var ppal = document.getElementById("cabecera");
                         document.getElementById("cabecera_id").value = data.cabecera_id;
