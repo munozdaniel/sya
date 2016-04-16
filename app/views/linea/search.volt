@@ -139,7 +139,7 @@
 
                         {{ hidden_field('centroCosto_lineaId') }}
 
-                        <label for="linea_nombre">Nombre de la Linea</label>
+                        <label for="centroCosto_codigo">Nombre del Centro de Costo</label>
 
                         <div class="form-group">
                             {{ text_field("centroCosto_codigo", "size" : 50,'class':'form-control','required':'true','placeholder':'INGRESAR EL CODIGO') }}
