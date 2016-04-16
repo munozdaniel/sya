@@ -24,6 +24,7 @@ class YacimientoController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        $this->view->yacimientoForm = new YacimientoForm();
     }
 
     /**
@@ -71,6 +72,8 @@ class YacimientoController extends ControllerBase
      */
     public function newAction()
     {
+        $this->importarSelect2();
+        $this->view->yacimientoForm = new YacimientoForm(null,array('edit'=>'true','required'=>'required'));
 
     }
 
@@ -94,12 +97,17 @@ class YacimientoController extends ControllerBase
                     "action" => "index"
                 ));
             }
+            $this->view->yacimientoForm = new YacimientoForm($yacimiento,array('required'=>'required'));
 
             $this->view->yacimiento_id = $yacimiento->yacimiento_id;
 
             $this->tag->setDefault("yacimiento_id", $yacimiento->getYacimientoId());
             $this->tag->setDefault("yacimiento_destino", $yacimiento->getYacimientoDestino());
-            $this->tag->setDefault("yacimiento_habilitado", $yacimiento->getYacimientoHabilitado());
+            $operadoras = Operadora::find(array('operadora_habilitado=1 AND operadora_yacimientoId=:yacimiento_id:',
+                'bind'=>array('yacimiento_id'=>$yacimiento->yacimiento_id)));
+
+            $equiposPozos = Equipopozo::find(array('equipoPozo_habilitado=1 AND equipoPozo_yacimientoId=:yacimiento_id:',
+                'bind'=>array('yacimiento_id'=>$yacimiento->yacimiento_id)));
             
         }
     }
@@ -116,12 +124,18 @@ class YacimientoController extends ControllerBase
                 "action" => "index"
             ));
         }
-
+        $yacimientoForm = new YacimientoForm(null,array('required'=>'required'));
         $yacimiento = new Yacimiento();
-
-        $yacimiento->setYacimientoDestino($this->request->getPost("yacimiento_destino"));
-        $yacimiento->setYacimientoHabilitado(1);
-        
+        $data = $this->request->getPost();
+        if (!$yacimientoForm->isValid($data, $yacimiento)) {
+            foreach ($yacimientoForm->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+            return $this->dispatcher->forward(array(
+                "controller" => "yacimiento",
+                "action" => "new"
+            ));
+        }
 
         if (!$yacimiento->save()) {
             foreach ($yacimiento->getMessages() as $message) {
@@ -133,7 +147,7 @@ class YacimientoController extends ControllerBase
                 "action" => "new"
             ));
         }
-
+        $yacimientoForm->clear();
         $this->flash->success("El yacimiento fue creado correctamente");
 
         return $this->dispatcher->forward(array(

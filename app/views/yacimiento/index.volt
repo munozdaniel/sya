@@ -16,7 +16,7 @@
         <label for="yacimiento_id"> N° de Yacimiento</label>
 
         <div class="form-group">
-            {{ text_field("yacimiento_id", "type" : "numeric") }}
+            {{ text_field("yacimiento_id", "type" : "numeric",'class':'form-control','placeholder':'INGRESE EL ID') }}
         </div>
         {#===================================================#}
         <label for="yacimiento_destino">Destino</label>

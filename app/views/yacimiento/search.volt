@@ -51,7 +51,7 @@
                            onclick="setearHidden({{ yacimiento.getYacimientoId() }})">Agregar Operadora</a>
                     </td>
                     <td>
-                        {{ link_to("equipopozo/buscarEPPorYacimiento/"~yacimiento.getYacimientoId(), "Ver Equipo/Pozo",'class':'btn btn-flat  bg-light-blue-gradient') }}
+                        {{ link_to("equipopozo/search/"~yacimiento.getYacimientoId(), "Ver Equipo/Pozo",'class':'btn btn-flat  bg-light-blue-gradient') }}
                         <a href="#agregarEP" role="button"
                            class="btn btn-flat bg-light-blue-gradient" data-toggle="modal"
                            onclick="setearHidden({{ yacimiento.getYacimientoId() }})">Agregar Equipo/Pozo</a>
@@ -160,12 +160,88 @@
     </div>
 </div>
 <!--=========== FIN:Agregar Operadora ================-->
+<!--=========== Agregar EP ================-->
+<div id="agregarEP" class="modal fade modal-primary">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"> INGRESAR DATOS</h4>
+            </div>
+            <div class="modal-body margin-left-right-one">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="mensajes-alertas-ep"></div>
+
+                        {{ form('equipopozo/agregarEPAlYacimiento', "method":"post" ,"id":"guardarEP") }}
+
+                        {{ hidden_field('equipoPozo_yacimientoId') }}
+
+                        <label for="operadora_nombre">Nombre del Equipo/Pozo</label>
+
+                        <div class="form-group">
+                            {{ text_field("equipoPozo_nombre", "size" : 50,'class':'form-control','required':'true','placeholder':'INGRESAR NOMBRE','form':'nuevaOperadora') }}
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
+                {{ submit_button('AGREGAR','class':'btn btn-outline') }}
+
+                {{ end_form() }}
+            </div>
+        </div>
+    </div>
+</div>
+<!--=========== FIN:Agregar EP ================-->
 <script>
     function setearHidden(operadora_yacimientoId) {
         document.getElementById("operadora_yacimientoId").value = operadora_yacimientoId;
+        document.getElementById("equipoPozo_yacimientoId").value = operadora_yacimientoId;
     }
     /**
-     * Realiza una llamada ajax para guardar los datos de una linea para un cliente seleccionado
+     * Realiza una llamada ajax para guardar datos
+     */
+    $('#guardarEP').submit(function (event) {
+        $('.help-block').remove(); // Limpieza de los mensajes de alerta.
+
+        var datos = {
+            'equipoPozo_nombre': $('#equipoPozo_nombre').val(),
+            'equipoPozo_yacimientoId': $('#equipoPozo_yacimientoId').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/sya/equipopozo/agregarEPAlYacimiento',
+            data: datos,
+            dataType: 'json',
+            encode: true
+        })
+                .done(function (data) {
+                    console.log(data);
+                    if (!data.success)
+                    {
+                        $('#mensajes-alertas-ep').append('<div class="help-block  alert-danger"><h4><i class="fa fa-info-circle"></i> ' + data.mensaje + '</h4></div>');
+                    }
+                    else
+                    {
+                        $('#mensajes-alertas-ep').append('<div class="help-block  alert-success"><h4><i class="fa fa-exclamation-triangle"></i> ' + data.mensaje + '<br><small> Puede continuar agregando lineas.</small></h4></div>');
+                        document.getElementById("equipoPozo_nombre").value = "";
+
+                    }
+                })
+                .fail(function (data) {
+                    console.log(data);
+                });
+        event.preventDefault();
+    });
+    /**
+     * Realiza una llamada ajax para guardar datos
      */
     $('#guardarOperadora').submit(function (event) {
         $('.help-block').remove(); // Limpieza de los mensajes de alerta.

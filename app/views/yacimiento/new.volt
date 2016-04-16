@@ -21,6 +21,10 @@
         <div class="form-group">
             {{ text_field("yacimiento_destino", "size" : 30,'class':'form-control','required':'','placeholder':'INGRESE EL DESTINO') }}
         </div>
+        <label for="operadoras">Seleccionar Operadoras</label>
+        <div class="form-group">
+            {{ form.render('operadoras') }}
+        </div>
     </div>
 </div><!-- /. Cuerpo -->
 
@@ -28,4 +32,4 @@
 <div class="box-footer">
     {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
-</form>
+{{ end_form() }}
