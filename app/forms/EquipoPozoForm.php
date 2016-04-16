@@ -32,7 +32,7 @@ class EquipoPozoForm extends Form
 
         $equipoPozo_nombre = new Text("equipoPozo_nombre", array(
             'maxlength' => 50,
-            'placeholder' => 'NOMBRE',
+            'placeholder' => 'NOMBRE','required'=>'true'
         ));
         $equipoPozo_nombre->setLabel("Nombre Equipo/Pozo");
         $equipoPozo_nombre->setFilters(array('striptags', 'string'));
@@ -42,15 +42,18 @@ class EquipoPozoForm extends Form
             ))
         ));
         $this->add($equipoPozo_nombre);
-        /*======================== YACIMIENTO =========================*/
-        //yacimiento_id - yacimiento_destino
-        $listaYacimiento = new DataListElement('equipoPozo_yacimiento',
-            array(array('placeholder' => 'DESTINO', 'maxlength' => 50),
-                Yacimiento::find(),
-                array('yacimiento_id', 'yacimiento_destino'),'equipoPozo_yacimientoId'
-            ));
-        $listaYacimiento->setLabel('Yacimiento');
-        $this->add($listaYacimiento);
+
+        $operadoras = new \Phalcon\Forms\Element\Select('equipoPozo_yacimientoId',
+            Yacimiento::find(array('yacimiento_habilitado=1', 'order' => 'yacimiento_destino')),
+            array(
+                'using' => array('yacimiento_id', 'yacimiento_destino'),
+                'useEmpty' => true,
+                'emptyText' => 'SELECCIONE EL YACIMIENTO',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%'
+            )
+        );        $this->add($operadoras);
 
 
     }
