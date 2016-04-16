@@ -16,27 +16,30 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    {% for element in centroCostoForm %}
-        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
-            {{ element }}
-        {% else %}
-            {{ element.label() }}
+    <div class="col-md-6 col-md-offset-3">
+
+        {% for element in centroCostoForm %}
+            {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+                {{ element }}
+            {% else %}
+                {{ element.label() }}
+                <div class="form-group">
+                    {{ element }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div id="nuevo" style="display: none;">
             <div class="form-group">
-                {{ element.render(['class': '']) }}
+                {{ text_field("linea_nombre", "size" : 50,"placeholder":"INGRESAR NUEVA LINEA",'class':'form-control') }}
             </div>
-        {% endif %}
-    {% endfor %}
-    <div id="nuevo" style="display: none;">
-        <div class="form-group">
-            {{ text_field("linea_nombre", "size" : 50,"placeholder":"NUEVA LINEA") }}
         </div>
-    </div>
-    <div class="form-group">
-        <div class="checkbox">
-            <label for="nuevaLinea">
-                <input id="nuevaLinea" name="nuevaLinea" type="checkbox" onclick="habilitarNuevo(this);" value="1">
-                Ingresar nueva Linea?
-            </label>
+        <div class="form-group">
+            <div class="checkbox">
+                <label for="nuevaLinea">
+                    <input id="nuevaLinea" name="nuevaLinea" type="checkbox" onclick="habilitarNuevo(this);" value="1">
+                    Ingresar nueva Linea?
+                </label>
+            </div>
         </div>
     </div>
     {#===============================================#}

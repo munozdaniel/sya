@@ -23,7 +23,7 @@ class CentroCostoForm  extends Form
 
         /*======================== ID =========================*/
         if (!isset($options['edit'])) {
-            $equipoPozo_id = new Text("centroCosto_id");
+            $equipoPozo_id = new Text("centroCosto_id",array('class'=>'form-control','placeholder'=>'INGRESAR ID CENTRO DE COSTO'));
             $this->add($equipoPozo_id->setLabel("N° de Centro Costo"));
         } else {
             $this->add(new Hidden("centroCosto_id"));
@@ -32,7 +32,8 @@ class CentroCostoForm  extends Form
 
         $equipoPozo_nombre = new Text("centroCosto_codigo", array(
             'maxlength' => 50,
-            'placeholder' => 'CODIGO',
+            'placeholder' => 'INGRESAR CODIGO',
+            'class'=>'form-control'
         ));
         $equipoPozo_nombre->setLabel("Centro Costo");
         $equipoPozo_nombre->setFilters(array('striptags', 'string'));
@@ -45,7 +46,7 @@ class CentroCostoForm  extends Form
         /*======================== LINEA =========================*/
         //"centroCosto_lineaId" .... linea_id - linea_nombre
         $listaLinea = new DataListElement('centroCosto_linea',
-            array(array('placeholder' => 'LINEA', 'maxlength' => 50),
+            array(array('placeholder' => 'INGRESAR NOMBRE', 'maxlength' => 50,'class'=>'form-control'),
                 Linea::find(),
                 array('linea_id', 'linea_nombre'),'centroCosto_lineaId'
             ));

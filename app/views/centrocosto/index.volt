@@ -12,21 +12,25 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    {% for element in centroCostoForm %}
-        {% if admin!=1 %}
-            {{ hidden_field("centroCosto_habilitado", "value" : "1" ) }}
-        {% endif %}
-        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
-            {{ element }}
-        {% else %}
-            {{ element.label(['class': 'control-label']) }}
-            <div class="form-group">
+    <div class="col-md-6 col-md-offset-3">
+
+        {% for element in centroCostoForm %}
+            {% if admin!=1 %}
+                {{ hidden_field("centroCosto_habilitado", "value" : "1" ) }}
+            {% endif %}
+            {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
                 {{ element }}
-            </div>
-        {% endif %}
-    {% endfor %}
-    {#===============================================#}
-</div><!-- /.Cuerpo -->
+            {% else %}
+                {{ element.label(['class': 'control-label']) }}
+
+                <div class="form-group">
+                    {{ element }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {#===============================================#}
+    </div>
+</div>
 <!-- /.Cuerpo -->
 <!-- Footer -->
 <div class="box-footer">
