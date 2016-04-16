@@ -27,14 +27,18 @@
            data-row-style="rowStyle"
            class="table table-bordered table-striped">
         <thead>
+
         <tr>
-            <th>#</th>
-            <th>Codigo</th>
-            <th>Linea</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
+            <th data-field="Nro" data-sortable="true">#</th>
+            <th data-field="codigo" data-sortable="true" data-halign="center" data-align="center">Codigo</th>
+            <th data-field="linea" data-sortable="true" data-halign="center" data-align="center">Linea</th>
+            <th data-field="editar" data-sortable="true" data-halign="center" data-align="center">Editar</th>
+            <th data-field="eliminar" data-sortable="true" data-halign="center" data-align="center">Eliminar</th>
+            <th data-field="estado" style="width: 10px;" data-sortable="true" data-halign="center"
+                data-align="center">EST
+            </th>
         </tr>
+
         </thead>
         <tbody>
         {% if page.items is defined %}
@@ -42,15 +46,16 @@
                 <tr>
                     <td>{{ centrocosto.getCentrocostoId() }}</td>
                     <td>{{ centrocosto.getCentrocostoCodigo() }}</td>
-                    <td>{{ link_to('linea/buscarLineaPorId/?linea_id='~centrocosto.getLinea().getLineaId(),""~centrocosto.getLinea().getLineaNombre(),'class':'btn btn-flat bg-light-blue-gradient btn-block')}}</td>
+                    <td>{{ link_to('linea/buscarLineaPorId/?linea_id='~centrocosto.getLinea().getLineaId(),""~centrocosto.getLinea().getLineaNombre(),'class':'btn btn-flat bg-light-blue-gradient btn-block') }}</td>
                     {% if admin == 1 %}
                         <td>{{ link_to("centrocosto/edit/"~centrocosto.getCentrocostoId(), "Editar") }}</td>
                         <td>
                             {% if centrocosto.getCentrocostoHabilitado() == 1 %}
-                                <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal" data-id="{{  centrocosto.getCentrocostoId() }}">Eliminar</a>
+                                <a href="#confirmarEliminar" role="button" class="enviar-dato" data-toggle="modal"
+                                   data-id="{{ centrocosto.getCentrocostoId() }}">Eliminar</a>
                             {% else %}
                                 {{ link_to("centrocosto/habilitar/"~centrocosto.getCentrocostoId(), "Habilitar") }}
-                            {%endif%}
+                            {% endif %}
                         </td>
                     {% else %}
                         <td> sin acceso</td>
@@ -91,6 +96,7 @@
                         <!-- START SUBSCRIBE HEADING -->
                         <div class="heading">
                             <h2 class="wow fadeInLeftBig">Esta seguro de continuar con la eliminación? </h2>
+
                             <p>Recuerde que el Centro Costo eliminado no podrá ser utilizado nuevamente.</p>
                         </div>
 
@@ -100,7 +106,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
                 {{ form('centrocosto/eliminar','method':'POST') }}
-                <div  id="cuerpo">
+                <div id="cuerpo">
                     {{ hidden_field('id','value':'','form') }}
                     {{ submit_button('Eliminar','class':'btn btn-outline') }}
                 </div>
