@@ -4,13 +4,8 @@
         <table width="100%">
             <tr>
                 <td align="left">
-                    {{ link_to("remito/buscarRemitoPorPlanilla", "<i class='fa fa-search'></i> Realizar nueva búsqueda",'class':'btn btn-flat btn-google') }}
+                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-search'></i> Realizar nueva búsqueda",'class':'btn btn-flat btn-google') }}
                 </td>
-
-                <td align="right">
-                    {{ link_to("remito/nuevoRemitoPorPlanilla", "<i class='fa fa-search'></i> Agregar Remito",'class':'btn btn-flat btn-primary') }}
-                </td>
-
             </tr>
         </table>
     </div>
