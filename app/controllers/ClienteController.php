@@ -71,7 +71,7 @@ class ClienteController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $cliente,
-            "limit" => 10000,
+            "limit" => 30,
             "page" => $numberPage
         ));
 
@@ -94,7 +94,7 @@ class ClienteController extends ControllerBase
                 'class' => 'form-control autocompletar',
                 'style' => 'height:40px !important;'
             ));
-        $this->view->formulario = $elemento;
+        $this->view->clienteForm  = new ClienteForm();
     }
 
 
