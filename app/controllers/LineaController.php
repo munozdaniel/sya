@@ -65,7 +65,7 @@ class LineaController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $linea,
-            "limit"=> 10000,
+            "limit"=> 25,
             "page" => $numberPage
         ));
 
@@ -76,7 +76,7 @@ class LineaController extends ControllerBase
      */
     public function buscarLineasPorClienteAction($cliente_id)
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
         $numberPage = $this->request->getQuery("page", "int");
