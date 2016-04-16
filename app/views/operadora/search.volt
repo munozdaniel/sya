@@ -68,6 +68,12 @@
         {% endif %}
 
         </tbody>
+        {{ link_to("operadora/search", "Primera",'class':'btn btn-flat btn-primary') }}
+        {{ link_to("operadora/search?page="~page.before, "Anterior",'class':'btn btn-flat btn-primary') }}
+        <a class="btn btn-flat bg-blue-gradient"> {{ page.current~"/"~page.total_pages }} </a>
+        {{ link_to("operadora/search?page="~page.next, "Siguiente",'class':'btn btn-flat btn-primary') }}
+        {{ link_to("operadora/search?page="~page.last, "Ultima",'class':'btn btn-flat btn-primary') }}
+        <hr>
     </table>
 </div>
 
