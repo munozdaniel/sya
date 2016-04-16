@@ -50,7 +50,7 @@ class CentrocostoController extends ControllerBase
 
         $centrocosto = Centrocosto::find($parameters);
         if (count($centrocosto) == 0) {
-            $this->flash->notice("No se encontraron resultados en la busqueda");
+            $this->flash->notice("No se encontraron resultados en la búsqueda");
 
             return $this->dispatcher->forward(array(
                 "controller" => "centrocosto",
@@ -60,7 +60,7 @@ class CentrocostoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $centrocosto,
-            "limit"=> 10000,
+            "limit"=> 25,
             "page" => $numberPage
         ));
 
@@ -69,7 +69,7 @@ class CentrocostoController extends ControllerBase
     /**
      * Searches for centrocosto
      */
-    public function buscarCCPorLineaAction($linea_id)
+    public function buscarCCPorLineaAction($centroCosto_id)
     {
         parent::importarJsSearch();
 
@@ -77,7 +77,7 @@ class CentrocostoController extends ControllerBase
         $numberPage = $this->request->getQuery("page", "int");
 
         $centrocosto = Centrocosto::find(array("centroCosto_lineaId=:linea_id: AND centroCosto_habilitado=1",
-            'bind'=>array('linea_id'=>$linea_id)));
+            'bind'=>array('linea_id'=>$centroCosto_id)));
         if (count($centrocosto) == 0) {
             $this->flash->notice("No se encontraron resultados en la busqueda");
 
@@ -133,9 +133,9 @@ class CentrocostoController extends ControllerBase
             $this->tag->setDefault("centroCosto_codigo", $centrocosto->getCentrocostoCodigo());
             $this->tag->setDefault("centroCosto_habilitado", $centrocosto->getCentrocostoHabilitado());
             //Asignado valor por defecto al datalist centroCosto_linea
-            $linea = Linea::findFirstByLinea_id($centrocosto->centroCosto_lineaId);
-            if($linea){
-                $nombre = $linea->linea_nombre;
+            $centroCosto = Linea::findFirstByLinea_id($centrocosto->centroCosto_lineaId);
+            if($centroCosto){
+                $nombre = $centroCosto->linea_nombre;
                 $this->assets->collection('footerInline')->addInlineJs("
                                             function cargarCombo() {
                                                 document.getElementById('centroCosto_linea').value='$nombre';
@@ -162,11 +162,11 @@ class CentrocostoController extends ControllerBase
         $centrocosto = new Centrocosto();
         if ($this->request->getPost("nuevaLinea") == 1)//Checkbox: Nueva Linea? 1:SI
         {
-            $linea = new Linea();
-            $linea->assign(array('linea_nombre'=>$this->request->getPost('linea_nombre'),
+            $centroCosto = new Linea();
+            $centroCosto->assign(array('linea_nombre'=>$this->request->getPost('linea_nombre'),
                 'linea_habilitado'=>1));//el input linea_nombre es para crear una nueva linea
-            if(!$linea->save()){
-                foreach ($linea->getMessages() as $message) {
+            if(!$centroCosto->save()){
+                foreach ($centroCosto->getMessages() as $message) {
                     $this->flash->error($message);
                 }
                 return $this->dispatcher->forward(array(
@@ -175,7 +175,7 @@ class CentrocostoController extends ControllerBase
                 ));
             }
 
-            $centrocosto->setCentroCostoLineaId($linea->getLineaId());
+            $centrocosto->setCentroCostoLineaId($centroCosto->getLineaId());
         } else {
 
             if($this->request->getPost("centroCosto_lineaId")!=NULL)
@@ -240,11 +240,11 @@ class CentrocostoController extends ControllerBase
 
         if ($this->request->getPost("nuevaLinea") == 1)//Checkbox: Nueva Linea? 1:SI
         {
-            $linea = new Linea();
-            $linea->assign(array('linea_nombre'=>$this->request->getPost('linea_nombre'),
+            $centroCosto = new Linea();
+            $centroCosto->assign(array('linea_nombre'=>$this->request->getPost('linea_nombre'),
                 'linea_habilitado'=>1));//el input linea_nombre es para crear una nueva linea
-            if(!$linea->save()){
-                foreach ($linea->getMessages() as $message) {
+            if(!$centroCosto->save()){
+                foreach ($centroCosto->getMessages() as $message) {
                     $this->flash->error($message);
                 }
                 return $this->dispatcher->forward(array(
@@ -254,7 +254,7 @@ class CentrocostoController extends ControllerBase
                 ));
             }
 
-            $centrocosto->setCentroCostoLineaId($linea->getLineaId());
+            $centrocosto->setCentroCostoLineaId($centroCosto->getLineaId());
         } else {
             if($this->request->getPost("centroCosto_lineaId")!=NULL)
                 $centrocosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));//Se utiliza una linea existente
@@ -424,4 +424,42 @@ class CentrocostoController extends ControllerBase
 
     }
 
+    /**
+     * Guarda los datos enviados desde el search de linea
+     */
+    public function agregarCCALineaAction()
+    {
+        $this->view->disable();
+        $retorno = array();
+        $retorno['success'] = false;
+        $retorno['mensaje'] = " - ";
+        if (!$this->request->isAjax()) {
+            return $this->dispatcher->forward(array(
+                "controller" => "cliente",
+                "action" => "index"
+            ));
+        }
+
+        $centroCosto = new Centrocosto();
+
+        $centroCosto->setCentroCostoCodigo($this->request->getPost("centroCosto_codigo"));
+        $centroCosto->setCentroCostoLineaId($this->request->getPost("centroCosto_lineaId"));
+        $centroCosto->setCentroCostoHabilitado(1);
+
+
+        if (!$centroCosto->save()) {
+            $mensaje="No se pudo guardar";
+            foreach ($centroCosto->getMessages() as $message) {
+                $mensaje = $message."<br>";
+            }
+            $retorno['mensaje']=$mensaje;
+            echo json_encode($retorno);
+            return;
+        }
+
+        $retorno['mensaje']= "El Centro de Costo ha sido agregada correctamente";
+        $retorno['success']=true;
+        echo json_encode($retorno);
+        return;
+    }
 }
