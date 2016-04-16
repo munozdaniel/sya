@@ -17,18 +17,8 @@
 {{ content() }}
 
 <div class="box-body">
-    <div id="toolbar">
-        <label>
-            <select class="form-control">
-                <option value="">Exportar Pagina</option>
-                <option value="all">Exportar Todo</option>
-                <option value="selected">Exportar Seleccionados</option>
-            </select>
-        </label>
-        <button id="botonTop" class="btn btn-flat bg-olive">Subir</button>
-        <button id="botonBottom" class="btn btn-flat bg-olive">Bajar</button>
-    </div>
-    <table id="tabla"
+
+    <table id="tabla_id"
            data-show-pagination-switch="true"
            data-page-list="[10, 25, 50, 100, ALL]"
            data-escape="false"{# Para usar html en las celdas#}
@@ -39,9 +29,7 @@
            data-show-toggle="false"{# Cambia de vista cada celda#}
            data-pagination="true"
            data-reorderable-columns="true"
-           data-show-export="true"
            data-click-to-select="true"
-           data-toolbar="#toolbar"
            class="table table-bordered table-striped">
         <thead>
         <tr>
