@@ -97,8 +97,7 @@ class ConcatenadoController extends ControllerBase
 
             $this->tag->setDefault("concatenado_id", $concatenado->getConcatenadoId());
             $this->tag->setDefault("concatenado_nombre", $concatenado->getConcatenadoNombre());
-            $this->tag->setDefault("concatenado_habilitado", $concatenado->getConcatenadoHabilitado());
-            
+
         }
     }
 
@@ -168,8 +167,7 @@ class ConcatenadoController extends ControllerBase
         }
 
         $concatenado->setConcatenadoNombre($this->request->getPost("concatenado_nombre"));
-        $concatenado->setConcatenadoHabilitado($this->request->getPost("concatenado_habilitado"));
-        
+
 
         if (!$concatenado->save()) {
 
@@ -229,6 +227,73 @@ class ConcatenadoController extends ControllerBase
             "controller" => "concatenado",
             "action" => "index"
         ));
+    }
+    /**
+     * Habilitar un concatenado.
+     * @param $idConcatenado
+     * @return bool
+     */
+    public function habilitarAction($idConcatenado)
+    {
+        $concatenado = Concatenado::findFirstByConcatenado_id($idConcatenado);
+        $concatenado->concatenado_habilitado = 1;
+        if (!$concatenado->update()) {
+
+            foreach ($concatenado->getMessages() as $message) {
+                $this->flash->error($message);
+            }
+
+            return $this->dispatcher->forward(array(
+                "controller" => "concatenado",
+                "action" => "search"
+            ));
+        }
+
+        $this->flash->success("El concatenado ha sido habilitado");
+
+        return $this->dispatcher->forward(array(
+            "controller" => "concatenado",
+            "action" => "search"
+        ));
+    }
+    /**
+     * Eliminar un concatenado de manera logica.
+     *
+     * @return bool
+     */
+    public function eliminarAction()
+    {
+        if ($this->request->isPost()) {
+            $id = $this->request->getPost('id');
+            $concatenado = Concatenado::findFirstByConcatenado_id($id);
+            if (!$concatenado) {
+                $this->flash->error("El concatenado no ha sido encontrado");
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "concatenado",
+                    "action" => "index"
+                ));
+            }
+            $concatenado->concatenado_habilitado = 0;
+            if (!$concatenado->update()) {
+
+                foreach ($concatenado->getMessages() as $message) {
+                    $this->flash->error($message);
+                }
+
+                return $this->dispatcher->forward(array(
+                    "controller" => "concatenado",
+                    "action" => "search"
+                ));
+            }
+
+            $this->flash->success("El concatenado ha sido eliminado correctamente");
+
+            return $this->dispatcher->forward(array(
+                "controller" => "concatenado",
+                "action" => "search"
+            ));
+        }
     }
 
 }
