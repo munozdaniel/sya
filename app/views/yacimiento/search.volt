@@ -17,14 +17,25 @@
 {{ content() }}
 
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <table id="tabla"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-toggle="table"
+           data-cookie="true"
+           data-cookie-id-table="tabla"
+           data-reorderable-columns="true"
+           data-click-to-select="true"
+           data-row-style="rowStyle"
+           class="table table-bordered table-striped">
         <thead>
         <tr>
-            <th>N° Yacimiento</th>
-            <th>Destino</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
+            <th data-field="Nro" data-sortable="true">#</th>
+            <th data-field="nombre" data-sortable="true" data-halign="center" data-align="center">Destino</th>
+            <th data-field="operadora" data-sortable="true" data-halign="center" data-align="center">Operadora</th>
+            <th data-field="equipoPozo" data-sortable="true" data-halign="center" data-align="center">Equipo/Pozo</th>
+            <th data-field="editar" data-sortable="true" data-halign="center" data-align="center">Editar</th>
+            <th data-field="eliminar" data-sortable="true" data-halign="center" data-align="center">Eliminar</th>
+            <th data-field="estado" style="width: 10px;" data-sortable="true" data-halign="center"
+                data-align="center">EST
         </tr>
         </thead>
         <tbody>
@@ -33,6 +44,18 @@
                 <tr>
                     <td>{{ yacimiento.getYacimientoId() }}</td>
                     <td>{{ yacimiento.getYacimientoDestino() }}</td>
+                    <td>
+                        {{ link_to("operadora/search/"~yacimiento.getYacimientoId(), "Ver Operadoras",'class':'btn btn-flat  bg-light-blue-gradient') }}
+                        <a href="#agregarOperadora" role="button"
+                           class="btn btn-flat bg-light-blue-gradient" data-toggle="modal"
+                           onclick="setearHidden({{ yacimiento.getYacimientoId() }})">Agregar Operadora</a>
+                    </td>
+                    <td>
+                        {{ link_to("equipopozo/buscarEPPorYacimiento/"~yacimiento.getYacimientoId(), "Ver Equipo/Pozo",'class':'btn btn-flat  bg-light-blue-gradient') }}
+                        <a href="#agregarEP" role="button"
+                           class="btn btn-flat bg-light-blue-gradient" data-toggle="modal"
+                           onclick="setearHidden({{ yacimiento.getYacimientoId() }})">Agregar Equipo/Pozo</a>
+                    </td>
                     {% if admin == 1 %}
                         <td>{{ link_to("yacimiento/edit/"~yacimiento.getYacimientoId(), "Editar") }}</td>
                         <td>
@@ -98,3 +121,84 @@
     </div>
 </div>
 <!--=========== FIN:ConfirmarEliminar ================-->
+<!--=========== Agregar Operadora ================-->
+<div id="agregarOperadora" class="modal fade modal-primary">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"> INGRESAR DATOS</h4>
+            </div>
+            <div class="modal-body margin-left-right-one">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="mensajes-alertas"></div>
+
+                        {{ form('linea/agregarOperadoraAlYacimiento', "method":"post" ,"id":"guardarOperadora") }}
+
+                        {{ hidden_field('operadora_yacimientoId') }}
+
+                        <label for="operadora_nombre">Nombre de la Operadora</label>
+
+                        <div class="form-group">
+                            {{ text_field("operadora_nombre", "size" : 50,'class':'form-control','required':'true','placeholder':'INGRESAR NOMBRE','form':'nuevaOperadora') }}
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
+                {{ submit_button('AGREGAR','class':'btn btn-outline') }}
+
+                {{ end_form() }}
+            </div>
+        </div>
+    </div>
+</div>
+<!--=========== FIN:Agregar Operadora ================-->
+<script>
+    function setearHidden(operadora_yacimientoId) {
+        document.getElementById("operadora_yacimientoId").value = operadora_yacimientoId;
+    }
+    /**
+     * Realiza una llamada ajax para guardar los datos de una linea para un cliente seleccionado
+     */
+    $('#guardarOperadora').submit(function (event) {
+        $('.help-block').remove(); // Limpieza de los mensajes de alerta.
+
+        var datos = {
+            'operadora_nombre': $('#operadora_nombre').val(),
+            'operadora_yacimientoId': $('#operadora_yacimientoId').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/sya/operadora/agregarOperadoraAlYacimiento',
+            data: datos,
+            dataType: 'json',
+            encode: true
+        })
+                .done(function (data) {
+                    console.log(data);
+                    if (!data.success)
+                    {
+                        $('#mensajes-alertas').append('<div class="help-block  alert-danger"><h4><i class="fa fa-info-circle"></i> ' + data.mensaje + '</h4></div>');
+                    }
+                    else
+                    {
+                        $('#mensajes-alertas').append('<div class="help-block  alert-success"><h4><i class="fa fa-exclamation-triangle"></i> ' + data.mensaje + '<br><small> Puede continuar agregando lineas.</small></h4></div>');
+                        document.getElementById("operadora_nombre").value = "";
+
+                    }
+                })
+                .fail(function (data) {
+                    console.log(data);
+                });
+        event.preventDefault();
+    });
+
+</script>

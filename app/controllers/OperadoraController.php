@@ -1,5 +1,5 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
@@ -17,36 +17,54 @@ class OperadoraController extends ControllerBase
         parent::initialize();
 
     }
+
     /**
      * Index action
      */
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        parent::importarSelect2();
+        /*=========================== Operadoras =====================================*/
+        $this->view->operadoras = new \Phalcon\Forms\Element\Select('operadora_yacimientoId',
+            Yacimiento::find(array('yacimiento_habilitado=1', 'order' => 'yacimiento_destino')),
+            array(
+                'using' => array('yacimiento_id', 'yacimiento_destino'),
+                'useEmpty' => true,
+                'emptyText' => 'SELECCIONE LAS OPERADORAS',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+            )
+        );
     }
 
     /**
      * Searches for operadora
      */
-    public function searchAction()
+    public function searchAction($yacimientoId = null)
     {
-        parent::importarJsSearch();
+        parent::importarJsTable();
 
         $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Operadora", $_POST);
-            $this->persistent->parameters = $query->getParams();
+        if ($yacimientoId != null) {
+            $operadora = Operadora::find(array('operadora_yacimientoId=:yacimiento_id:', 'bind' => array('yacimiento_id' => $yacimientoId)));
         } else {
-            $numberPage = $this->request->getQuery("page", "int");
+            if ($this->request->isPost()) {
+                $query = Criteria::fromInput($this->di, "Operadora", $_POST);
+                $this->persistent->parameters = $query->getParams();
+            } else {
+                $numberPage = $this->request->getQuery("page", "int");
+            }
+
+            $parameters = $this->persistent->parameters;
+            if (!is_array($parameters)) {
+                $parameters = array();
+            }
+            $parameters["order"] = "operadora_id";
+            $operadora = Operadora::find($parameters);
         }
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "operadora_id";
-
-        $operadora = Operadora::find($parameters);
         if (count($operadora) == 0) {
             $this->flash->notice("No se han encontrado resultados");
 
@@ -58,7 +76,7 @@ class OperadoraController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $operadora,
-            "limit"=> 100000,
+            "limit" => 25,
             "page" => $numberPage
         ));
 
@@ -114,7 +132,7 @@ class OperadoraController extends ControllerBase
                                             window.onload = cargarCombo;
                                         ");
             }
-            
+
         }
     }
 
@@ -136,7 +154,7 @@ class OperadoraController extends ControllerBase
         $operadora->setOperadoraNombre($this->request->getPost("operadora_nombre"));
         $operadora->setOperadoraYacimientoId($this->request->getPost('operadora_yacimientoId'));
         $operadora->setOperadoraHabilitado(1);
-        
+
 
         if (!$operadora->save()) {
             foreach ($operadora->getMessages() as $message) {
@@ -157,42 +175,44 @@ class OperadoraController extends ControllerBase
         ));
 
     }
+
     /**
-     * Agregar una nueva operadora
+     * Creates a new linea
      */
-    public function agregarAction()
+    public function agregarOperadoraAlYacimientoAction()
     {
-
-
         $this->view->disable();
-        if ($this->request->isPost()) {
-            if ($this->request->isAjax()) {
-                $operadora = new Operadora();
-
-                $operadora->setOperadoraNombre($this->request->getPost("operadora_nombreNew"));
-                $operadora->setOperadoraHabilitado(1);
-                if (!$operadora->save()) {
-                    $mensaje ="";
-                    foreach ($operadora->getMessages() as $message) {
-                        $mensaje .= $message ." <br>";
-                    }
-                    $this->response->setStatusCode(500, "<div class='alert alert-danger' ><i class='fa fa-fw fa-warning'></i> <br>".$mensaje."</div>");
-                }
-                else{
- /*                   $lista = Operadora::find();
-                    $resData = array();
-
-                    foreach ($lista as $item) {
-                        $resData[] = array("operadora_id" => $item->operadora_id, "operadora_nombre" => $item->operadora_nombre);
-                    }
-                    $this->response->setJsonContent(array("lista" => $resData));*/
-                    $this->response->setStatusCode(200, "<div class='alert alert-success' >"." OPERACIÓN EXITOSA <br> Si desea puede continuar agregando "."</div>");
-                }
-                $this->response->send();
-            }
+        $retorno = array();
+        $retorno['success'] = false;
+        $retorno['mensaje'] = " - ";
+        if (!$this->request->isAjax()) {
+            return $this->dispatcher->forward(array(
+                "controller" => "yacimiento",
+                "action" => "index"
+            ));
         }
 
+        $operadora = new Operadora();
 
+        $operadora->setOperadoraNombre($this->request->getPost("operadora_nombre"));
+        $operadora->setOperadoraYacimientoId($this->request->getPost("operadora_yacimientoId"));
+        $operadora->setOperadoraHabilitado(1);
+
+
+        if (!$operadora->save()) {
+            $mensaje = "No se pudo guardar";
+            foreach ($operadora->getMessages() as $message) {
+                $mensaje = $message . "<br>";
+            }
+            $retorno['mensaje'] = $mensaje;
+            echo json_encode($retorno);
+            return;
+        }
+
+        $retorno['mensaje'] = "La operadora ha sido agregada correctamente";
+        $retorno['success'] = true;
+        echo json_encode($retorno);
+        return;
     }
 
     /**
@@ -213,7 +233,7 @@ class OperadoraController extends ControllerBase
 
         $operadora = Operadora::findFirstByoperadora_id($operadora_id);
         if (!$operadora) {
-            $this->flash->error("La operadora NO existe " );
+            $this->flash->error("La operadora NO existe ");
 
             return $this->dispatcher->forward(array(
                 "controller" => "operadora",
@@ -284,6 +304,7 @@ class OperadoraController extends ControllerBase
             "action" => "index"
         ));
     }
+
     /**
      * Eliminar manera logica.
      *
@@ -351,6 +372,7 @@ class OperadoraController extends ControllerBase
             "action" => "search"
         ));
     }
+
     public function buscarOperadorasAction()
     {
         $this->view->disable();
@@ -359,7 +381,7 @@ class OperadoraController extends ControllerBase
                 $id = $this->request->getPost("id", "int");
 
                 $lista = Operadora::find(array(
-                    "operadora_yacimientoId = :id: AND operadora_habilitado=1",'bind'=>array('id'=>$id)
+                    "operadora_yacimientoId = :id: AND operadora_habilitado=1", 'bind' => array('id' => $id)
                 ));
                 $resData = array();
 
@@ -369,7 +391,7 @@ class OperadoraController extends ControllerBase
                 if (count($lista) > 0) {
                     $this->response->setJsonContent(array("lista" => $resData));
                     $this->response->setStatusCode(200, "OK");
-                }else{
+                } else {
                     $this->response->setJsonContent(array("lista" => null));
 
                 }

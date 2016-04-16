@@ -8,7 +8,7 @@
 <table width="100%">
     <tr>
         <td align="left">
-            {{ link_to("operadora", "VOLVER",'class':'btn btn-flat btn-large bg-olive') }}
+            {{ link_to("operadora", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
         </td>
     </tr>
 </table>
