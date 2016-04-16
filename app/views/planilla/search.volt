@@ -35,7 +35,6 @@
                class="table table-bordered table-striped">
             <thead>
             <tr>
-
                 <th data-field="state" data-checkbox="true"></th>
                 <th data-field="Nro" data-sortable="true">#</th>
                 <th data-field="dominio" data-sortable="true" data-halign="center" >Nombre de Planilla</th>
@@ -55,13 +54,13 @@
                         <td>{{ planilla.getPlanillaFecha() }}</td>
                         <td>{# Estado: Habilitado?Cabecera?Finalizado?OK #}
                             {% if planilla.getPlanillaHabilitado()==0 %}
-                                <a class="btn btn-flat btn-block "><i class="fa fa-stas"></i> DESHABILITADA </a>
+                                <a class="btn btn-flat btn-block bg-gray font-red"><strong>DESHABILITADA </strong> </a>
                             {% elseif  planilla.getCabecera() == null%}
-                                <a class="btn btn-flat btn-block "><i class="fa fa-sas-caso"></i> SIN CABECERA</a>
+                                <a class="btn btn-flat btn-block bg-gray font-orange"><strong>SIN CABECERA</strong> </a>
                             {% elseif planilla.getPlanillaFinalizada() %}
-                                <a class="btn btn-flat btn-block "><i class="fa fa-stopas-circle-o"></i> CERRADA</a>
+                                <a class="btn btn-flat btn-block bg-gray font-blue"> <strong>CERRADA</strong> </a>
                             {% else %}
-                                <a class="btn btn-flat btn-block  "><i class="fa fa-stop-cirascle-o"></i> HABILITADA</a>
+                                <a class="btn btn-flat btn-block bg-gray font-green "> <strong>HABILITADA</strong> </a>
                             {% endif %}
                         </td>
                         <td> {{ link_to('planilla/view/'~planilla.getPlanillaId(),'<i class="fa fa-desktop"></i> ABRIR',
@@ -112,40 +111,5 @@
     </div>
     <!--=========== FIN:ConfirmarEliminar ================-->
 
-    <!--=========== Administrar Columnas ================-->
-    <div id="administrar_columnas" class="modal fade modal-primary">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><i class="fa   fa-hand-stop-o"></i> ADMINISTRAR COLUMNAS</h4>
-                </div>
-                <div class="modal-body margin-left-right-one"
-                     style="border-left: 0 !important; border-right: 0 !important;">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 ">
-                            <!-- START SUBSCRIBE HEADING -->
-                            <div class="heading">
-                                <h2 class="wow fadeInLeftBig">Seleccione la opción que desee para administrar las columnas de la planilla</h2>
-                                <p></p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn bg-navy btn-flat pull-left" data-dismiss="modal">CERRAR</button>
-                    {{ form('equipopozo/eliminar','method':'POST') }}
-                    <div  id="cuerpo">
-                        {{ hidden_field('id','value':'','form') }}
-                        {{ submit_button('Eliminar','class':'btn btn-outline') }}
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--=========== FIN:Administrar Columnas ================-->
 
 </div>
