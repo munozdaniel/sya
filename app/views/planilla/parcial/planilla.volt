@@ -74,7 +74,8 @@
             var datos = {
                 'fechaActual': $('#fechaActual').val(),
                 'tipo_planilla': values,
-                'cliente_nombre': $('#cliente_nombre').val()
+                'cliente_nombre': $('#cliente_nombre').val(),
+                'cliente_id': $('#cliente_id').val()
             };
 
             $.ajax({

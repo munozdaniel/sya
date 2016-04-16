@@ -81,7 +81,7 @@
                                                                     <p>La planilla no permite agregar nuevos remitos.</p>
                                                                 </div>
                                                             {% elseif planilla.getPlanillaHabilitado() == 1 OR planilla.getCabecera()!=null %}
-                                                                {{ link_to('','Agregar Remito','class':'btn btn-flat bg-light-blue-gradient','title':'AGREGAR UN NUEVO REMITO') }}
+                                                                {{ link_to('remito/agregar/'~planilla.getPlanillaId(),'Agregar Remito','class':'btn btn-flat bg-light-blue-gradient','title':'AGREGAR UN NUEVO REMITO') }}
                                                             {% endif %}
                                                         </div>
                                                     {% endif %}
@@ -132,7 +132,7 @@
                                                             <p><strong><ins>Operaciones</ins></strong></p>
                                                             {% if planilla.getPlanillaHabilitado() != 0 %}
 
-                                                            {{ link_to('cabecera/reordenar/'~planilla.getPlanillaId(),'Reordenar','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'REORDENAR LAS COLUMNAS') }}
+                                                            {{ link_to('cabecera/reordenar','Reordenar','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'REORDENAR LAS COLUMNAS') }}
                                                             <hr>
                                                             {{ link_to('columna/agregarExtra/'~planilla.getPlanillaId(),'Agregar Extra','class':'btn btn-flat bg-light-blue-gradient btn-block','title':'AGREGAR UNA COLUMNA EXTRA A LA CABECERA') }}
                                                             <hr>
@@ -165,6 +165,7 @@
                                                     {% endif %}
                                                 </div>
                                                 <!-- /.col -->
+
                                             </div>
                                         </div>
                                         <!-- /.user-block -->
