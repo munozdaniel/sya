@@ -837,5 +837,18 @@ class Remito extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    public function validation()
+    {
 
+        $this->validate(
+            new \Phalcon\Mvc\Model\Validator\Uniqueness(
+                array(
+                    "field"   => "remito_nro",
+                    "message" => "El Remito ya se encuentra  en la Base de Datos."
+                )
+            )
+        );
+
+        return $this->validationHasFailed() != true;
+    }
 }
