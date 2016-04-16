@@ -17,7 +17,7 @@ class ColumnaExtraForm extends Form
             $columnas = $options['extra'];
             foreach($columnas as $col)
             {
-                $elemento = new Text($col->getColumnaNombre(),
+                $elemento = new Text($col->getColumnaClave(),
                     array('placeholder' => 'Ingrese '.$col->getColumnaNombre(), 'class'=>'form-control', 'maxlength' => 60));
                 $elemento->setLabel($col->getColumnaNombre());
                 $this->add($elemento);
