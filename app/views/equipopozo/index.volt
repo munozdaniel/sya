@@ -12,22 +12,25 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    {% for element in equipoPozoForm %}
-        {% if admin!=1 %}
-            {{ hidden_field("equipoPozo_habilitado", "value" : "1" ) }}
-        {% endif %}
-        {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
-            {{ element }}
-        {% else %}
-            {{ element.label(['class': 'control-label']) }}
-            <div class="form-group">
-                    {{ element }}
-            </div>
-        {% endif %}
-    {% endfor %}
-    {#===============================================#}
+    <div class="col-md-6 col-md-offset-3">
 
-</div><!-- /.Cuerpo -->
+        {% for element in equipoPozoForm %}
+            {% if admin!=1 %}
+                {{ hidden_field("equipoPozo_habilitado", "value" : "1" ) }}
+            {% endif %}
+            {% if is_a(element, 'Phalcon\Forms\Element\Hidden') %}
+                {{ element }}
+            {% else %}
+                {{ element.label(['class': 'control-label']) }}
+                <div class="form-group">
+                    {{ element.render(['class': 'form-control']) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {#===============================================#}
+
+    </div>
+</div>
 
 <!-- Footer -->
 <div class="box-footer">

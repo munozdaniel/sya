@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("equipopozo/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("equipopozo/index", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("equipopozo/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("equipopozo/new", "Nuevo Equipo/Pozo ",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -16,17 +16,26 @@
 <!-- ./ Titulo -->
 {{ content() }}
 <div class="box-body">
-    <table id="tabla_id" class="table table-bordered table-striped">
+    <table id="tabla"
+           data-escape="false"{# Para usar html en las celdas#}
+           data-toggle="table"
+           data-cookie="true"
+           data-cookie-id-table="tabla"
+           data-reorderable-columns="true"
+           data-click-to-select="true"
+           data-row-style="rowStyle"
+           class="table table-bordered table-striped">
         <thead>
         <tr>
-        <tr>
-            <th>#</th>
-            <th>Equipo/Pozo</th>
-            <th>Yacimiento</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-            <th style="width: 10px;">EST</th>
+            <th data-field="Nro" data-sortable="true">#</th>
+            <th data-field="nombre" data-sortable="true" data-halign="center" data-align="center">Nombre</th>
+            <th data-field="yacimiento" data-sortable="true" data-halign="center" data-align="center">Yacimiento</th>
+            <th data-field="editar" data-sortable="true" data-halign="center" data-align="center">Editar</th>
+            <th data-field="eliminar" data-sortable="true" data-halign="center" data-align="center">Eliminar</th>
+            <th data-field="estado" style="width: 10px;" data-sortable="true" data-halign="center"
+                data-align="center">EST
         </tr>
+
         </thead>
         <tbody>
         {% if page.items is defined %}
@@ -34,7 +43,7 @@
                 <tr>
                     <td>{{ equipopozo.getEquipopozoId() }}</td>
                     <td>{{ equipopozo.getEquipopozoNombre() }}</td>
-                    <td>{{ equipopozo.getNombreYacimiento(equipopozo.getEquipopozoYacimientoId()) }}</td>
+                    <td><a class="btn btn-flat bg-gray">{{ equipopozo.getNombreYacimiento(equipopozo.getEquipopozoYacimientoId()) }}</a></td>
                     {% if admin == 1 %}
                         <td>{{ link_to("equipopozo/edit/"~equipopozo.getEquipopozoId(), "Editar") }}</td>
                         <td>

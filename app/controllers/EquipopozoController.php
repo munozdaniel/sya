@@ -25,31 +25,47 @@ class EquipopozoController extends ControllerBase
     {
         $this->persistent->parameters = null;
         $this->view->equipoPozoForm = new EquipoPozoForm();
+        /*=========================== Operadoras =====================================*/
+        $this->view->operadoras = new \Phalcon\Forms\Element\Select('operadora_yacimientoId',
+            Yacimiento::find(array('yacimiento_habilitado=1', 'order' => 'yacimiento_destino')),
+            array(
+                'using' => array('yacimiento_id', 'yacimiento_destino'),
+                'useEmpty' => true,
+                'emptyText' => 'SELECCIONE LAS OPERADORAS',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+            )
+        );
     }
 
     /**
      * Searches for equipopozo
      */
-    public function searchAction()
+    public function searchAction($yacimientoId = null)
     {
         parent::importarJsTable();
 
         $numberPage = 1;
-        if ($this->request->isPost()) {
-            //$query = parent::fromInput($this->di, 'Equipopozo', $this->request->getPost());
-            $query = Criteria::fromInput($this->di, "Equipopozo", $_POST);
-            $this->persistent->parameters = $query->getParams();
+        if ($yacimientoId != null) {
+            $equipopozo = Equipopozo::find(array('equipoPozo_yacimientoId=:yacimiento_id:', 'bind' => array('yacimiento_id' => $yacimientoId)));
         } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
+            if ($this->request->isPost()) {
+                //$query = parent::fromInput($this->di, 'Equipopozo', $this->request->getPost());
+                $query = Criteria::fromInput($this->di, "Equipopozo", $_POST);
+                $this->persistent->parameters = $query->getParams();
+            } else {
+                $numberPage = $this->request->getQuery("page", "int");
+            }
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "equipoPozo_id";
+            $parameters = $this->persistent->parameters;
+            if (!is_array($parameters)) {
+                $parameters = array();
+            }
+            $parameters["order"] = "equipoPozo_id";
 
-        $equipopozo = Equipopozo::find($parameters);
+            $equipopozo = Equipopozo::find($parameters);
+        }
         if (count($equipopozo) == 0) {
             $this->flash->notice("No se encontraron resultados en la busqueda");
 
@@ -61,7 +77,7 @@ class EquipopozoController extends ControllerBase
 
         $paginator = new Paginator(array(
             "data" => $equipopozo,
-            "limit" => 10000,
+            "limit" => 25,
             "page" => $numberPage
         ));
 
@@ -86,7 +102,8 @@ class EquipopozoController extends ControllerBase
 
         if (!$this->request->isPost()) {
 
-            $equipopozo = Equipopozo::findFirstByequipoPozo_id($equipoPozo_id);
+            $equipopozo = Equipopozo::findFirst(array('equipoPozo_id=:equipoPozo_id:',
+                'bind'=>array('equipoPozo_id'=>$equipoPozo_id)));
             if (!$equipopozo) {
                 $this->flash->error("El Equipo/Pozo no se encontró");
 
@@ -96,22 +113,13 @@ class EquipopozoController extends ControllerBase
                 ));
             }
             $this->view->equipoPozoForm = new EquipoPozoForm($equipopozo, array('edit' => true));
-            $this->view->equipoPozo_id = $equipopozo->equipoPozo_id;
+            $this->view->equipoPozo_id = $equipopozo->getEquipoPozoId();
 
             $this->tag->setDefault("equipoPozo_id", $equipopozo->getEquipopozoId());
             $this->tag->setDefault("equipoPozo_nombre", $equipopozo->getEquipopozoNombre());
             $this->tag->setDefault("equipoPozo_habilitado", $equipopozo->getEquipopozoHabilitado());
-            //Default Yacimiento
-            $yacimiento = Yacimiento::findFirstByYacimiento_id($equipopozo->getEquipoPozoYacimientoId());
-            if ($yacimiento) {
-                $destino = $yacimiento->yacimiento_destino;
-                $this->assets->collection('footerInline')->addInlineJs("
-                                            function cargarCombo() {
-                                                document.getElementById('equipoPozo_yacimiento').value='$destino';
-                                            }
-                                            window.onload = cargarCombo;
-                                        ");
-            }
+            $this->tag->setDefault("operadora_yacimientoId", $equipopozo->getEquipopozoYacimientoid());
+
         }
     }
 
@@ -159,6 +167,7 @@ class EquipopozoController extends ControllerBase
             }
         }
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
+        $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
         $equipopozo->setEquipopozoHabilitado(1);
 
         if (!$equipopozo->save()) {
@@ -179,6 +188,36 @@ class EquipopozoController extends ControllerBase
             "action" => "index"
         ));
 
+    }
+
+    public function agregarEPAlYacimientoAction()
+    {
+        $this->view->disable();
+        $retorno = array();
+        $retorno['success'] = false;
+        $retorno['mensaje'] = " - ";
+
+        $equipopozo = new Equipopozo();
+
+        $equipopozo->setEquipoPozoNombre($this->request->getPost("equipoPozo_nombre"));
+        $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId",'int'));
+        $equipopozo->setEquipoPozoHabilitado(1);
+
+
+        if (!$equipopozo->save()) {
+            $mensaje = "No se pudo guardar";
+            foreach ($equipopozo->getMessages() as $message) {
+                $mensaje = $message . "<br>";
+            }
+            $retorno['mensaje'] = $mensaje;
+            echo json_encode($retorno);
+            return;
+        }
+
+        $retorno['mensaje'] = "El Equipo/Pozo ha sido agregado correctamente";
+        $retorno['success'] = true;
+        echo json_encode($retorno);
+        return;
     }
 
     /**
@@ -206,37 +245,7 @@ class EquipopozoController extends ControllerBase
                 "action" => "index"
             ));
         }
-        if ($this->request->getPost("nuevoYacimiento") == 1)//Nuevo Yacimiento? 1:SI
-        {
-            $yacimiento = new Yacimiento();
-            $yacimiento->assign(array(
-                'yacimiento_destino' => $this->request->getPost('yacimiento_destino'),
-                'yacimiento_habilitado' => 1,
-            ));
-            if (!$yacimiento->save()) {
-                foreach ($yacimiento->getMessages() as $message) {
-                    $this->flash->error($message);
-                }
-                return $this->dispatcher->forward(array(
-                    "controller" => "equipopozo",
-                    "action" => "edit",
-                    "params" => array($equipopozo->equipoPozo_id)
-                ));
-            }
-            $equipopozo->setEquipoPozoYacimientoId($yacimiento->getYacimientoId());
-        } else {
-            if ($this->request->getPost("equipoPozo_yacimientoId") != NULL)
-                $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId"));
-            else {
-                $this->flash->error("Seleccione un Yacimiento");
-
-                return $this->dispatcher->forward(array(
-                    "controller" => "equipopozo",
-                    "action" => "edit",
-                    "params" => array($equipopozo->equipoPozo_id)
-                ));
-            }
-        }
+        $equipopozo->setEquipoPozoYacimientoId($this->request->getPost("equipoPozo_yacimientoId",'int'));
         $equipopozo->setEquipopozoNombre($this->request->getPost("equipoPozo_nombre"));
         $equipopozo->setEquipopozoHabilitado(1);
 
@@ -369,6 +378,7 @@ class EquipopozoController extends ControllerBase
             "action" => "search"
         ));
     }
+
     public function buscarEquipoPozoAction()
     {
         $this->view->disable();
@@ -377,7 +387,7 @@ class EquipopozoController extends ControllerBase
             if ($this->request->isAjax()) {
                 $id = $this->request->getPost("id", "int");
                 $lista = Equipopozo::find(array(
-                    "equipoPozo_yacimientoId = :id: AND equipoPozo_habilitado=1",'bind'=>array('id'=>$id)
+                    "equipoPozo_yacimientoId = :id: AND equipoPozo_habilitado=1", 'bind' => array('id' => $id)
                 ));
                 $resData = array();
 
@@ -387,7 +397,7 @@ class EquipopozoController extends ControllerBase
                 if (count($lista) > 0) {
                     $this->response->setJsonContent(array("lista" => $resData));
                     $this->response->setStatusCode(200, "OK");
-                }else{
+                } else {
                     $this->response->setJsonContent(array("lista" => null));
                 }
                 $this->response->send();
