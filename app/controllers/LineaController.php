@@ -137,7 +137,21 @@ class LineaController extends ControllerBase
      */
     public function newAction()
     {
-
+        //SELECT2
+        $this->importarSelect2();
+        $select = new \Phalcon\Forms\Element\Select('linea_clienteId',
+            Cliente::find(array('cliente_habilitado=1', 'order' => 'cliente_nombre DESC')),
+            array(
+                'using' => array('cliente_id', 'cliente_nombre'),
+                'useEmpty' => true,
+                'emptyText' => 'SELECCIONE UN CLIENTE',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => ''
+            ));
+        $select->clear();
+        $this->view->cliente =$select;
     }
 
     /**
@@ -161,9 +175,23 @@ class LineaController extends ControllerBase
             }
 
             $this->view->linea_id = $linea->linea_id;
-
+            //SELECT2
+            $this->importarSelect2();
+            $select = new \Phalcon\Forms\Element\Select('linea_clienteId',
+                Cliente::find(array('cliente_habilitado=1', 'order' => 'cliente_nombre DESC')),
+                array(
+                    'using' => array('cliente_id', 'cliente_nombre'),
+                    'useEmpty' => true,
+                    'emptyText' => 'SELECCIONE UN CLIENTE',
+                    'emptyValue' => '',
+                    'class' => 'form-control autocompletar',
+                    'style' => 'width:100%',
+                    'required' => ''
+                ));
+            $this->view->cliente =$select;
             $this->tag->setDefault("linea_id", $linea->getLineaId());
             $this->tag->setDefault("linea_nombre", $linea->getLineaNombre());
+            $this->tag->setDefault("linea_clienteId", $linea->getLineaClienteId());
             $this->tag->setDefault("linea_habilitado", $linea->getLineaHabilitado());
             
         }
@@ -185,6 +213,7 @@ class LineaController extends ControllerBase
         $linea = new Linea();
 
         $linea->setLineaNombre($this->request->getPost("linea_nombre"));
+        $linea->setLineaClienteId($this->request->getPost("linea_clienteId"));
         $linea->setLineaHabilitado(1);
         
 
@@ -207,6 +236,7 @@ class LineaController extends ControllerBase
         ));
 
     }
+
 
     /**
      * Saves a linea edited
@@ -235,6 +265,7 @@ class LineaController extends ControllerBase
         }
 
         $linea->setLineaNombre($this->request->getPost("linea_nombre"));
+        $linea->setLineaClienteId($this->request->getPost("linea_clienteId"));
         $linea->setLineaHabilitado(1);
         
 
@@ -395,5 +426,42 @@ class LineaController extends ControllerBase
 
     }
 
+    /**
+     * Creates a new linea
+     */
+    public function agregarLineaAlClienteAction()
+    {
+        $this->view->disable();
+        $retorno = array();
+        $retorno['success'] = false;
+        $retorno['mensaje'] = " - ";
+        if (!$this->request->isAjax()) {
+            return $this->dispatcher->forward(array(
+                "controller" => "cliente",
+                "action" => "index"
+            ));
+        }
 
+        $linea = new Linea();
+
+        $linea->setLineaNombre($this->request->getPost("linea_nombre"));
+        $linea->setLineaClienteId($this->request->getPost("linea_clienteId"));
+        $linea->setLineaHabilitado(1);
+
+
+        if (!$linea->save()) {
+            $mensaje="No se pudo guardar";
+            foreach ($linea->getMessages() as $message) {
+                $mensaje = $message."<br>";
+            }
+            $retorno['mensaje']=$mensaje;
+            echo json_encode($retorno);
+            return;
+        }
+
+        $retorno['mensaje']= "La linea ha sido agregada correctamente";
+        $retorno['success']=true;
+        echo json_encode($retorno);
+        return;
+    }
 }

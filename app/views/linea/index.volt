@@ -11,22 +11,25 @@
 
 <!-- Cuerpo -->
 <div class="box-body">
-    {#===============================================#}
-    <label for="linea_id">N° de Linea</label>
+    <div class="col-md-6 col-md-offset-3">
 
-    <div class="form-group">
-        {{ text_field("linea_id", "type" : "numeric") }}
-    </div>
-    {#===============================================#}
-    <label for="linea_nombre">Nombre </label>
+        {#===============================================#}
+        <label for="linea_id">N° de Linea</label>
 
-    <div class="form-group">
-        {{ text_field("linea_nombre", "size" : 30) }}
+        <div class="form-group">
+            {{ text_field("linea_id", "type" : "numeric",'class':'form-control', 'placeholder':'INGRESAR ID LINEA') }}
+        </div>
+        {#===============================================#}
+        <label for="linea_nombre">Nombre </label>
+
+        <div class="form-group">
+            {{ text_field("linea_nombre", "size" : 50,'class':'form-control','placeholder':'INGRESAR NOMBRE') }}
+        </div>
+        {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
+        {% if admin!=1 %}
+            {{ hidden_field("linea_habilitado", "value" : "1",'class':'form-control','placeholder':'INGRESAR 1/0' ) }}
+        {% endif %}
     </div>
-    {# EN LA BUSQUEDA Si no es ADMIN mostrar unicamente los habilitados = 1#}
-    {% if admin!=1 %}
-        {{ hidden_field("linea_habilitado", "value" : "1" ) }}
-    {% endif %}
 </div><!-- /.Cuerpo -->
 
 <!-- Footer -->

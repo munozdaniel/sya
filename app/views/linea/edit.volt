@@ -14,9 +14,19 @@
 </table>
 <!-- Cuerpo -->
 <div class="box-body">
-    <label for="linea_nombre">Nombre de la Linea</label>
-    <div class="form-group">
-        {{ text_field("linea_nombre", "size" : 30) }}
+    <div class="col-md-6 col-md-offset-3">
+
+        <label for="linea_nombre">Nombre de la Linea</label>
+
+        <div class="form-group">
+            {{ text_field("linea_nombre", "size" : 50,'class':'form-control','required':'true','placeholder':'INGRESAR NOMBRE') }}
+        </div>
+        {#==================================================#}
+        <label for="linea_nombre">Nombre del Cliente</label>
+
+        <div class="form-group">
+            {{ cliente }}
+        </div>
     </div>
 </div><!-- /.Cuerpo -->
 
@@ -25,4 +35,10 @@
     {{ hidden_field("linea_id") }}
     {{ submit_button("Guardar",'class':'btn btn-large btn-primary btn-flat') }}
 </div>
-</form>
+{{ end_form() }}
+<script>
+    $(function () {
+        $(".autocompletar").select2();
+
+    });
+</script>

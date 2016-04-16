@@ -5,10 +5,10 @@
     <table width="100%">
         <tr>
             <td align="left">
-                {{ link_to("linea/index", "VOLVER",'class':'btn btn-flat btn-large btn-warning') }}
+                {{ link_to("linea/index", "Búsqueda Personalizada",'class':'btn btn-flat btn-large btn-warning') }}
             </td>
             <td align="right">
-                {{ link_to("linea/new", "CREAR ",'class':'btn btn-flat btn-large btn-danger') }}
+                {{ link_to("linea/new", "Nueva Linea",'class':'btn btn-flat btn-large btn-danger') }}
             </td>
         </tr>
     </table>
@@ -34,7 +34,10 @@
                 <tr>
                     <td>{{ linea.getLineaId() }}</td>
                     <td>{{ linea.getLineaNombre() }}</td>
-                    <td>{{ link_to('centrocosto/buscarCCPorLinea/'~linea.getLineaId(),'Ver Centro Costo','class':'btn btn-primary btn-flat') }}</td>
+                    <td>
+                        {{ link_to('centrocosto/buscarCCPorLinea/'~linea.getLineaId(),
+                        'Ver los Centros de Costo','class':'btn bg-light-blue-gradient btn-flat btn-block') }}
+                    </td>
                     {% if admin == 1 %}
                         <td>{{ link_to("linea/edit/"~linea.getLineaId(), "Editar") }}</td>
                         <td>
