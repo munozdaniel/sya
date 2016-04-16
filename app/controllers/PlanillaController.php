@@ -47,7 +47,7 @@ class PlanillaController extends ControllerBase
         if (!is_array($parameters)) {
             $parameters = array();
         }
-        $parameters["order"] = "planilla_id";
+        $parameters["order"] = "planilla_id DESC";
 
         $planilla = Planilla::find($parameters);
         if (count($planilla) == 0) {
@@ -136,7 +136,7 @@ class PlanillaController extends ControllerBase
             $planilla->setPlanillaArmada(0);
             $planilla->setPlanillaHabilitado(1);
             $planilla->setPlanillaFinalizada(0);
-
+            $planilla->setPlanillaClienteId($this->request->getPost('cliente_id','int'));
 
             if (!$planilla->save()) {
                 foreach ($planilla->getMessages() as $message) {
@@ -429,6 +429,10 @@ class PlanillaController extends ControllerBase
         ');
 
         $planilla = Planilla::findFirst(array('planilla_id=:planilla:','bind'=>array('planilla'=>$planilla_id)));
+        if(!$planilla){
+            $this->flash->error("NO EXISTE LA PLANILLA QUE ESTÁ INTENTANDO ACCEDER");
+            return $this->redireccionar('planilla/search');
+        }
         if($planilla->getCabecera()!=null) {
             $columnas = Columna::find(array('columna_cabeceraId=:cabecera: AND columna_habilitado=1',
                 'bind' => array('cabecera' => $planilla->getCabecera()->getCabeceraId())));
