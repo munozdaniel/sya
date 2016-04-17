@@ -1,6 +1,10 @@
 <div class="box box-primary">
     <div class="box-header">
+        <div class="col-md-12">
         <h3 class="box-title">BUSCAR REMITOS POR PLANILLA <br></h3>
+
+        </div>
+
 
         <table width="100%">
             <tr>
@@ -9,6 +13,9 @@
                 </td>
             </tr>
         </table>
+        <div class="col-md-6 col-md-offset-3">
+            {{ text_field('planilla_nombreCliente','value':'','readOnly':'true','class':'form-control','style':'text-align:center;') }}
+        </div>
     </div>
 </div>
 {#=============================================================================================================#}
@@ -34,14 +41,17 @@
                 <div class="row">
                     <div class="col-md-6 col-md-offset-2">
                         {{ formulario.render() }}
-
                     </div>
-                    <div class="col-md-2">
-                    <span class="input-group-btn"><br>
+                    <div class="col-md-4">
+                    <span class="input-group-btn">
+                        {{ form('id':'form-buscarRemitos' ,"method":"post") }}
+                        {{ submit_button(" INICIAR BÚSQUEDA",'id':'submit','class':'btn btn-flat btn-primary pull-left','style':'display:none;') }}
+                        {{ end_form() }}
                         <a id="confirmarPlanilla"
                            class="btn btn-flat btn-primary pull-left" title="CARGAR CABECERA"><i
                                     class="fa fa-2x fa-refresh  fa-spin"></i>
                         </a>
+
                     </span>
                     </div>
                 </div>
@@ -49,9 +59,7 @@
             </div>
         </fieldset>
     </div>
-    {{ form('id':'form-buscarRemitos' ,"method":"post") }}
-    {{ submit_button(" BUSCAR REMITOS",'id':'submit','class':'btn btn-lg btn-flat btn-primary', 'disabled':'') }}
-    {{ end_form() }}
+
 
 </section>
 
@@ -59,7 +67,11 @@
 <!-- /.box-header -->
 {{ content() }}
 <section id="seccion-tabla" class="box box-body ocultar">
-    <a class="btn btn-flat btn-twitter" onclick="habilitarBusqueda()"> BUSQUEDA PERSONALIZADA</a>
+
+    <div class="col-md-12">
+
+    <a class="btn btn-flat btn-twitter" onclick="habilitarBusqueda()"> BÚSQUEDA PERSONALIZADA</a>
+
     <div id="mensajes"></div>
 
         <div id="body-buscador" class="row ocultar" >
@@ -76,7 +88,7 @@
         </thead>
 
     </table>
-
+    </div>
 </section>
 
 <script>
@@ -104,6 +116,7 @@
     });
     /**************** obtener un arreglo con todas las posiciones de las columans ordenadas *******************/
     $("#confirmarPlanilla").click(function () {
+
         $('#mensajes').empty();
         $('#tr-cabecera').empty();
         var datos = {
@@ -121,7 +134,9 @@
                     if (!data.success) {
                         $('#mensajes').append('<div class="help-block  alert-danger">&nbsp; <i class="fa fa-exclamation-triangle"></i> Hubo un problema, la planilla no tiene las columnas definidas.</div>'); // add the actual error message under our input
                     } else {
-                        $('#mensajes').append('<div id="load" class="help-block ">&nbsp; CARGANDO DATOS, POR FAVOR ESPERE UNOS MINUTOS </div>'); // add the actual error message under our input
+                        $('#mensajes').append('<div id="load" class="help-block  alert-info">&nbsp; CARGANDO DATOS, POR FAVOR ESPERE UNOS MINUTOS </div>'); // add the actual error message under our input
+                        document.getElementById("planilla_nombreCliente").value=data.planilla_nombreCliente;
+
                         posiciones = data.columnas;
                         claves = data.claves;//Recupera las claves que van armar las columnas.
                         //Creamos la cabecera de la tabla.
@@ -165,6 +180,8 @@
                             i = i + 1;
                         }
                         $('#submit').prop('disabled', false);
+                        $('#submit').show(1000);
+                        $('#confirmarPlanilla').hide(1000);
 
                     }
 
@@ -194,17 +211,36 @@
             dom: 'Bfrtip',
             buttons: [
                 {
+                    text: 'Recargar',
+                    action: function ( e, dt, node, config ) {
+                        table.ajax.reload();
+                    }
+                }
+                ,
+                {
                     extend: 'excelHtml5',
-                    text: 'EXPORTAR TODO'
+                    text: 'Exportar Todo',
+                    filename: document.getElementById("planilla_nombreCliente").value,
+                    exportOptions: {
+                        columns: ':visible'
+                    }
                 },
                 {
                     extend: 'excelHtml5',
-                    text: 'EXPORTAR SELECCIONADOS',
+                    filename: document.getElementById("planilla_nombreCliente").value,
+                    text: 'Exportar Seleccionados',
                     exportOptions: {
                         modifier: {
                             selected: true
-                        }
+                        },
+                        columns: ':visible'
                     }
+                }
+                ,
+                {
+                    extend: 'colvis',
+                    text:"Columnas",
+                    collectionLayout: 'fixed four-column'
                 }
             ],
             select: {
@@ -214,7 +250,7 @@
             'ordering': true,
             'info': true,
             stateSave: false,
-            fixedHeader: true,
+            fixedHeader: false,
             scrollY: '80vh',
             scrollX: 'true',
             scrollCollapse: true,
@@ -253,13 +289,6 @@
                     "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
-            },
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                var $nRow = $(nRow);
-                if (aData['remito_pdf'] == "" || aData['remito_pdf'] == null) {
-                    $nRow.css({"color": "red"});
-                }
-
             }
         });
         //Busqueda personaliza
@@ -274,6 +303,10 @@
         $('#example').on( 'draw.dt', function () {
            $("#load").hide();
         } );
+        function recargar() {
+            table.ajax.reload();
+        }
+
         /** =========================== FIN: DATATABLE =================================*/
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });

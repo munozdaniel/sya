@@ -81,7 +81,7 @@
                 if(data.success)
                     alert("VERDADERO");
                 $('#agregarRemitoEscaneado').modal('toggle');
-                //$('#example').ajax.reload();
+                recargar();
             }
         });
 
