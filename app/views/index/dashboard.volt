@@ -26,7 +26,7 @@
                 </div>
                 <div class="box-body no-padding" style="display: block;">
                     <ul class="nav nav-pills nav-stacked">
-                        <li>{{ link_to("planilla/search",'<i class="fa fa-circle-o text-light-blue"></i> Ver todas las planillas <span class="label label-primary pull-right">12</span>') }}</li>
+                        <li>{{ link_to("planilla/search",'<i class="fa fa-circle-o text-light-blue"></i> Ver todas las planillas <span class="label label-primary pull-right">'~ cantidadPlanillas ~'</span>') }}</li>
                         <li>{{ link_to("planilla/new",'<i class="fa fa-circle-o text-light-blue"></i> Nueva planilla') }}</li>
                         <li>{{ link_to("planilla/index",'<i class="fa fa-circle-o text-light-blue"></i> Búsqueda Personalizada') }}</li>
                     </ul>
@@ -48,6 +48,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li>{{ link_to("remito/nuevo",'<i class="fa fa-circle-o text-yellow"></i> Nuevo remito') }}</li>
                         <li>{{ link_to("remito/buscarRemitoPorPlanilla",'<i class="fa fa-circle-o text-yellow"></i> Buscar remitos por planilla') }}</li>
+                        <li>{{ link_to("remito/buscarRemitoPorNro",'<i class="fa fa-circle-o text-yellow"></i> Buscar Remito ') }}</li>
                     </ul>
                 </div>
                 <!-- /.box-body -->
@@ -75,5 +76,6 @@
             </div>
             <!-- /. box -->
         </div>
+    </div>
 
 </section>

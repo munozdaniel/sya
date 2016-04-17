@@ -40,7 +40,8 @@ class IndexController extends ControllerBase
         $this->view->setTemplateAfter('principal');
         $this->tag->setTitle('Tablero Principal');
         $this->view->form = new ClienteForm();
-        //$this->flash->success("Bienvenido ".$this->session->get('auth')['usuario_nick']);
+        $planillas = Planilla::find();
+        $this->view->cantidadPlanillas =$planillas->count();
     }
 
     /**
