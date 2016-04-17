@@ -1,283 +1,79 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        <i class="fa  fa-dashcube"></i> <ins>Tablero Principal</ins>
-        <small>Seleccione una opción para comenzar </small>
+        <ins>Tablero Principal</ins>
     </h1>
-    <hr>
 </section>
 
 <!-- ===================== Main content =====================-->
 <section class="content">
     {{ content() }}
     <div class="row">
+        <div align="center">
+            {{ image('image/logo-portada.png','width':'420','height':'152') }}
+        </div>
         <div class="col-md-12">
-            <div class="box-header with-border">
-                <i class="fa fa-table"></i>
-
-                <h3 class="box-title">Planillas</h3>
-            </div>
+            <hr>
         </div>
         <div class="col-md-4">
-            <div class="box box-primary">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Planillas</h3>
 
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('planilla/search','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-list"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>VER TODAS LAS PLANILLAS</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Realiza una busqueda general.
-                            </span>
-                        </div>
+                    <div class="box-tools">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
-                    ') }}
+                </div>
+                <div class="box-body no-padding" style="display: block;">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>{{ link_to("planilla/search",'<i class="fa fa-circle-o text-light-blue"></i> Ver todas las planillas <span class="label label-primary pull-right">12</span>') }}</li>
+                        <li>{{ link_to("planilla/new",'<i class="fa fa-circle-o text-light-blue"></i> Nueva planilla') }}</li>
+                        <li>{{ link_to("planilla/index",'<i class="fa fa-circle-o text-light-blue"></i> Búsqueda Personalizada') }}</li>
+                    </ul>
                 </div>
                 <!-- /.box-body -->
             </div>
-            <!-- /.box -->
+            <!-- /. box -->
         </div>
         <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('planilla/new','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-square"></i></span>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Remitos</h3>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>NUEVA PLANILLA</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Formulario de creación.
-                            </span>
-                        </div>
+                    <div class="box-tools">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
-                    ') }}
+                </div>
+                <div class="box-body no-padding" style="display: block;">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>{{ link_to("remito/nuevo",'<i class="fa fa-circle-o text-yellow"></i> Nuevo remito') }}</li>
+                        <li>{{ link_to("remito/buscarRemitoPorPlanilla",'<i class="fa fa-circle-o text-yellow"></i> Buscar remitos por planilla') }}</li>
+                    </ul>
                 </div>
                 <!-- /.box-body -->
             </div>
-            <!-- /.box -->
+            <!-- /. box -->
         </div>
-        <!-- ./col -->
         <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('planilla','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Cabecera</h3>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>BUSCAR PLANILLA</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Filtro personalizado.
-                            </span>
-                        </div>
+                    <div class="box-tools">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
-                    ') }}
+                </div>
+                <div class="box-body no-padding" style="display: block;">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>{{ link_to("cabecera/reordenar",'<i class="fa fa-circle-o text-red"></i>  Reordenar columnas ') }}</li>
+                        <li>{{ link_to("columna/agregarExtra",'<i class="fa fa-circle-o text-red"></i>  Agregar columna extra') }}</li>
+                        <li>{{ link_to("columna/editar",'<i class="fa fa-circle-o text-red"></i> Habilitar/Deshabilitar columnas') }}</li>
+
+                    </ul>
                 </div>
                 <!-- /.box-body -->
             </div>
-            <!-- /.box -->
+            <!-- /. box -->
         </div>
 
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('cabecera/reordenar','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-arrows-v"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>REORDENAR COLUMNAS</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Filtro personalizado.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('planilla/agregarExtra','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-circle"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>AGREGAR COLUMNAS EXTRAS</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Agregar a la planilla columnas.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <!-- ./col -->
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('columna/editar','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-check-square"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>HABILITAR/DESHABILITAR COL</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Visualización de tablas personalizadas.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <!-- ./col -->
-        <div class="col-md-12">
-            <div class="box-header with-border">
-                <i class="fa fa-file-text"></i>
-                <h3 class="box-title">Remitos</h3>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('remito/nuevoRemitoPorPlanilla','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-plus-circle"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>AGREGAR REMITO</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Selecciona la planilla, luego agrega el remito.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('remito/buscarRemitoPorPlanilla','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>BUSCAR POR PLANILLA</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Búsqueda de remitos.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('remito/searchDataTablePlanilla','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>BUSQUEDA PERSONALIZADA</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Búsqueda de remitos.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <div class="col-md-4">
-            <div class="box box-primary">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    {{ link_to('remito/searchRemitoSinPdf','
-                    <div class="info-box">
-                        <span class="info-box-icon bg-light-blue-gradient"><i class="fa fa-search"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text text-black"><strong>REMITOS SIN PDF</strong></span>
-
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                            <span class="progress-description  text-black">
-                                Remitoso escaneados.
-                            </span>
-                        </div>
-                    </div>
-                    ') }}
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-    </div>
 </section>
