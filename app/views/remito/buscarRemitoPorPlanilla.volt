@@ -1,3 +1,4 @@
+
 <div class="box box-primary">
     <div class="box-header">
         <div class="col-md-12">
@@ -209,14 +210,14 @@
         var table = $('#example').DataTable({
             "processing": true,
             dom: 'Bfrtip',
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             buttons: [
                 {
                     text: 'Recargar',
                     action: function ( e, dt, node, config ) {
                         table.ajax.reload();
                     }
-                }
-                ,
+                },
                 {
                     extend: 'excelHtml5',
                     text: 'Exportar Todo',
@@ -235,8 +236,7 @@
                         },
                         columns: ':visible'
                     }
-                }
-                ,
+                },
                 {
                     extend: 'colvis',
                     text:"Columnas",
@@ -250,12 +250,11 @@
             'ordering': true,
             'info': true,
             stateSave: false,
-            fixedHeader: false,
+            fixedHeader: true,
             scrollY: '80vh',
-            scrollX: 'true',
+            scrollX: false,
             scrollCollapse: true,
             "columns": claves,
-
             ajax: {
                 'url': 'buscarRemitosPorPlanillaIdAjax',
                 'type': 'POST',
@@ -263,7 +262,6 @@
                 dataType: 'json'
             },
             colReorder: {
-
                 order: posiciones
             },
             "language": {

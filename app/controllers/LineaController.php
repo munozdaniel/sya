@@ -464,4 +464,45 @@ class LineaController extends ControllerBase
         echo json_encode($retorno);
         return;
     }
+    public function cargarDependientesAction()
+    {
+        $this->view->disable();
+        $retorno = array();
+        $retorno['success']=false;
+        $retorno['mensaje'][]='-';
+        if(!$this->request->isPost()){
+            $retorno['mensaje']="LOS DATOS NO FUERON ENVIADO POR POST";
+            echo json_encode($retorno);
+            return;
+        }
+        $linea_id = $this->request->getPost('linea_id','int');
+        $linea = Linea::findFirst(array('linea_id=:linea_id:',
+            'bind'=>array('linea_id'=>$linea_id)));
+        if(!$linea)
+        {
+            $retorno['mensaje']="NO SE ENCONTRÓ NINGUNA LINEA CARGADA EN LA BASE DE DATOS";
+            echo json_encode($retorno);
+            return;
+        }
+        $centros = Centrocosto::find(array('centroCosto_habilitado=1 AND centroCosto_lineaId=:centroCosto_lineaId:',
+            'bind'=>array('centroCosto_lineaId'=>$linea_id)));
+        if(!$centros)
+        {
+            $retorno['mensaje']="LA LINEA SELECCIONADA NO TIENE CENTROS DE COSTOS CARGADOS.";
+
+        }
+        else{
+            $c = array();
+            foreach ($centros as $centro) {
+                $item = array();
+                $item['valor']=$centro->getCentroCostoId();
+                $item['nombre']=$centro->getCentroCostoCodigo();
+                $c[]=$item;
+            }
+            $retorno['centros']=$c;
+            $retorno['success']=true;
+        }
+        echo json_encode($retorno);
+        return;
+    }
 }

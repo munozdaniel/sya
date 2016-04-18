@@ -117,7 +117,7 @@ class RemitoForm  extends Form
         ));
         $this->add($fecha);
         /*=========================== TARIFA =====================================*/
-        $elemento = new TypeElement("tarifa_horaInicial",array('type'=>'time', 'class'=>'form-control',$required['clave']=>$required['valor']
+        $elemento = new Text("tarifa_horaInicial",array( 'class'=>'form-control',$required['clave']=>$required['valor']
         ));
         $elemento->setLabel("HORA INICIAL");
         $elemento->addValidators(array(
@@ -126,7 +126,7 @@ class RemitoForm  extends Form
             ))
         ));
         $this->add($elemento);
-        $elemento = new TypeElement("tarifa_horaFinal",array('type'=>'time', 'class'=>'form-control',$required['clave']=>$required['valor']
+        $elemento = new Text("tarifa_horaFinal",array('class'=>'form-control',$required['clave']=>$required['valor']
         ));
         $elemento->setLabel("HORA FINAL");
         $elemento->addValidators(array(

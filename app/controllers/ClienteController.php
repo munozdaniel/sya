@@ -94,7 +94,6 @@ class ClienteController extends ControllerBase
                 'class' => 'form-control autocompletar',
                 'style' => 'height:40px !important;'
             ));
-        $this->view->clienteForm  = new ClienteForm();
     }
 
 

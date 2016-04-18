@@ -341,4 +341,62 @@ class YacimientoController extends ControllerBase
             }
         }
     }
+    public function cargarDependientesAction()
+    {
+        $this->view->disable();
+        $retorno = array();
+        $retorno['success']=false;
+        $retorno['mensaje'][]='-';
+        if(!$this->request->isPost()){
+            $retorno['mensaje']="LOS DATOS NO FUERON ENVIADO POR POST";
+            echo json_encode($retorno);
+            return;
+        }
+        $yacimiento_id = $this->request->getPost('yacimiento_id','int');
+        $yacimiento = Yacimiento::findFirst(array('yacimiento_id=:yacimiento_id:',
+            'bind'=>array('yacimiento_id'=>$yacimiento_id)));
+        if(!$yacimiento)
+        {
+            $retorno['mensaje']="NO SE ENCONTRÓ NINGÚN YACIMIENTO CARGADO EN LA BASE DE DATOS";
+            echo json_encode($retorno);
+            return;
+        }
+        $operadoras = Operadora::find(array('operadora_habilitado=1 AND operadora_yacimientoId=:yacimiento_id:',
+            'bind'=>array('yacimiento_id'=>$yacimiento_id)));
+        if(!$operadoras)
+        {
+            $retorno['tiene_op']=false;
+            $retorno['mensaje']="EL YACIMIENTO SELECCIONADO NO TIENE OPERADORAS CARGADAS.";
+        }else{
+            $retorno['tiene_op']=true;
+            $op=array();
+            foreach($operadoras as $operadora){
+                $item = array();
+                $item['valor']=$operadora->getOperadoraId();
+                $item['nombre']=$operadora->getOperadoraNombre();
+                $op[] = $item;
+            }
+            $retorno['operadoras']=$op;
+        }
+        $equipos= Equipopozo::find(array('equipoPozo_habilitado=1 AND equipoPozo_yacimientoId=:yacimiento_id:',
+            'bind'=>array('yacimiento_id'=>$yacimiento_id)));
+        if(!$equipos){
+            $retorno['tiene_eq']=false;
+            $retorno['mensaje']="EL YACIMIENTO SELECCIONADO NO TIENE EQUIPOS/POZOS CARGADAS.";
+        }
+        else{
+            $retorno['tiene_eq']=true;
+            $eq = array();
+            foreach ($equipos as $equipo) {
+                $item = array();
+                $item['valor']=$equipo->getEquipoPozoId();
+                $item['nombre']=$equipo->getEquipoPozoNombre();
+                $eq[]=$item;
+            }
+            $retorno['equipos']=$eq;
+        }
+        $retorno['success']=true;
+        echo json_encode($retorno);
+        return;
+    }
 }
