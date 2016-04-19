@@ -70,8 +70,8 @@
                             ' <br>' +
                             ' <ul class="list-unstyled ">Si desea personalizar la cabecera puede: ' +
                             '<li>{{ link_to('cabecera/reordenar','Reordenar las Columnas') }}</li>' +
-                            '<li>{{ link_to('cabecera/extra','Agregar Columnas Extras') }}</li>' +
-                            '<li>{{ link_to('cabecera/extra','Habilitar/Eliminar Columnas') }}</li>' +
+                            '<li>{{ link_to('columna/agregarExtra','Agregar Columnas Extras') }}</li>' +
+                            '<li>{{ link_to('columna/editar','Habilitar/Eliminar Columnas') }}</li>' +
                             '</ul>' +
                             '<small>* Es necesario tener permisos de administrador.</small></div>'); // add the actual error message under our input
                             $('#extra').prop('disabled', false);
