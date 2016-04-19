@@ -265,7 +265,7 @@ class RemitoController extends ControllerBase
      */
     public function editAction($remito_id)
     {
-        echo "<h1> ID: $remito_id</h1>";
+
         $this->importarSelect2();
         $this->assets->collection("headerCss")
             ->addCss('plugins/validador-upload/css/file-validator.css')
@@ -287,7 +287,7 @@ class RemitoController extends ControllerBase
                 ));
             }
             //remito
-            $this->view->remitoForm = new RemitoNuevoForm($remito, array('edit'=>true,'required' => ''));
+            $this->view->remitoForm = new RemitoEditForm($remito, array('edit'=>true,'required' => ''));
             //cliente
             $cliente = Cliente::findFirst(array('cliente_id=:cliente_id:', 'bind' => array('cliente_id' => $remito->getRemitoClienteId())));
             $this->view->clienteForm = new ClienteForm($cliente, array('required' => ''));
@@ -332,7 +332,7 @@ class RemitoController extends ControllerBase
                 "action" => "index"
             ));
         }
-        $remitoForm =  new RemitoNuevoForm($remito, array('edit'=>true,'required' => ''));
+        $remitoForm =  new RemitoEditForm($remito, array('edit'=>true,'required' => ''));
         $this->view->remitoForm = $remitoForm;
 
 

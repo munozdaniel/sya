@@ -12,7 +12,7 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Forms\Element\Date;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Select;
-class RemitoNuevoForm extends Form
+class RemitoEditForm extends Form
 {
     /**
      * Utiliza select2
