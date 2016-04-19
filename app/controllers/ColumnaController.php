@@ -312,23 +312,23 @@ class ColumnaController extends ControllerBase
                 'required' => ''
             ));
         $select->clear();
-        $this->view->formulario =$select;
+        $this->view->formulario = $select;
     }
 
     public function obtenerColumnasNombreIdAction()
     {
         $data['success'] = false;
         $this->view->disable();
-        if ($this->request->getPost('cabecera_id','int') != null) {
+        if ($this->request->getPost('cabecera_id', 'int') != null) {
             $columnas = $this->modelsManager
                 ->createBuilder()
                 ->columns('columna_nombre,columna_id,columna_habilitado')
                 ->from('Columna')
-                ->where('columna_cabeceraId=:columna_cabeceraId:', array('columna_cabeceraId' => $this->request->getPost('cabecera_id','int')))
+                ->where('columna_cabeceraId=:columna_cabeceraId:', array('columna_cabeceraId' => $this->request->getPost('cabecera_id', 'int')))
                 ->orderBy('columna_posicion ASC')
                 ->getQuery()
                 ->execute()->toArray();
-            $data['cabecera_id'] = $this->request->getPost('cabecera_id','int');
+            $data['cabecera_id'] = $this->request->getPost('cabecera_id', 'int');
 
             if ($columnas) {
                 $data['success'] = true;
@@ -374,10 +374,10 @@ class ColumnaController extends ControllerBase
             return $this->redireccionar('columna/editar');
         }
 
-        $allColumns = Columna::find(array("columna_cabeceraId = :cabecera_id:", 'bind' => array("cabecera_id" => $this->request->getPost("cabecera_id",'int'))));
+        $allColumns = Columna::find(array("columna_cabeceraId = :cabecera_id:", 'bind' => array("cabecera_id" => $this->request->getPost("cabecera_id", 'int'))));
 
         foreach ($allColumns as $colBD) {
-            $encontro =false;
+            $encontro = false;
             foreach ($columnas as $col) {
                 if ($colBD->getColumnaId() == $col)//Si son iguales, es porque esta chequeado => Habilitar
                 {
@@ -438,7 +438,7 @@ class ColumnaController extends ControllerBase
                     $max = $max + 1;
                     $nuevaColumna = new Columna();
                     $nuevaColumna->setColumnaNombre(strtoupper($columna));
-                    $cadenaLimpia = preg_replace('/\&(.)[^;]*;/', '\\1', $columna);
+                    $cadenaLimpia = $this->limpiarCadena(strtoupper($columna));
                     $nuevaColumna->setColumnaClave(strtoupper(trim($cadenaLimpia)));
                     $nuevaColumna->setColumnaExtra(1);
                     $nuevaColumna->setColumnaPosicion($max);
@@ -455,5 +455,22 @@ class ColumnaController extends ControllerBase
         }
         return $this->redireccionar('columna/agregarExtra');
 
+    }
+
+    public static function limpiarCadena($url)
+    {
+        $url = strtolower($url);
+        //Reemplazamos caracteres especiales latinos
+        $find = array('á', 'é', 'í', 'ó', 'ú', 'â', 'ê', 'î', 'ô', 'û', 'ã', 'õ', 'ç', 'ñ');
+        $repl = array('a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'o', 'c', 'n');
+        $url = str_replace($find, $repl, $url);
+        //Añadimos los guiones
+        $find = array(' ', '&amp;', '\r\n', '\n', '+');
+        $url = str_replace($find, '', $url);
+        //Eliminamos y Reemplazamos los demas caracteres especiales
+        $find = array('/[^a-z0-9\-&lt;&gt;]/', '/[\-]+/', '/&lt;{^&gt;*&gt;/');
+        $repl = array('', '', '');
+        $url = preg_replace($find, $repl, $url);
+        return $url;
     }
 }
