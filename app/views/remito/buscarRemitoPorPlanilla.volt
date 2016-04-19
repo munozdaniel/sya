@@ -1,4 +1,8 @@
-
+<style>
+    footer{
+        display: none !important;
+    }
+</style>
 <div class="box box-primary">
     <div class="box-header">
         <div class="col-md-12">
@@ -209,8 +213,9 @@
 
         var table = $('#example').DataTable({
             "processing": true,
-            dom: 'Bfrtip',
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            dom: 'Bfrtipl',
+            'pageLength': 10,
+            'lengthMenu': [[10, 20, 50, 75, -1], [10, 20, 50, 75, 'Todos']],
             buttons: [
                 {
                     text: 'Recargar',
@@ -250,9 +255,9 @@
             'ordering': true,
             'info': true,
             stateSave: false,
-            fixedHeader: true,
+            fixedHeader: false,
             scrollY: '80vh',
-            scrollX: false,
+            scrollX: true,
             scrollCollapse: true,
             "columns": claves,
             ajax: {
@@ -286,6 +291,8 @@
                 "oAria": {
                     "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },select: {
+                    rows: "%d fila/s seleccionada"
                 }
             }
         });

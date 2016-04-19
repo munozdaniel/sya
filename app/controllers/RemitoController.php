@@ -113,7 +113,7 @@ class RemitoController extends ControllerBase
                 'class' => 'form-control autocompletar',
                 'style' => 'width:100%',
                 'required' => '',
-                'onchange' => 'var x = document.getElementById("remito_planillaId").value;alert(x);'
+                'onchange' => 'var x = document.getElementById("remito_planillaId").value;'
             ));
     }
 
@@ -121,7 +121,71 @@ class RemitoController extends ControllerBase
      * OK: Busca todas las planillas que no tengan los remitos escaneados
      * usado en buscarRemitoPorPlanillaSinPDFAction
      */
-    public function buscarRemitosPorPlanillaIdAjaxSinPDFAction()
+    public function buscarRemitoPorPlanillaIdAjaxSinPDFAction()
+    {
+        $this->view->disable();
+        $remito = null;
+        $error = array();
+        $data = array();
+        $tabla = array();
+        if ($this->request->getPost('remito_planillaId') == null)
+            $error[] = "No se encontró la planilla";
+
+        $remito = Remito::find(array('remito_habilitado = 1 AND remito_planillaId =:planilla_id: AND remito_pdf IS NULL',
+            'bind' => array('planilla_id' => $this->request->getPost('remito_planillaId')),
+            'order by' => 'remito_nroOrden ASC'));
+        if (count($remito) != 0)
+            $tabla = $this->generarTablaDeRemitosNuevo($remito, 'extra');
+        else {
+            $error [] = "NO SE ENCONTRARON REMITOS";
+
+        }
+        $data['problemas'] = $error;
+        echo json_encode(array('data' => $tabla, 'errores' => ""));
+    }
+    /**
+     * Permite seleccionar 2 fechas desde,hasta y una planilla
+     * @return bool
+     */
+    public function buscarRemitoEntreFechasAction()
+    {
+        $this->importarDataTables();
+
+        $this->assets->collection("headerCss")
+            ->addCss('plugins/daterangepicker/daterangepicker-bs3.css');
+        $this->assets->collection('headerJs')
+            ->addJs('plugins/daterangepicker/moment.min.js')
+            ->addJs('plugins/daterangepicker/daterangepicker.js');
+        //Select Autocomplete Planilla
+        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
+            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
+            array(
+                'using' => array('planilla_id', 'planilla_nombreCliente'),
+                'useEmpty' => false,
+                'emptyText' => 'Seleccione una planilla',
+                'emptyValue' => '',
+                'class' => 'form-control autocompletar',
+                'style' => 'width:100%',
+                'required' => '',
+                'onchange' => 'var x = document.getElementById("remito_planillaId").value;'
+            ));
+    }
+public function buscarRemitoEntreFechasAjaxAction()
+{
+    $this->view->disable();
+    $columns= array('Nombre','posicion','oficina');
+    $data=array(
+        array('Tiger Nixon','Sistemas','Edinburgo'),
+        array('Daniel Muñoz','Sistemas','Galapagos'),
+        array('Ivana Garcia','Medicina','Galapagos')
+    );
+    echo json_encode(array('columns' => $columns, 'data' => $data));
+
+}
+    /**
+     * Dada dos fechas y una planilla busca todos los remitos
+     */
+    public function buscarRemitosEntreFechasAjaxAction()
     {
         $this->view->disable();
         $remito = null;
@@ -845,33 +909,7 @@ class RemitoController extends ControllerBase
         echo json_encode($retorno);
         return;
     }
-    /**
-     * Editar Remito por planilla
-     * @return bool
-     */
-    public function editarRemitoPorPlanillaAction()
-    {
-        //SELECT2
-        $this->importarSelect2();
-        //DATATABLES
 
-        $this->importarDataTablesEditor();
-        $this->assets->collection("headerCss")
-            ->addCss('plugins/validador-upload/css/file-validator.css');
-        $this->assets->collection('headerJs')
-            ->addJs('plugins/validador-upload/file-validator.js');
-        //Select Autocomplete Planilla
-        $this->view->formulario = new \Phalcon\Forms\Element\Select('remito_planillaId',
-            Planilla::find(array('planilla_habilitado=1 AND planilla_armada=1', 'order' => 'planilla_nombreCliente DESC')),
-            array(
-                'using' => array('planilla_id', 'planilla_nombreCliente'),
-                'useEmpty' => false,
-                'emptyText' => 'Seleccione una planilla',
-                'emptyValue' => '',
-                'class' => 'form-control autocompletar',
-                'style' => 'width:100%',
-                'required' => '',
-                'onchange' => 'var x = document.getElementById("remito_planillaId").value;'
-            ));
-    }
+
+
 }
