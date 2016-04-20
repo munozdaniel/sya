@@ -553,7 +553,7 @@ public function buscarRemitoEntreFechasAjaxAction()
         ));
 
         if (count($columnas) != 0) {
-            $this->view->columnaExtraForm = new ColumnaExtraForm(null, array('extra' => $columnas));
+            $this->view->columnaExtraForm = new ColumnaExtraForm($columnas);
         }
 
         $this->view->remitoForm = new RemitoForm(null, array('required' => ''));

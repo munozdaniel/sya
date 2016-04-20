@@ -46,9 +46,10 @@
                 </div>
                 <div class="box-body no-padding" style="display: block;">
                     <ul class="nav nav-pills nav-stacked">
-                        <li>{{ link_to("remito/nuevo",'<i class="fa fa-circle-o text-yellow"></i> Nuevo remito') }}</li>
+                        <li>{{ link_to("remito/nuevoRemitoPorPlanilla",'<i class="fa fa-circle-o text-yellow"></i> Nuevo remito') }}</li>
                         <li>{{ link_to("remito/buscarRemitoPorPlanilla",'<i class="fa fa-circle-o text-yellow"></i> Buscar remitos por planilla') }}</li>
-                        <li>{{ link_to("remito/buscarRemitoPorNro",'<i class="fa fa-circle-o text-yellow"></i> Buscar Remito ') }}</li>
+                        <li>{{ link_to("remito/buscarRemitoPorNro",'<i class="fa fa-circle-o text-yellow"></i> Buscar Remito por NRO') }}</li>
+                        <li>{{ link_to("remito/buscarRemitoEntreFechas",'<i class="fa fa-circle-o text-yellow"></i> Buscar Remitos entre fechas') }}</li>
                     </ul>
                 </div>
                 <!-- /.box-body -->
